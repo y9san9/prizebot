@@ -4,3 +4,5 @@
 /data/
 /telegram/build/
 /fsm/build/
+/buildSrc/.gradle/
+/buildSrc/build/

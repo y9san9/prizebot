@@ -1,10 +1,10 @@
 plugins {
-    kotlin("jvm")
+    kotlin(plugin.jvm)
 }
 
 dependencies {
-    api(project(":fsm"))
+    api(fsm)
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
-    implementation("dev.inmo:tgbotapi:0.32.1")
+    implementation(coroutines)
+    implementation(tgBotApi)
 }

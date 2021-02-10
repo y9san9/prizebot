@@ -1,12 +1,12 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.4.21"
-    kotlin("plugin.serialization") version "1.4.21"
+    kotlin(plugin.jvm) version Version.KOTLIN
+    kotlin(plugin.serialization) version Version.SERIALIZATION_PLUGIN
 }
 
-group = "me.y9san9.prizebot"
-version = "1.0"
+group = AppInfo.PACKAGE
+version = AppInfo.VERSION
 
 allprojects {
     repositories {
@@ -17,21 +17,20 @@ allprojects {
 }
 
 dependencies {
-    implementation(project(":telegram"))
+    implementation(tgBotApi)
+    implementation(`telegram-extensions`)
 
-    implementation("org.slf4j:slf4j-simple:1.6.1")
+    implementation(exposed)
+    implementation(exposedJdbc)
+    compileOnly(postgresql)  // default jdbc driver dependency; replace with your own if you want.
 
-    implementation("org.jetbrains.exposed:exposed-core:0.24.1")
-    implementation("org.jetbrains.exposed:exposed-jdbc:0.24.1")
+    implementation(slf4j)
 
-    implementation("dev.inmo:tgbotapi:0.32.3")
-    implementation("org.postgresql:postgresql:42.2.18")
-
-    implementation("com.kotlingang.kds:kds:1.2.11")
+    implementation(kds)
 }
 
 allprojects {
     tasks.withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions.jvmTarget = Version.JVM
     }
 }
