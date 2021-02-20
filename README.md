@@ -32,8 +32,8 @@ Table `giveaways`:
 
 field | type
 ---|---
-id | LONG AUTOINCREMENT
-ownerId | LONG NOT NULL
+id | BIGINT AUTOINCREMENT
+ownerId | BIGINT NOT NULL
 title | TEXT NOT NULL
 participateButton | TEXT NOT NULL
 languageCode | TEXT DEFAULT NULL
