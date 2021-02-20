@@ -7,10 +7,10 @@ data class FSMStateResult <TDataOut> (
     val nextState: FSMState<TDataOut, *>
 )
 
-fun <T> result(data: T, nextState: FSMState<T, *>) =
+fun <T> result(nextState: FSMState<T, *>, data: T) =
     FSMStateResult (
         data = data,
         nextState = nextState
     )
 
-fun result(nextState: FSMState<Unit, *>) = result(data = Unit, nextState)
+fun result(nextState: FSMState<Unit, *>) = result(nextState, data = Unit)

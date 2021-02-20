@@ -17,16 +17,8 @@ allprojects {
 }
 
 dependencies {
-    implementation(tgBotApi)
-    implementation(`telegram-extensions`)
-
-    implementation(exposed)
-    implementation(exposedJdbc)
-    compileOnly(postgresql)  // default jdbc driver dependency; replace with your own if you want.
-
-    implementation(slf4j)
-
-    implementation(kds)
+    implementation(bot)
+    implementation(coroutines)
 }
 
 allprojects {

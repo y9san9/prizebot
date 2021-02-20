@@ -3,8 +3,5 @@ plugins {
 }
 
 dependencies {
-    api(fsm)
-
-    implementation(coroutines)
-    implementation(tgBotApi)
+    api(tgBotApi)
 }

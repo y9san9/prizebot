@@ -1,5 +1,6 @@
 rootProject.name = "prize-bot"
 
-
-include("fsm")
+include("bot")
+include("bot:actors")
 include("telegram")
+include("fsm")
