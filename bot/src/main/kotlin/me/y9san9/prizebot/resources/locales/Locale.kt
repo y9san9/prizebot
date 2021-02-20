@@ -14,7 +14,7 @@ object DefaultLocale : Locale()
 
 open class Locale {
     open val start = regular("Hi there! My name is ") + bold("PrizeBot") +
-            regular("here you can transparently raffle prizes among random users. " +
+            regular(", here you can transparently raffle prizes among random users. " +
                     "One of the main features is that you can " +
                     "choose conditions for members " +
                     "(they must be subscribed on some channels and etc.)\n" +
