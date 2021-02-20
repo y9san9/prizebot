@@ -74,6 +74,8 @@ class Prizebot (
         }
     }
 
-    private fun logException(throwable: Throwable) =
+    private fun logException(throwable: Throwable) {
         System.err.println("Unexpected exception occurred: ${throwable.stackTraceToString()}")
+        println("But still working")
+    }
 }
