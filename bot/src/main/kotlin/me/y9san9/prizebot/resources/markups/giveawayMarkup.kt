@@ -48,11 +48,11 @@ fun giveawayMarkup (
                     callbackData = "${CALLBACK_ACTION_RAFFLE_GIVEAWAY}_${giveaway.id}"
                 )
             },
-            listOf(
+            listOf (
                 SwitchInlineQueryInlineKeyboardButton (
-                text = locale.send,
-                switchInlineQuery = "${INLINE_ACTION_SEND_GIVEAWAY}_${giveaway.id}"
-            )
+                    text = locale.send,
+                    switchInlineQuery = "${INLINE_ACTION_SEND_GIVEAWAY}_${giveaway.id}"
+                )
             )
         ) else listOf(listOf (
             if(finished) participateButtonNoAction() else CallbackDataInlineKeyboardButton (

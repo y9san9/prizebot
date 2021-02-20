@@ -1,5 +1,6 @@
 package me.y9san9.prizebot
 
+import dev.inmo.micro_utils.coroutines.subscribeSafely
 import dev.inmo.tgbotapi.bot.Ktor.telegramBot
 import dev.inmo.tgbotapi.extensions.utils.updates.retrieving.longPolling
 import dev.inmo.tgbotapi.types.message.abstracts.PrivateContentMessage
@@ -41,21 +42,18 @@ class Prizebot (
         )
 
         val messages = messageFlow
-            .map { it.data }
-            .filterIsInstance<PrivateContentMessage<*>>()
+            .mapNotNull { it.data as? PrivateContentMessage<*> }
             .map { PrizebotPrivateMessageUpdate(bot, di, it) }
 
         createFSM(events = messages)
 
         inlineQueryFlow
             .map { InlineQueryUpdate(bot, di, query = it) }
-            .onEach(InlineQueryHandler::handle)
-            .launchIn(scope)
+            .subscribeSafely(scope, ::logException, InlineQueryHandler::handle)
 
         callbackQueryFlow
             .map { CallbackQueryUpdate(bot, di, query = it) }
-            .onEach(CallbackQueryHandler::handle)
-            .launchIn(scope)
+            .subscribeSafely(scope, ::logException, CallbackQueryHandler::handle)
     }
 
     private fun createFSM(events: Flow<PrizebotPrivateMessageUpdate>) = FSM.prizebotPrivateMessages (
@@ -75,4 +73,7 @@ class Prizebot (
             Database.connect(url, user = user, password = password)
         }
     }
+
+    private fun logException(throwable: Throwable) =
+        System.err.println("Unexpected exception occurred: ${throwable.stackTraceToString()}")
 }
