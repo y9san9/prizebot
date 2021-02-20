@@ -1,9 +1,7 @@
 # Motivation
 There is no open source telegram bot that can purely raffle prizes, so I decided to do the one
 
-# TODO
-- Refactor code; Create the principles of bot's architecture
-- Integrate with random.org draws for important giveaways
+The official bot is hosted at [@secure_prize_bot](https://t.me/secure_prize_bot)
 
 # Running 
 To run this bot by yourself provide the bot token with `BOT_TOKEN` environment variable.
@@ -43,3 +41,6 @@ winnerId | BIGINT DEFAULT NULL
 
 # Licence
 [MIT](https://github.com/y9san9/prizebot/LICENCE)
+
+# TODO
+- Integrate with random.org draws for important giveaways
