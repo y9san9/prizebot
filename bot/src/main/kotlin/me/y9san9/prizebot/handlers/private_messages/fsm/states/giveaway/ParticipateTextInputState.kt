@@ -36,6 +36,7 @@ object ParticipateTextInputState : PrizebotFSMState<GiveawayTitle> {
         val giveaway = update.di.saveGiveaway (
             update.chatId, title, participateText, update.languageCode
         )
+
         GiveawayCreatedSender.send(update, giveaway)
     }
 }

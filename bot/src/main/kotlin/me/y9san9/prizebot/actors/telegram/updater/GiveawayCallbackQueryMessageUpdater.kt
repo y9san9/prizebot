@@ -10,20 +10,20 @@ import me.y9san9.telegram.utils.asTextContentMessage
 
 object GiveawayCallbackQueryMessageUpdater {
     suspend fun update (
-        query: PrizebotCallbackQueryUpdate,
+        update: PrizebotCallbackQueryUpdate,
         giveaway: Giveaway,
         demo: Boolean = false
     ) {
-        val inlineMessageId = query.inlineMessageId
-        val message = query.message?.asTextContentMessage()
+        val inlineMessageId = update.inlineMessageId
+        val message = update.message?.asTextContentMessage()
 
         if(inlineMessageId == null && message == null)
             return
 
-        val (entities, markup) = giveawayContent(query, giveaway, demo)
+        val (entities, markup) = giveawayContent(update, giveaway, demo)
 
         if(inlineMessageId != null) safely {
-            query.bot.editMessageText (
+            update.bot.editMessageText (
                 inlineMessageId = inlineMessageId,
                 entities = entities,
                 replyMarkup = markup
@@ -31,7 +31,7 @@ object GiveawayCallbackQueryMessageUpdater {
         }
 
         if(message != null) safely {
-            query.bot.editMessageText (
+            update.bot.editMessageText (
                 message = message,
                 entities = entities,
                 replyMarkup = markup

@@ -20,8 +20,8 @@ object GiveawaySender {
         update.sendMessage(entities, replyMarkup = markup)
     }
 
-    suspend fun send(update: FromChatBotUpdate, giveaway: Giveaway, participantsCount: Int) {
-        val (entities, markup) = giveawayContent(update, giveaway, participantsCount)
+    suspend fun send(update: FromChatBotUpdate, giveaway: Giveaway, participantsCount: Int, demo: Boolean = false) {
+        val (entities, markup) = giveawayContent(update, giveaway, participantsCount, demo)
         update.sendMessage(entities, replyMarkup = markup)
     }
 }

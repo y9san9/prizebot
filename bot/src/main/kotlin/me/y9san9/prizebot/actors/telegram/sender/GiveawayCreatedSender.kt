@@ -13,6 +13,6 @@ object GiveawayCreatedSender {
     suspend fun <T> send(update: T, giveaway: Giveaway) where
             T : FromChatLocalizedBotUpdate, T : DIUpdate<out GiveawaysStorage> {
         update.sendMessage(update.locale.giveawayCreated, replyMarkup = mainMarkup(update))
-        GiveawaySender.send(update, giveaway, participantsCount = 0)
+        GiveawaySender.send(update, giveaway, participantsCount = 0, demo = true)
     }
 }
