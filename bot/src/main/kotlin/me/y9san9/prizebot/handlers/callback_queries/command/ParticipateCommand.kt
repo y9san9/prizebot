@@ -1,5 +1,6 @@
 package me.y9san9.prizebot.handlers.callback_queries.command
 
+import dev.inmo.micro_utils.coroutines.safely
 import dev.inmo.tgbotapi.extensions.api.edit.text.editMessageText
 import me.y9san9.prizebot.actors.storage.giveaways_storage.FinishedGiveaway
 import me.y9san9.prizebot.actors.storage.participants_storage.ParticipantsStorage
@@ -17,14 +18,12 @@ object ParticipateCommand {
         val locale = update.locale
 
         val giveaway = GiveawayFromCommandExtractor.extract(update, splitter = "_")
-
-        if(giveaway == null) {
-            update.bot.editMessageText (
-                inlineMessageId,
-                entities = locale.thisGiveawayDeleted
-            )
-            return
-        }
+            ?: return safely {
+                update.bot.editMessageText (
+                    inlineMessageId,
+                    entities = locale.thisGiveawayDeleted
+                )
+            }
 
         val answer = when {
             giveaway is FinishedGiveaway -> locale.giveawayFinished
