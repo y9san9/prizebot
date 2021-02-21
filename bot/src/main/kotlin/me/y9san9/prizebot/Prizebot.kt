@@ -21,6 +21,7 @@ import me.y9san9.prizebot.handlers.private_messages.fsm.states.statesSerializers
 import me.y9san9.prizebot.models.DatabaseConfig
 import me.y9san9.prizebot.models.di.PrizebotDI
 import me.y9san9.prizebot.models.telegram.PrizebotPrivateMessageUpdate
+import me.y9san9.prizebot.resources.images.ResourceImage
 import me.y9san9.telegram.updates.CallbackQueryUpdate
 import me.y9san9.telegram.updates.InlineQueryUpdate
 import org.jetbrains.exposed.sql.Database

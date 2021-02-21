@@ -3,6 +3,7 @@ package me.y9san9.prizebot.resources.locales
 import dev.inmo.tgbotapi.CommonAbstracts.plus
 import dev.inmo.tgbotapi.types.MessageEntity.textsources.bold
 import dev.inmo.tgbotapi.types.MessageEntity.textsources.italic
+import dev.inmo.tgbotapi.types.MessageEntity.textsources.link
 import dev.inmo.tgbotapi.types.MessageEntity.textsources.regular
 import me.y9san9.prizebot.extensions.awesomeCut
 import me.y9san9.prizebot.resources.Emoji
@@ -13,8 +14,9 @@ object RuLocale : Locale() {
     override val start = regular("Привет! Меня зовут ") + bold("PrizeBot") +
             regular(", здесь вы можете прозрачно разыграть призы. " +
                     "Главная особенность бота - вы можете выбирать условия для участников " +
-                    "(подписка на канал и пр.)\n" +
-                    "Чтобы посмотреть список всех доступных каналов, используйте /help")
+                    "(подписка на канал и пр.). Случайность выбора достигается с помощью random.org, а ") +
+                    link(text = "здесь", url = "https://github.com/y9san9/prizebot") + "можно посмотреть исходный код\n" +
+                    "Чтобы посмотреть список всех доступных каналов, используйте /help"
 
     override fun unknownCommand(command: String) = "Неизвестная команда '$command'"
 

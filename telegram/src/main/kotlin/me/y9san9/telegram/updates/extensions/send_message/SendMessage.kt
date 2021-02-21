@@ -1,12 +1,16 @@
 package me.y9san9.telegram.updates.extensions.send_message
 
 import dev.inmo.tgbotapi.CommonAbstracts.TextSource
+import dev.inmo.tgbotapi.extensions.api.send.media.sendPhoto
 import dev.inmo.tgbotapi.extensions.api.send.sendMessage
+import dev.inmo.tgbotapi.requests.abstracts.InputFile
+import dev.inmo.tgbotapi.requests.abstracts.toInputFile
 import dev.inmo.tgbotapi.types.ChatId
 import dev.inmo.tgbotapi.types.MessageIdentifier
 import dev.inmo.tgbotapi.types.ParseMode.ParseMode
 import dev.inmo.tgbotapi.types.buttons.KeyboardMarkup
 import me.y9san9.telegram.updates.hierarchies.FromChatBotUpdate
+import java.io.File
 
 
 suspend fun FromChatBotUpdate.sendMessage (
@@ -40,3 +44,17 @@ suspend fun FromChatBotUpdate.sendMessage (
         allowSendingWithoutReply, replyMarkup
     )
 }
+
+suspend fun FromChatBotUpdate.sendPhoto (
+    file: File,
+    entities: List<TextSource>,
+    disableNotification: Boolean = false,
+    replyToMessageId: MessageIdentifier? = null,
+    allowSendingWithoutReply: Boolean? = null,
+    replyMarkup: KeyboardMarkup? = null
+) = bot.sendPhoto (
+    ChatId(chatId), file.toInputFile(),
+    entities, disableNotification,
+    replyToMessageId, allowSendingWithoutReply,
+    replyMarkup
+)
