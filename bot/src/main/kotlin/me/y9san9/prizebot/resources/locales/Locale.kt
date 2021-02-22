@@ -3,6 +3,7 @@ package me.y9san9.prizebot.resources.locales
 import dev.inmo.tgbotapi.CommonAbstracts.plus
 import dev.inmo.tgbotapi.types.MessageEntity.textsources.bold
 import dev.inmo.tgbotapi.types.MessageEntity.textsources.italic
+import dev.inmo.tgbotapi.types.MessageEntity.textsources.link
 import dev.inmo.tgbotapi.types.MessageEntity.textsources.regular
 import me.y9san9.prizebot.resources.Emoji
 import me.y9san9.prizebot.resources.MAX_TITLE_LEN
@@ -14,11 +15,14 @@ object DefaultLocale : Locale()
 
 open class Locale {
     open val start = regular("Hi there! My name is ") + bold("PrizeBot") +
-            regular(", here you can transparently raffle prizes among random users. " +
-                    "One of the main features is that you can " +
-                    "choose conditions for members " +
-                    "(they must be subscribed on some channels and etc.)\n" +
-                    "To see all available commands, use /help")
+            regular(
+                ", here you can transparently raffle prizes among random users. " +
+                        "One of the main features is that you can " +
+                        "choose conditions for members " +
+                        "(they must be subscribed on some channels, etc.). " +
+                        "\nBot's random is powered by random.org and "
+            ) + link(text = "there", url = "https://github.com/y9san9/prizebot") + " are sources.\n" +
+            "To see all available commands, use /help"
 
     open val help = "Hey! I am advanced bot for giveaways, here is available commands list:\n" +
             "- /start: Starts me! You've probably already used this.\n" +
