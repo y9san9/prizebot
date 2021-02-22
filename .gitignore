@@ -8,3 +8,4 @@
 /buildSrc/build/
 /bot/build/
 /random/build/
+/deploy.properties

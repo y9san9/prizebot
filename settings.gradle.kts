@@ -1,4 +1,4 @@
-rootProject.name = "prize-bot"
+rootProject.name = "prizebot"
 
 include("bot")
 include("bot:actors")
