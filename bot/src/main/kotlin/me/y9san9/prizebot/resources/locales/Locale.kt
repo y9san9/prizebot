@@ -22,7 +22,10 @@ open class Locale {
                         "(they must be subscribed on some channels, etc.). " +
                         "\nBot's random is powered by random.org and "
             ) + link(text = "there", url = "https://github.com/y9san9/prizebot") + " are sources.\n" +
-            "To see all available commands, use /help"
+            "To see all available commands, use /help\n\n" +
+            bold("There is telegram ") + link(text = "bug", url = "https://github.com/y9san9/prizebot/issues/24") +
+            bold(" right now, so if you use non-english locale, and have english start message, please type /start again")
+
 
     open val help = "Hey! I am advanced bot for giveaways, here is available commands list:\n" +
             "- /start: Starts me! You've probably already used this.\n" +
