@@ -43,4 +43,4 @@ winnerId | BIGINT DEFAULT NULL
 [MIT](https://github.com/y9san9/prizebot/LICENCE)
 
 # TODO
-- Integrate with random.org draws for important giveaways
+- [Integrate](https://github.com/y9san9/prizebot/issues/24) with random.org draws for important giveaways
