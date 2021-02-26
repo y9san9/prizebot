@@ -92,6 +92,8 @@ open class Locale {
 
     open val giveawayFinished = "Giveaway already finished!"
 
+    open val giveawayDoesNotExist = "Giveaway does not exist"
+
     companion object {
         fun with(language: String?) = when(language) {
             "ru" -> RuLocale
