@@ -38,13 +38,11 @@ suspend fun FromChatBotUpdate.sendMessage (
     replyToMessageId: MessageIdentifier? = null,
     allowSendingWithoutReply: Boolean? = null,
     replyMarkup: KeyboardMarkup? = null
-) {
-    bot.sendMessage (
-        ChatId(chatId), entities, disableWebPagePreview,
-        disableNotification, replyToMessageId,
-        allowSendingWithoutReply, replyMarkup
-    )
-}
+) = bot.sendMessage (
+    ChatId(chatId), entities, disableWebPagePreview,
+    disableNotification, replyToMessageId,
+    allowSendingWithoutReply, replyMarkup
+)
 
 suspend fun FromChatBotUpdate.sendPhoto (
     file: MultipartFile,

@@ -2,7 +2,7 @@ package me.y9san9.prizebot.handlers.callback_queries.command
 
 import me.y9san9.prizebot.actors.telegram.extractor.GiveawayFromCommandExtractor
 import me.y9san9.prizebot.actors.telegram.updater.GiveawayCallbackQueryMessageUpdater
-import me.y9san9.prizebot.models.telegram.PrizebotCallbackQueryUpdate
+import me.y9san9.prizebot.extensions.telegram.PrizebotCallbackQueryUpdate
 
 
 object SelfGiveawaysSendCommand {

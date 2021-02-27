@@ -3,6 +3,8 @@ package me.y9san9.prizebot.resources
 
 const val MAX_TITLE_LEN = 150
 
+const val ACTIVE_MESSAGES_LIMIT = 5
+
 // Inline actions
 const val INLINE_ACTION_SEND_GIVEAWAY = 0
 

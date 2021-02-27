@@ -1,7 +1,7 @@
 package me.y9san9.prizebot.handlers.callback_queries
 
 import me.y9san9.prizebot.handlers.callback_queries.command.*
-import me.y9san9.prizebot.models.telegram.PrizebotCallbackQueryUpdate
+import me.y9san9.prizebot.extensions.telegram.PrizebotCallbackQueryUpdate
 import me.y9san9.prizebot.resources.*
 import me.y9san9.telegram.updates.extensions.command.commandOrAnswer
 

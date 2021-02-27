@@ -7,8 +7,8 @@ import me.y9san9.prizebot.actors.telegram.sender.GiveawayParticipateTextInputSen
 import me.y9san9.prizebot.actors.telegram.sender.TooLongGiveawayTitleSender
 import me.y9san9.prizebot.extensions.telegram.textOrDefault
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.MainState
-import me.y9san9.prizebot.models.telegram.PrizebotFSMState
-import me.y9san9.prizebot.models.telegram.PrizebotPrivateMessageUpdate
+import me.y9san9.prizebot.extensions.telegram.PrizebotFSMState
+import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
 import me.y9san9.prizebot.resources.MAX_TITLE_LEN
 
 

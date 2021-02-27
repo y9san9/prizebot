@@ -4,9 +4,10 @@ import me.y9san9.prizebot.actors.raffle.RaffleActor
 import me.y9san9.prizebot.actors.storage.giveaways_storage.ActiveGiveaway
 import me.y9san9.prizebot.actors.storage.giveaways_storage.Giveaway
 import me.y9san9.prizebot.actors.telegram.extractor.GiveawayFromCommandExtractor
+import me.y9san9.prizebot.actors.telegram.updater.GiveawayActiveMessagesUpdater
 import me.y9san9.prizebot.actors.telegram.updater.GiveawayCallbackQueryMessageUpdater
 import me.y9san9.prizebot.extensions.telegram.locale
-import me.y9san9.prizebot.models.telegram.PrizebotCallbackQueryUpdate
+import me.y9san9.prizebot.extensions.telegram.PrizebotCallbackQueryUpdate
 
 
 object RaffleCommand {
@@ -27,6 +28,8 @@ object RaffleCommand {
                 updateMessage(update, update.di.getGiveawayById(giveaway.id)!!)
             }
         } else updateMessage(update, giveaway)
+
+        GiveawayActiveMessagesUpdater.update(update, giveaway.id)
 
         update.answer()
     }

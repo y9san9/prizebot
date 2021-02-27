@@ -20,9 +20,11 @@ fun giveawayMarkup (
 
 fun giveawayMarkup (
     participantsCount: Int,
-    giveaway: Giveaway,
+    giveaway: Giveaway?,
     demo: Boolean = false,
-): InlineKeyboardMarkup {
+): InlineKeyboardMarkup? {
+    giveaway ?: return null
+
     val locale = giveaway.locale
 
     val participateText = "${giveaway.participateText}${if(participantsCount == 0) "" else " $participantsCount"}"

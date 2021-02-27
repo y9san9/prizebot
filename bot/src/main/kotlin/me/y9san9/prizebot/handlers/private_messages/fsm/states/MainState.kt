@@ -9,8 +9,8 @@ import me.y9san9.prizebot.actors.telegram.sender.StartSender
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.TitleInputState
 import me.y9san9.prizebot.extensions.telegram.commandOrDefault
 import me.y9san9.prizebot.extensions.telegram.locale
-import me.y9san9.prizebot.models.telegram.PrizebotFSMState
-import me.y9san9.prizebot.models.telegram.PrizebotPrivateMessageUpdate
+import me.y9san9.prizebot.extensions.telegram.PrizebotFSMState
+import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
 
 
 object MainState : PrizebotFSMState<Unit> {
