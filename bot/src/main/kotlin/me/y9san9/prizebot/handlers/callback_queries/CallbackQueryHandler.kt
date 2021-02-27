@@ -2,10 +2,7 @@ package me.y9san9.prizebot.handlers.callback_queries
 
 import me.y9san9.prizebot.handlers.callback_queries.command.*
 import me.y9san9.prizebot.models.telegram.PrizebotCallbackQueryUpdate
-import me.y9san9.prizebot.resources.CALLBACK_ACTION_DELETE_GIVEAWAY
-import me.y9san9.prizebot.resources.CALLBACK_ACTION_PARTICIPATE
-import me.y9san9.prizebot.resources.CALLBACK_ACTION_RAFFLE_GIVEAWAY
-import me.y9san9.prizebot.resources.CALLBACK_ACTION_SELF_GIVEAWAYS_CONTROL
+import me.y9san9.prizebot.resources.*
 import me.y9san9.telegram.updates.extensions.command.commandOrAnswer
 
 
@@ -25,6 +22,9 @@ object CallbackQueryHandler {
         }
         case("$CALLBACK_ACTION_RAFFLE_GIVEAWAY", argsCount = 1) {
             RaffleCommand.handle(update)
+        }
+        case("$CALLBACK_ACTION_UPDATE_COUNTER", argsCount = 1) {
+            UpdateCounterCommand.handle(update)
         }
     }
 }
