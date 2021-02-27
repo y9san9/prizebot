@@ -1,31 +1,23 @@
 package me.y9san9.prizebot.handlers.callback_queries.command
 
-import dev.inmo.micro_utils.coroutines.safely
-import dev.inmo.tgbotapi.extensions.api.edit.text.editMessageText
 import me.y9san9.prizebot.actors.storage.giveaways_storage.FinishedGiveaway
 import me.y9san9.prizebot.actors.storage.participants_storage.ParticipantsStorage
 import me.y9san9.prizebot.actors.telegram.extractor.GiveawayFromCommandExtractor
 import me.y9san9.prizebot.actors.telegram.updater.GiveawayCallbackQueryMessageUpdater
 import me.y9san9.prizebot.extensions.telegram.locale
-import me.y9san9.prizebot.models.telegram.PrizebotCallbackQueryUpdate
+import me.y9san9.prizebot.extensions.telegram.PrizebotCallbackQueryUpdate
 
 
 object ParticipateCommand {
     suspend fun handle(update: PrizebotCallbackQueryUpdate) {
-        val inlineMessageId = update.inlineMessageId ?: return
         val storage = update.di as ParticipantsStorage
         val participantId = update.chatId
         val locale = update.locale
 
         val giveaway = GiveawayFromCommandExtractor.extract(update, splitter = "_")
-            ?: return safely {
-                update.bot.editMessageText (
-                    inlineMessageId,
-                    entities = locale.thisGiveawayDeleted
-                )
-            }
 
         val answer = when {
+            giveaway == null -> null
             giveaway is FinishedGiveaway -> locale.giveawayFinished
             giveaway.ownerId == participantId -> {
                 locale.cannotParticipateInSelfGiveaway

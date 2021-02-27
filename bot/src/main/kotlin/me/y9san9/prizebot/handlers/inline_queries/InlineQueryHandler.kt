@@ -2,7 +2,7 @@ package me.y9san9.prizebot.handlers.inline_queries
 
 import me.y9san9.prizebot.handlers.inline_queries.command.PickGiveawayCommand
 import me.y9san9.prizebot.handlers.inline_queries.command.SendGiveawayCommand
-import me.y9san9.prizebot.models.telegram.PrizebotInlineQueryUpdate
+import me.y9san9.prizebot.extensions.telegram.PrizebotInlineQueryUpdate
 import me.y9san9.prizebot.resources.INLINE_ACTION_SEND_GIVEAWAY
 import me.y9san9.telegram.updates.extensions.command.commandOrAnswer
 

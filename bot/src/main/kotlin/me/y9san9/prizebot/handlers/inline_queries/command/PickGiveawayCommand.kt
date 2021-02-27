@@ -2,8 +2,7 @@ package me.y9san9.prizebot.handlers.inline_queries.command
 
 import me.y9san9.prizebot.actors.telegram.mapper.GiveawayToResultArticleMapper
 import me.y9san9.prizebot.extensions.telegram.locale
-import me.y9san9.prizebot.models.telegram.PrizebotInlineQueryUpdate
-import me.y9san9.prizebot.resources.locales.Locale
+import me.y9san9.prizebot.extensions.telegram.PrizebotInlineQueryUpdate
 
 
 object PickGiveawayCommand {
@@ -16,7 +15,7 @@ object PickGiveawayCommand {
 
         val results = giveaways.mapIndexed { i, giveaway ->
             GiveawayToResultArticleMapper.map (
-                queryId = "${i + offset}",
+                resultId = "${i + offset}",
                 update, giveaway
             )
         }

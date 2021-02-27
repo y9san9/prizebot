@@ -1,7 +1,7 @@
 package me.y9san9.prizebot.handlers.callback_queries.command
 
 import dev.inmo.tgbotapi.extensions.api.edit.text.editMessageText
-import me.y9san9.prizebot.models.telegram.PrizebotCallbackQueryUpdate
+import me.y9san9.prizebot.extensions.telegram.PrizebotCallbackQueryUpdate
 import me.y9san9.prizebot.resources.content.selfGiveawaysContent
 import me.y9san9.telegram.updates.extensions.command.requireCommand
 import me.y9san9.telegram.utils.asTextContentMessage

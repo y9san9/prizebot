@@ -20,23 +20,25 @@ fun giveawayMarkup (
 
 fun giveawayMarkup (
     participantsCount: Int,
-    giveaway: Giveaway,
+    giveaway: Giveaway?,
     demo: Boolean = false,
-): InlineKeyboardMarkup {
+): InlineKeyboardMarkup? {
+    giveaway ?: return null
+
     val locale = giveaway.locale
 
     val participateText = "${giveaway.participateText}${if(participantsCount == 0) "" else " $participantsCount"}"
 
     val finished = giveaway is FinishedGiveaway
 
-    fun participateButtonNoAction() = CallbackDataInlineKeyboardButton (
+    fun participateButtonUpdateAction() = CallbackDataInlineKeyboardButton (
         participateText,
-        callbackData = "$CALLBACK_NO_ACTION"
+        callbackData = "${CALLBACK_ACTION_UPDATE_COUNTER}_${giveaway.id}"
     )
 
     return InlineKeyboardMarkup (
         keyboard = if(demo) listOf (
-            listOf(participateButtonNoAction()),
+            listOf(participateButtonUpdateAction()),
             listOf (
                 CallbackDataInlineKeyboardButton (
                     text = locale.delete,
@@ -55,7 +57,7 @@ fun giveawayMarkup (
                 )
             )
         ) else listOf(listOf (
-            if(finished) participateButtonNoAction() else CallbackDataInlineKeyboardButton (
+            if(finished) participateButtonUpdateAction() else CallbackDataInlineKeyboardButton (
                 participateText,
                 callbackData = "${CALLBACK_ACTION_PARTICIPATE}_${giveaway.id}"
             )

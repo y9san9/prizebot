@@ -39,6 +39,14 @@ participateButton | TEXT NOT NULL
 languageCode | TEXT DEFAULT NULL
 winnerId | BIGINT DEFAULT NULL
 
+Table `giveaways_active_messages`:
+
+field | type
+---|---
+rowId | BIGINT AUTOINCREMENT
+giveawayId | BIGINT NOT NULL
+inlineMessageId | TEXT NOT NULL
+
 # Licence
 [MIT](https://github.com/y9san9/prizebot/LICENCE)
 

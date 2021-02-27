@@ -81,4 +81,6 @@ object RuLocale : Locale() {
     override val nobodyIsParticipatingYet = "Никто ещё не участвует в розыгрыше!"
 
     override val giveawayFinished = "Розыгрыш уже закончен!"
+
+    override val giveawayDoesNotExist = "Такого розыгрыша не существует"
 }

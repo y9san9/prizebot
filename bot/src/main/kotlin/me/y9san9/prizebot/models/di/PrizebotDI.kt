@@ -1,5 +1,6 @@
 package me.y9san9.prizebot.models.di
 
+import me.y9san9.prizebot.actors.storage.giveaways_active_messages_storage.GiveawaysActiveMessagesStorage
 import me.y9san9.prizebot.actors.storage.giveaways_storage.GiveawaysStorage
 import me.y9san9.prizebot.actors.storage.participants_storage.ParticipantsStorage
 
@@ -7,5 +8,7 @@ import me.y9san9.prizebot.actors.storage.participants_storage.ParticipantsStorag
 class PrizebotDI (
     giveawaysStorage: GiveawaysStorage,
     participantsStorage: ParticipantsStorage,
+    giveawaysActiveMessagesStorage: GiveawaysActiveMessagesStorage,
 ) : GiveawaysStorage by giveawaysStorage,
-    ParticipantsStorage by participantsStorage
+    ParticipantsStorage by participantsStorage,
+    GiveawaysActiveMessagesStorage by giveawaysActiveMessagesStorage
