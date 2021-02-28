@@ -1,6 +1,10 @@
 package me.y9san9.telegram.updates.extensions.command
 
 
+@DslMarker
+annotation class CommandDSLMarker
+
+@CommandDSLMarker
 data class CommandContext (
     val command: Command
 )
@@ -11,6 +15,7 @@ sealed class Default {
     data class InvalidArgsCount(val expectedCount: Int, val actualCount: Int) : Default()
 }
 
+@CommandDSLMarker
 class CommandDSL (
     @PublishedApi internal val command: Command?
 ) {
@@ -23,6 +28,7 @@ class CommandDSL (
     else
         Default.NoTextMatched(actualText = command.text)
 
+    @CommandDSLMarker
     inline fun case(vararg texts: String, argsCount: Int? = null, handler: CommandContext.() -> Unit) {
         if(command != null && result != null) {
             if(texts.any(command.text::equals)) {
@@ -35,6 +41,7 @@ class CommandDSL (
         }
     }
 
+    @CommandDSLMarker
     inline fun raw(vararg texts: String, action: CommandContext.() -> Unit) {
         if(command != null && result != null) {
             if(texts.any(command.source::equals)) {
@@ -44,6 +51,7 @@ class CommandDSL (
         }
     }
 
+    @CommandDSLMarker
     inline fun default(handler: (Default) -> Unit) {
         if(result != null) {
             handler(result!!)
