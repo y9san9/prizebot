@@ -9,9 +9,10 @@ import me.y9san9.telegram.updates.primitives.BotUpdate
 import me.y9san9.telegram.updates.primitives.FromChatUpdate
 import me.y9san9.telegram.updates.primitives.HasTextUpdate
 import me.y9san9.telegram.updates.primitives.LocalizedUpdate
+import org.intellij.lang.annotations.Language
 
 
-suspend inline fun <T> T.commandOrDefault(splitter: String = "\\s+", builder: CommandDSL.() -> Unit) where
+suspend inline fun <T> T.commandOrDefault(@Language("RegExp") splitter: String = "\\s+", builder: CommandDSL.() -> Unit) where
         T : HasTextUpdate, T : FromChatLocalizedBotUpdate = command(splitter) {
     builder()
 
