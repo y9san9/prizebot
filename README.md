@@ -47,6 +47,13 @@ rowId | BIGINT AUTOINCREMENT
 giveawayId | BIGINT NOT NULL
 inlineMessageId | TEXT NOT NULL
 
+Table `language_codes`:
+
+field | type
+---|---
+userId | BIGINT NOT NULL
+languageCode | TEXT NOT NULL
+
 # Licence
 [MIT](https://github.com/y9san9/prizebot/LICENCE)
 
