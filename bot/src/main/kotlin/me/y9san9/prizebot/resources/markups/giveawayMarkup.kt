@@ -13,7 +13,7 @@ import me.y9san9.telegram.updates.primitives.DIUpdate
 
 
 fun giveawayMarkup (
-    update: DIUpdate<out ParticipantsStorage>,
+    update: DIUpdate<ParticipantsStorage>,
     giveaway: Giveaway,
     demo: Boolean = false
 ) = giveawayMarkup(update.di.getParticipantsCount(giveaway.id), giveaway, demo)

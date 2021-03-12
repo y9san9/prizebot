@@ -9,7 +9,7 @@ import me.y9san9.telegram.updates.primitives.HasTextUpdate
 
 object GiveawayFromCommandExtractor {
     fun <T> extract(update: T, splitter: String = "\\s+"): Giveaway? where
-            T : HasTextUpdate, T : DIUpdate<out GiveawaysStorage> {
+            T : HasTextUpdate, T : DIUpdate<GiveawaysStorage> {
         val giveawayId = update.command(splitter)?.args?.getOrNull(0)?.toLongOrNull() ?: return null
         return update.di.getGiveawayById(giveawayId)
     }

@@ -5,9 +5,8 @@ import dev.inmo.tgbotapi.extensions.api.answers.answerInlineQuery
 import dev.inmo.tgbotapi.types.CommonUser
 import dev.inmo.tgbotapi.types.InlineQueries.InlineQueryResult.abstracts.InlineQueryResult
 import dev.inmo.tgbotapi.types.update.InlineQueryUpdate
-import me.y9san9.telegram.updates.hierarchies.FromChatLocalizedBotUpdate
+import me.y9san9.telegram.updates.hierarchies.FromChatLocalizedDIBotUpdate
 import me.y9san9.telegram.updates.primitives.AnswerableUpdate
-import me.y9san9.telegram.updates.primitives.DIUpdate
 import me.y9san9.telegram.updates.primitives.HasTextUpdate
 
 
@@ -15,7 +14,7 @@ class InlineQueryUpdate <DI> (
     override val bot: TelegramBot,
     override val di: DI,
     private val query: InlineQueryUpdate,
-) : DIUpdate<DI>, FromChatLocalizedBotUpdate, HasTextUpdate, AnswerableUpdate {
+) : FromChatLocalizedDIBotUpdate<DI>, HasTextUpdate, AnswerableUpdate {
 
     override val chatId = query.data.from.id.chatId
     override val languageCode = (query.data.from as? CommonUser)?.languageCode

@@ -7,15 +7,16 @@ import dev.inmo.tgbotapi.types.MessageEntity.textsources.regular
 import me.y9san9.prizebot.actors.storage.giveaways_storage.FinishedGiveaway
 import me.y9san9.prizebot.actors.storage.giveaways_storage.Giveaway
 import me.y9san9.prizebot.actors.storage.giveaways_storage.locale
+import me.y9san9.prizebot.extensions.telegram.PrizebotLocalizedBotUpdate
 import me.y9san9.prizebot.extensions.telegram.locale
 import me.y9san9.telegram.updates.primitives.BotUpdate
 import me.y9san9.telegram.updates.primitives.LocalizedUpdate
 import me.y9san9.telegram.utils.getUserLink
 
 
-suspend fun <T> giveawayEntities (
-    update: T, giveaway: Giveaway?
-): TextSourcesList where T : BotUpdate, T : LocalizedUpdate {
+suspend fun giveawayEntities (
+    update: PrizebotLocalizedBotUpdate, giveaway: Giveaway?
+): TextSourcesList {
     if(giveaway == null)
         return update.locale.thisGiveawayDeleted
 

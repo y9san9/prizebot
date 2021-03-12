@@ -10,6 +10,7 @@ import me.y9san9.fsm.FSM
 import me.y9san9.fsm.statesOf
 import me.y9san9.prizebot.actors.storage.giveaways_active_messages_storage.GiveawaysActiveMessagesStorage
 import me.y9san9.prizebot.actors.storage.giveaways_storage.GiveawayStorage
+import me.y9san9.prizebot.actors.storage.language_codes_storage.LanguageCodesStorage
 import me.y9san9.prizebot.actors.storage.participants_storage.ParticipantsStorage
 import me.y9san9.prizebot.actors.storage.states_storage.PrizebotFSMStorage
 import me.y9san9.prizebot.handlers.callback_queries.CallbackQueryHandler
@@ -27,6 +28,7 @@ import me.y9san9.telegram.updates.CallbackQueryUpdate
 import me.y9san9.telegram.updates.ChosenInlineResultUpdate
 import me.y9san9.telegram.updates.InlineQueryUpdate
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.transactions.transaction
 
 
 class Prizebot (
@@ -42,7 +44,8 @@ class Prizebot (
         val di = PrizebotDI (
             giveawaysStorage = GiveawayStorage(database),
             participantsStorage = ParticipantsStorage(database),
-            giveawaysActiveMessagesStorage = GiveawaysActiveMessagesStorage(database)
+            giveawaysActiveMessagesStorage = GiveawaysActiveMessagesStorage(database),
+            languageCodesStorage = LanguageCodesStorage(database)
         )
 
         val messages = messageFlow
