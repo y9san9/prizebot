@@ -5,6 +5,7 @@ import me.y9san9.prizebot.actors.storage.kds.KDS
 
 internal class KDSLanguageCodesStorage : LanguageCodesStorage {
     override fun setLanguageCode(userId: Long, languageCode: String) {
+        KDS.languageCodes.removeIf { it.userId == userId }
         KDS.languageCodes += LanguageCode(userId, languageCode)
     }
 

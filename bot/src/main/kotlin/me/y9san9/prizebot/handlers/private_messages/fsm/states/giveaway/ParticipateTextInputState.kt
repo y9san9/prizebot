@@ -3,7 +3,7 @@ package me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway
 import kotlinx.serialization.Serializable
 import me.y9san9.fsm.FSMStateResult
 import me.y9san9.fsm.result
-import me.y9san9.prizebot.actors.telegram.sender.CancellationSender
+import me.y9san9.prizebot.actors.telegram.sender.CancellationToMainStateSender
 import me.y9san9.prizebot.actors.telegram.sender.GiveawayCreatedSender
 import me.y9san9.prizebot.extensions.telegram.textOrDefault
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.MainState
@@ -22,7 +22,7 @@ object ParticipateTextInputState : PrizebotFSMState<GiveawayTitle> {
         event.textOrDefault { text ->
             return result(MainState).apply {
                 when (text) {
-                    "/cancel" -> CancellationSender.send(event)
+                    "/cancel" -> CancellationToMainStateSender.send(event)
                     "/skip" -> createGiveaway(event, data.title, participateText = Emoji.HEART)
                     else -> createGiveaway(event, data.title, text)
                 }

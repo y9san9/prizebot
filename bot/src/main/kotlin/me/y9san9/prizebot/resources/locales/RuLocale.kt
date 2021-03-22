@@ -16,7 +16,7 @@ object RuLocale : Locale() {
                     "Главная особенность бота - вы можете выбирать условия для участников " +
                     "(подписка на канал и пр.). Случайность выбора достигается с помощью random.org, а ") +
                     link(text = "здесь", url = "https://github.com/y9san9/prizebot") + " можно посмотреть исходный код\n" +
-                    "Чтобы посмотреть список всех доступных каналов, используйте /help"
+                    "Чтобы посмотреть список всех доступных команд, используйте /help"
 
     override fun unknownCommand(command: String) = "Неизвестная команда '$command'"
 
@@ -28,7 +28,8 @@ object RuLocale : Locale() {
     override val help = "Привет! Я продвинутый бот для розыгрышей, вот список доступных команд:\n" +
             "- /help: Отправить это сообщение\n" +
             "- /giveaway: Начать новый розыгрыш\n" +
-            "- /my_giveaways: Посмотреть созданные розыгрыши\n"
+            "- /my_giveaways: Посмотреть созданные розыгрыши\n" +
+            "- /language: Установить язык бота\n"
 
     override val helpKeyboard = "${Emoji.HELP} Помощь"
     override val giveawayKeyboard = "${Emoji.GIFT} Новый розыгрыш"
@@ -83,4 +84,6 @@ object RuLocale : Locale() {
     override val giveawayFinished = "Розыгрыш уже закончен!"
 
     override val giveawayDoesNotExist = "Такого розыгрыша не существует"
+
+    override val selectLocale = "Выберите язык бота с помощью кнопок ниже"
 }

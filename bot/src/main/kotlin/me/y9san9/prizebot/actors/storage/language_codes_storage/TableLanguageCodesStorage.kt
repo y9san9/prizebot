@@ -20,6 +20,7 @@ internal class TableLanguageCodesStorage(private val database: Database) : Langu
     }
 
     override fun setLanguageCode(userId: Long, languageCode: String) = transaction(database) {
+        Storage.deleteWhere { USER_ID eq userId }
         Storage.insert {
             it[USER_ID] = userId
             it[LANGUAGE_CODE] = languageCode

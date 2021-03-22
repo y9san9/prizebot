@@ -21,17 +21,16 @@ open class Locale {
                         "choose conditions for members " +
                         "(they must be subscribed on some channels, etc.). " +
                         "\nBot's random is powered by random.org and "
-            ) + link(text = "there", url = "https://github.com/y9san9/prizebot") + " are sources.\n" +
-            "To see all available commands, use /help\n\n" +
-            bold("There is telegram ") + link(text = "bug", url = "https://github.com/y9san9/prizebot/issues/24") +
-            bold(" right now, so if you use non-english locale, and have english start message, please type /start again")
-
+            ) + link(text = "there", url = "https://github.com/y9san9/prizebot") +
+            " you can check sources.\n\n" +
+            "To see all available commands, use /help"
 
     open val help = "Hey! I am advanced bot for giveaways, here is available commands list:\n" +
-            "- /start: Starts me! You've probably already used this.\n" +
+            "- /start: Starts me! You've probably already used this\n" +
             "- /help: Sends this message\n" +
             "- /giveaway: Create new giveaway\n" +
-            "- /my_giveaways: Get list of created giveaways\n"
+            "- /my_giveaways: Get list of created giveaways\n" +
+            "- /language: Select bot language\n"
 
     open fun unknownCommand (command: String) = "Unknown command '$command'"
 
@@ -94,10 +93,11 @@ open class Locale {
 
     open val giveawayDoesNotExist = "Giveaway does not exist"
 
+    open val selectLocale = "Select bot locale with buttons below"
+
     companion object {
-        fun with(language: String?) = when(language) {
-            "ru" -> RuLocale
-            else -> DefaultLocale
-        }
+        fun with(language: String?) = locales
+            .firstOrNull { it.code == language }
+            ?.locale ?: DefaultLocale
     }
 }

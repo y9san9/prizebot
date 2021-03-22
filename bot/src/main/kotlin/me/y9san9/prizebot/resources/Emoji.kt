@@ -8,4 +8,6 @@ object Emoji {
     const val SETTINGS = "⚙️"
     const val TRASH = "\uD83D\uDDD1"
     const val CHECKMARK = "✅"
+    const val RUSSIAN = "\uD83C\uDDF7\uD83C\uDDFA"
+    const val ENGLISH = "\uD83C\uDDEC\uD83C\uDDE7"
 }
