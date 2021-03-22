@@ -86,4 +86,6 @@ object RuLocale : Locale() {
     override val giveawayDoesNotExist = "Такого розыгрыша не существует"
 
     override val selectLocale = "Выберите язык бота с помощью кнопок ниже"
+
+    override val localeSelected = "Язык изменён"
 }

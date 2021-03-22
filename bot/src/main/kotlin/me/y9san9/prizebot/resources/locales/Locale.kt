@@ -95,6 +95,8 @@ open class Locale {
 
     open val selectLocale = "Select bot locale with buttons below"
 
+    open val localeSelected = "Locale selected!"
+
     companion object {
         fun with(language: String?) = locales
             .firstOrNull { it.code == language }
