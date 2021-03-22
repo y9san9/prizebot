@@ -4,9 +4,9 @@ import me.y9san9.prizebot.actors.telegram.updater.GiveawayCallbackQueryMessageUp
 import me.y9san9.prizebot.extensions.telegram.PrizebotCallbackQueryUpdate
 
 
-object UpdateCounterCommand {
+object UpdateDemoCounterCommand {
     suspend fun handle(update: PrizebotCallbackQueryUpdate) {
         update.answer()
-        GiveawayCallbackQueryMessageUpdater.update(update)
+        GiveawayCallbackQueryMessageUpdater.update(update, demo = true)
     }
 }

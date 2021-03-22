@@ -33,7 +33,8 @@ fun giveawayMarkup (
 
     fun participateButtonUpdateAction() = CallbackDataInlineKeyboardButton (
         participateText,
-        callbackData = "${CALLBACK_ACTION_UPDATE_COUNTER}_${giveaway.id}"
+        callbackData = "${if(demo) CALLBACK_ACTION_UPDATE_DEMO_COUNTER 
+        else CALLBACK_ACTION_UPDATE_COUNTER}_${giveaway.id}"
     )
 
     return InlineKeyboardMarkup (
