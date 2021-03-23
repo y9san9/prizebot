@@ -53,7 +53,7 @@ object RuLocale : Locale() {
 
     override fun participateText(text: String) = "Кнопка участия: $text"
 
-    override val cannotParticipateInSelfGiveaway = "Ты не можете участвовать в своём конкурсе :("
+    override val cannotParticipateInSelfGiveaway = "Вы не можете участвовать в своём конкурсе :("
 
     override val nowParticipating = "Теперь ты участвуешь в розыгрыше!"
 
