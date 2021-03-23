@@ -101,6 +101,10 @@ open class Locale {
 
     open val confirm = "Confirm"
 
+    open val deleteGiveawayConfirmation = "delete giveaway"
+
+    open val raffleGiveawayConfirmation = "raffle giveaway"
+
     companion object {
         fun with(language: String?) = locales
             .firstOrNull { it.code == language }

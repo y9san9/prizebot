@@ -92,4 +92,8 @@ object RuLocale : Locale() {
     override fun confirmation(confirmationText: String) = "Вы уверены, что хотите $confirmationText?"
 
     override val confirm = "Подтвердить"
+
+    override val deleteGiveawayConfirmation = "удалить розыгрыш"
+
+    override val raffleGiveawayConfirmation = "разыграть приз"
 }

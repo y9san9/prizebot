@@ -43,12 +43,16 @@ fun giveawayMarkup (
             listOf (
                 CallbackDataInlineKeyboardButton (
                     text = locale.delete,
-                    callbackData = "${CALLBACK_ACTION_DELETE_GIVEAWAY}_${giveaway.id}"
+                    callbackData = "${CALLBACK_ACTION_CONFIRM}_" +
+                            "${CALLBACK_ACTION_DELETE_GIVEAWAY}+${giveaway.id}_" +
+                            "${CALLBACK_ACTION_UPDATE_DEMO_COUNTER}+${giveaway.id}"
                 )
             ).plusIf(!finished) {
                 CallbackDataInlineKeyboardButton (
                     text = locale.raffle,
-                    callbackData = "${CALLBACK_ACTION_RAFFLE_GIVEAWAY}_${giveaway.id}"
+                    callbackData = "${CALLBACK_ACTION_CONFIRM}_" +
+                            "${CALLBACK_ACTION_RAFFLE_GIVEAWAY}+${giveaway.id}_" +
+                            "${CALLBACK_ACTION_UPDATE_DEMO_COUNTER}+${giveaway.id}"
                 )
             },
             listOf (
