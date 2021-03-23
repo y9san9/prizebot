@@ -88,4 +88,8 @@ object RuLocale : Locale() {
     override val selectLocale = "Выберите язык бота с помощью кнопок ниже"
 
     override val localeSelected = "Язык изменён"
+
+    override fun confirmation(confirmationText: String) = "Вы уверены, что хотите $confirmationText?"
+
+    override val confirm = "Подтвердить"
 }

@@ -97,6 +97,10 @@ open class Locale {
 
     open val localeSelected = "Locale selected!"
 
+    open fun confirmation(confirmationText: String) = "Are you sure you want to $confirmationText"
+
+    open val confirm = "Confirm"
+
     companion object {
         fun with(language: String?) = locales
             .firstOrNull { it.code == language }
