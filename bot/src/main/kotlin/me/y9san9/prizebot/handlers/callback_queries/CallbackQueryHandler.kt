@@ -26,6 +26,9 @@ object CallbackQueryHandler {
         case("$CALLBACK_ACTION_UPDATE_COUNTER", argsCount = 1) {
             UpdateCounterCommand.handle(update)
         }
+        case("$CALLBACK_ACTION_UPDATE_DEMO_COUNTER", argsCount = 1) {
+            UpdateDemoCounterCommand.handle(update)
+        }
         case("$CALLBACK_ACTION_SELECT_LOCALE", argsCount = 1) {
             SelectLocaleCommand.handle(update)
         }
