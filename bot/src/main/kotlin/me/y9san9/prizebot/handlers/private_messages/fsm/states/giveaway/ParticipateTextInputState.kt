@@ -34,7 +34,8 @@ object ParticipateTextInputState : PrizebotFSMState<GiveawayTitle> {
 
     private suspend fun createGiveaway(update: PrizebotPrivateMessageUpdate, title: String, participateText: String) {
         val giveaway = update.di.saveGiveaway (
-            update.chatId, title, participateText, update.languageCode
+            update.chatId, title, participateText,
+            languageCode = update.di.getLanguageCode(update.chatId) ?: update.languageCode
         )
 
         GiveawayCreatedSender.send(update, giveaway)
