@@ -11,10 +11,8 @@ import me.y9san9.prizebot.extensions.telegram.PrizebotLocalizedBotUpdate
 import me.y9san9.prizebot.resources.entities.giveawayEntities
 import me.y9san9.prizebot.resources.markups.giveawayMarkup
 import me.y9san9.telegram.updates.hierarchies.FromChatLocalizedDIBotUpdate
-import me.y9san9.telegram.updates.primitives.BotUpdate
 import me.y9san9.telegram.updates.primitives.DIUpdate
 import me.y9san9.telegram.updates.primitives.HasTextUpdate
-import me.y9san9.telegram.updates.primitives.LocalizedUpdate
 
 
 suspend fun <TUpdate, TDI> giveawayContent (
@@ -32,7 +30,7 @@ suspend fun <TUpdate, TDI> giveawayContent (
 
 suspend fun <T> giveawayContent (
     update: FromChatLocalizedDIBotUpdate<T>,
-    giveaway: Giveaway?,
+    giveaway: Giveaway,
     demo: Boolean = false
 ): Pair<TextSourcesList, InlineKeyboardMarkup?> where
         T : LanguageCodesStorage, T : ParticipantsStorage =
@@ -47,7 +45,7 @@ private fun getParticipantsOrZero(giveaway: Giveaway?, update: DIUpdate<Particip
 
 suspend fun giveawayContent (
     update: PrizebotLocalizedBotUpdate,
-    giveaway: Giveaway?,
+    giveaway: Giveaway,
     participantsCount: Int,
     demo: Boolean = false
 ): Pair<TextSourcesList, InlineKeyboardMarkup?> {

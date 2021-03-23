@@ -25,8 +25,6 @@ object DeleteGiveawayCommand {
         update.bot.editMessageText (
             message, entities = update.locale.giveawayDeleted(giveaway.title)
         )
-
-        GiveawayActiveMessagesUpdater.update(update, giveaway.id)
         
         update.answer()
     }

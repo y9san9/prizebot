@@ -71,7 +71,7 @@ object RuLocale : Locale() {
     override fun giveawayDeleted(title: String) = regular("Розыгрыш '") +
             bold(title.awesomeCut(maxLength = 30)) + "' удалён"
 
-    override val thisGiveawayDeleted = listOf(italic("Этот розыгрыш удалён"))
+    override val thisGiveawayDeleted = "Этот розыгрыш удалён"
 
     override val raffle = "Разыграть ${Emoji.GIFT}"
 

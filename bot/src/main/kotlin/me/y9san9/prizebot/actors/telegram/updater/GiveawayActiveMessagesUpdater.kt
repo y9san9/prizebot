@@ -23,7 +23,7 @@ object GiveawayActiveMessagesUpdater {
             TDI : GiveawaysStorage,
             TDI : LanguageCodesStorage = scope.launch {
 
-        val giveaway = update.di.getGiveawayById(giveawayId)
+        val giveaway = update.di.getGiveawayById(giveawayId) ?: return@launch
 
         for(activeMessage in update.di.getActiveMessage(giveawayId)) launch {
             safelyWithoutExceptions {

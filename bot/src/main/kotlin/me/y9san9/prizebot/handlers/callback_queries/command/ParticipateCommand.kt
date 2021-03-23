@@ -15,9 +15,9 @@ object ParticipateCommand {
         val locale = update.locale
 
         val giveaway = GiveawayFromCommandExtractor.extract(update, splitter = "_")
+            ?: return update.answer(locale.thisGiveawayDeleted)
 
         val answer = when {
-            giveaway == null -> null
             giveaway is FinishedGiveaway -> locale.giveawayFinished
             giveaway.ownerId == participantId -> {
                 locale.cannotParticipateInSelfGiveaway

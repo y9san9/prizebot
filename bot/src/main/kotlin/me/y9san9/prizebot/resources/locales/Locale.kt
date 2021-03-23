@@ -79,7 +79,7 @@ open class Locale {
     open fun giveawayDeleted(title: String) = regular("Giveaway '") +
             bold(title.awesomeCut(maxLength = 30)) + "' deleted"
 
-    open val thisGiveawayDeleted = listOf(italic("This giveaway was deleted."))
+    open val thisGiveawayDeleted = "This giveaway was deleted."
 
     open val raffle = "Raffle ${Emoji.GIFT}"
 

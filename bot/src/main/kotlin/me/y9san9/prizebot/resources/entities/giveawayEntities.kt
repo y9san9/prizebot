@@ -8,18 +8,13 @@ import me.y9san9.prizebot.actors.storage.giveaways_storage.FinishedGiveaway
 import me.y9san9.prizebot.actors.storage.giveaways_storage.Giveaway
 import me.y9san9.prizebot.actors.storage.giveaways_storage.locale
 import me.y9san9.prizebot.extensions.telegram.PrizebotLocalizedBotUpdate
-import me.y9san9.prizebot.extensions.telegram.locale
-import me.y9san9.telegram.updates.primitives.BotUpdate
-import me.y9san9.telegram.updates.primitives.LocalizedUpdate
 import me.y9san9.telegram.utils.getUserLink
 
 
 suspend fun giveawayEntities (
-    update: PrizebotLocalizedBotUpdate, giveaway: Giveaway?
+    update: PrizebotLocalizedBotUpdate,
+    giveaway: Giveaway
 ): TextSourcesList {
-    if(giveaway == null)
-        return update.locale.thisGiveawayDeleted
-
     val locale = giveaway.locale
 
     val title = bold(giveaway.title) + "\n\n"
