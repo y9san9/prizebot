@@ -38,6 +38,7 @@ internal class TableGiveawaysStorage (
                 it[GIVEAWAY_OWNER_ID] = ownerId
                 it[GIVEAWAY_TITLE] = title
                 it[GIVEAWAY_PARTICIPATE_BUTTON] = participateButton
+                it[GIVEAWAY_LANGUAGE_CODE] = languageCode
             }
         }.let { data ->
             ActiveGiveaway (
