@@ -35,7 +35,7 @@ object RuLocale : Locale() {
     override val giveawayKeyboard = "${Emoji.GIFT} Новый розыгрыш"
     override val selfGiveawaysKeyboard = "${Emoji.SETTINGS} Мои розыгрыши"
 
-    override val giveawayTitleInput = "Хорошо, давай начнём создание конкурса, для начала отправь название конкурса (Нажми /cancel чтобы отменить)"
+    override val giveawayTitleInput = "Хорошо, давай начнём создание розыгрыша, для начала отправь название конкурса (Нажми /cancel чтобы отменить)"
     override val giveawayParticipateInput = "Отлично! Теперь отправь текст для кнопки участия (Нажми /cancel чтобы отменить или /skip для использования ${Emoji.HEART} по умолчанию)"
 
     override val cancel = "Назад"
