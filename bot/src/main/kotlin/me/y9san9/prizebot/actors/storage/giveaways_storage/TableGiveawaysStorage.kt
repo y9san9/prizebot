@@ -59,7 +59,6 @@ internal class TableGiveawaysStorage (
 
     override fun finishGiveaway(giveawayId: Long, winnerId: Long) = transaction(database) {
         Giveaways.update({ GIVEAWAY_ID eq giveawayId }) {
-            it[GIVEAWAY_RAFFLE_DATE] = null
             it[GIVEAWAY_WINNER_ID] = winnerId
         }
     }.let { }
