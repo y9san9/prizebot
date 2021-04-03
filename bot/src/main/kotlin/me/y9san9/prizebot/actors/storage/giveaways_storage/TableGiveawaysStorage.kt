@@ -4,10 +4,12 @@ import me.y9san9.prizebot.actors.storage.giveaways_storage.TableGiveawaysStorage
 import me.y9san9.prizebot.actors.storage.giveaways_storage.TableGiveawaysStorage.Giveaways.GIVEAWAY_LANGUAGE_CODE
 import me.y9san9.prizebot.actors.storage.giveaways_storage.TableGiveawaysStorage.Giveaways.GIVEAWAY_OWNER_ID
 import me.y9san9.prizebot.actors.storage.giveaways_storage.TableGiveawaysStorage.Giveaways.GIVEAWAY_PARTICIPATE_BUTTON
+import me.y9san9.prizebot.actors.storage.giveaways_storage.TableGiveawaysStorage.Giveaways.GIVEAWAY_RAFFLE_DATE
 import me.y9san9.prizebot.actors.storage.giveaways_storage.TableGiveawaysStorage.Giveaways.GIVEAWAY_TITLE
 import me.y9san9.prizebot.actors.storage.giveaways_storage.TableGiveawaysStorage.Giveaways.GIVEAWAY_WINNER_ID
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.time.OffsetDateTime
 
 
 internal class TableGiveawaysStorage (
@@ -18,6 +20,7 @@ internal class TableGiveawaysStorage (
         val GIVEAWAY_OWNER_ID = long("ownerId")
         val GIVEAWAY_TITLE = text("title")
         val GIVEAWAY_PARTICIPATE_BUTTON = text("participateButton")
+        val GIVEAWAY_RAFFLE_DATE = text("raffleDate").nullable()
         val GIVEAWAY_LANGUAGE_CODE = text("languageCode").nullable()
         val GIVEAWAY_WINNER_ID = long("winnerId").nullable()
     }
@@ -32,23 +35,31 @@ internal class TableGiveawaysStorage (
         Giveaways.select { GIVEAWAY_ID eq id }.firstOrNull()?.toGiveaway()
     }
 
-    override fun saveGiveaway(ownerId: Long, title: String, participateButton: String, languageCode: String?) =
-        transaction(database) {
-            Giveaways.insert {
-                it[GIVEAWAY_OWNER_ID] = ownerId
-                it[GIVEAWAY_TITLE] = title
-                it[GIVEAWAY_PARTICIPATE_BUTTON] = participateButton
-                it[GIVEAWAY_LANGUAGE_CODE] = languageCode
-            }
-        }.let { data ->
-            ActiveGiveaway (
-                id = data[GIVEAWAY_ID],
-                ownerId, title, participateButton, languageCode
-            )
+    override fun saveGiveaway (
+        ownerId: Long,
+        title: String,
+        participateButton: String,
+        languageCode: String?,
+        raffleDate: OffsetDateTime?
+    ) = transaction(database) {
+        Giveaways.insert {
+            it[GIVEAWAY_OWNER_ID] = ownerId
+            it[GIVEAWAY_TITLE] = title
+            it[GIVEAWAY_PARTICIPATE_BUTTON] = participateButton
+            it[GIVEAWAY_LANGUAGE_CODE] = languageCode
+            it[GIVEAWAY_RAFFLE_DATE] = raffleDate?.toString()
         }
+    }.let { data ->
+        ActiveGiveaway (
+            id = data[GIVEAWAY_ID],
+            ownerId, title, participateButton,
+            languageCode, raffleDate
+        )
+    }
 
     override fun finishGiveaway(giveawayId: Long, winnerId: Long) = transaction(database) {
         Giveaways.update({ GIVEAWAY_ID eq giveawayId }) {
+            it[GIVEAWAY_RAFFLE_DATE] = null
             it[GIVEAWAY_WINNER_ID] = winnerId
         }
     }.let { }
@@ -58,6 +69,10 @@ internal class TableGiveawaysStorage (
             .orderBy(GIVEAWAY_ID, order = SortOrder.DESC)
             .limit(n = count, offset = offset)
             .map { it.toGiveaway() }
+    }
+
+    override fun getAllGiveaways() = transaction(database) {
+        Giveaways.selectAll().map { it.toGiveaway() }
     }
 
     override fun deleteGiveaway(id: Long) = transaction(database) {
@@ -71,7 +86,8 @@ internal class TableGiveawaysStorage (
             this[GIVEAWAY_OWNER_ID],
             this[GIVEAWAY_TITLE],
             this[GIVEAWAY_PARTICIPATE_BUTTON],
-            this[GIVEAWAY_LANGUAGE_CODE]
+            this[GIVEAWAY_LANGUAGE_CODE],
+            this[GIVEAWAY_RAFFLE_DATE]?.let(OffsetDateTime::parse)
         )
     else
         FinishedGiveaway (
@@ -80,6 +96,7 @@ internal class TableGiveawaysStorage (
             this[GIVEAWAY_TITLE],
             this[GIVEAWAY_PARTICIPATE_BUTTON],
             this[GIVEAWAY_LANGUAGE_CODE],
+            this[GIVEAWAY_RAFFLE_DATE]?.let(OffsetDateTime::parse),
             winnerId = this[GIVEAWAY_WINNER_ID] ?: error("Finished giveaway must contain winnerId")
         )
 }

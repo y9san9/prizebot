@@ -1,13 +1,12 @@
+@file:Suppress("PropertyName")
+
 package me.y9san9.prizebot.resources.locales
 
 import dev.inmo.tgbotapi.CommonAbstracts.plus
-import dev.inmo.tgbotapi.types.MessageEntity.textsources.bold
-import dev.inmo.tgbotapi.types.MessageEntity.textsources.italic
-import dev.inmo.tgbotapi.types.MessageEntity.textsources.link
-import dev.inmo.tgbotapi.types.MessageEntity.textsources.regular
+import dev.inmo.tgbotapi.types.MessageEntity.textsources.*
 import me.y9san9.prizebot.resources.Emoji
 import me.y9san9.prizebot.resources.MAX_TITLE_LEN
-import me.y9san9.prizebot.extensions.awesomeCut
+import me.y9san9.prizebot.extensions.string.awesomeCut
 
 
 object DefaultLocale : Locale()
@@ -105,9 +104,41 @@ open class Locale {
 
     open val raffleGiveawayConfirmation = "raffle giveaway"
 
+    open val enterRaffleDateInput = regular("Enter auto-raffle date in one of this formats: ") +
+            bold("00:00") + ", " +
+            bold("00:00 13.01") + ", " +
+            bold("00:00 13.01.2020") + " (use /skip to skip or /cancel to cancel)"
+
+    open val invalidDateFormat = "Invalid date format, try again"
+
+    open val selectTimezone = "Select timezone with buttons below"
+
+    open val customTimezone = "Custom timezone"
+
+    open val `UTC-4` = "New York -4"
+    open val GMT = "GMT +0"
+    open val UTC1 = "Berlin +1"
+    open val UTC2 = "Kiev +2"
+    open val UTC3 = "Moscow +3"
+    open val UTC5_30 = "India +5:30"
+    open val UTC8 = "Peking +8"
+    open val UTC9 = "Tokyo +9"
+
+    open val customTimezoneInput = regular("Enter timezone offset in one of this formats: ") +
+            bold("+9") + ", " + bold("-9:30")
+
+    open val invalidTimezoneFormat = "Invalid timezone format, try again"
+
+    open val raffleDate = "Raffle date"
+
     companion object {
         fun with(language: String?) = locales
             .firstOrNull { it.code == language }
             ?.locale ?: DefaultLocale
+
+        fun all(getter: (Locale) -> String) = locales
+            .map(LocaleModel::locale)
+            .map(getter)
+            .toSet().toList()
     }
 }

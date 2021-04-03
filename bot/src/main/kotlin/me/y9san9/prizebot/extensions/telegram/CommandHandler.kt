@@ -1,8 +1,7 @@
 package me.y9san9.prizebot.extensions.telegram
 
-import me.y9san9.telegram.updates.extensions.command.CommandDSL
-import me.y9san9.telegram.updates.extensions.command.Default
-import me.y9san9.telegram.updates.extensions.command.command
+import me.y9san9.prizebot.resources.locales.Locale
+import me.y9san9.telegram.updates.extensions.command.*
 import me.y9san9.telegram.updates.extensions.send_message.sendMessage
 import me.y9san9.telegram.updates.primitives.HasTextUpdate
 import org.intellij.lang.annotations.Language
@@ -23,3 +22,10 @@ suspend inline fun <T> T.commandOrDefault(@Language("RegExp") splitter: String =
         }
     }
 }
+
+
+@CommandDSLMarker
+inline fun CommandDSL.raw (
+    noinline getter: (Locale) -> String,
+    action: CommandContext.() -> Unit
+) = raw(Locale.all(getter), action)

@@ -38,6 +38,7 @@ title | TEXT NOT NULL
 participateButton | TEXT NOT NULL
 languageCode | TEXT DEFAULT NULL
 winnerId | BIGINT DEFAULT NULL
+raffleDate | TEXT DEFAULT NULL
 
 Table `giveaways_active_messages`:
 

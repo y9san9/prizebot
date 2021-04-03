@@ -42,6 +42,10 @@ class CommandDSL (
     }
 
     @CommandDSLMarker
+    inline fun case(texts: List<String>, argsCount: Int? = null, handler: CommandContext.() -> Unit) =
+        case(*texts.toTypedArray(), argsCount = argsCount, handler = handler)
+
+    @CommandDSLMarker
     inline fun raw(vararg texts: String, action: CommandContext.() -> Unit) {
         if(command != null && result != null) {
             if(texts.any(command.source::equals)) {
@@ -50,6 +54,10 @@ class CommandDSL (
             }
         }
     }
+
+    @CommandDSLMarker
+    inline fun raw(texts: List<String>, action: CommandContext.() -> Unit) =
+        raw(*texts.toTypedArray(), action = action)
 
     @CommandDSLMarker
     inline fun default(handler: (Default) -> Unit) {

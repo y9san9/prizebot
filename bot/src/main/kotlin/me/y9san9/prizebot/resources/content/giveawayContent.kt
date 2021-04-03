@@ -10,7 +10,9 @@ import me.y9san9.prizebot.actors.telegram.extractor.GiveawayFromCommandExtractor
 import me.y9san9.prizebot.extensions.telegram.PrizebotLocalizedBotUpdate
 import me.y9san9.prizebot.resources.entities.giveawayEntities
 import me.y9san9.prizebot.resources.markups.giveawayMarkup
+import me.y9san9.telegram.updates.hierarchies.DIBotUpdate
 import me.y9san9.telegram.updates.hierarchies.FromChatLocalizedDIBotUpdate
+import me.y9san9.telegram.updates.primitives.BotUpdate
 import me.y9san9.telegram.updates.primitives.DIUpdate
 import me.y9san9.telegram.updates.primitives.HasTextUpdate
 
@@ -21,19 +23,18 @@ suspend fun <TUpdate, TDI> giveawayContent (
     demo: Boolean = false
 ): Pair<TextSourcesList, InlineKeyboardMarkup?>? where
         TUpdate : HasTextUpdate, TUpdate : FromChatLocalizedDIBotUpdate<TDI>,
-        TDI : GiveawaysStorage, TDI : ParticipantsStorage, TDI: LanguageCodesStorage {
+        TDI : GiveawaysStorage, TDI : ParticipantsStorage {
     val giveaway = GiveawayFromCommandExtractor.extract(update, splitter) ?: return null
 
     return giveawayEntities(update, giveaway) to
         giveawayMarkup(update, giveaway, demo)
 }
 
-suspend fun <T> giveawayContent (
-    update: FromChatLocalizedDIBotUpdate<T>,
+suspend fun giveawayContent (
+    update: DIBotUpdate<ParticipantsStorage>,
     giveaway: Giveaway,
     demo: Boolean = false
-): Pair<TextSourcesList, InlineKeyboardMarkup?> where
-        T : LanguageCodesStorage, T : ParticipantsStorage =
+): Pair<TextSourcesList, InlineKeyboardMarkup?> =
     // Zero won't be used if giveaway equals null
     giveawayContent(update, giveaway, getParticipantsOrZero(giveaway, update), demo)
 
@@ -44,7 +45,7 @@ private fun getParticipantsOrZero(giveaway: Giveaway?, update: DIUpdate<Particip
 }
 
 suspend fun giveawayContent (
-    update: PrizebotLocalizedBotUpdate,
+    update: BotUpdate,
     giveaway: Giveaway,
     participantsCount: Int,
     demo: Boolean = false

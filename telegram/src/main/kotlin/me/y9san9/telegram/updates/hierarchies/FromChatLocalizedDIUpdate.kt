@@ -5,4 +5,4 @@ import me.y9san9.telegram.updates.primitives.FromChatUpdate
 import me.y9san9.telegram.updates.primitives.LocalizedUpdate
 
 
-interface FromChatLocalizedDIUpdate<out T> : FromChatUpdate, LocalizedUpdate, DIUpdate<T>
+interface FromChatLocalizedDIUpdate<out T> : FromChatUpdate, LocalizedUpdate, DIBotUpdate<T>

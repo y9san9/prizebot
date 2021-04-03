@@ -1,4 +1,4 @@
-package me.y9san9.prizebot.extensions
+package me.y9san9.prizebot.extensions.any
 
 
 @Suppress("unused")

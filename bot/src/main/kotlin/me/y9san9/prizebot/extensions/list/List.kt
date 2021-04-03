@@ -1,4 +1,4 @@
-package me.y9san9.prizebot.logic.utils
+package me.y9san9.prizebot.extensions.list
 
 
 fun <T> MutableList<T>.replaceFirst(predicate: (T) -> Boolean, transformer: (T) -> (T)) {

@@ -7,7 +7,7 @@ import me.y9san9.prizebot.actors.storage.giveaways_storage.FinishedGiveaway
 import me.y9san9.prizebot.actors.storage.giveaways_storage.Giveaway
 import me.y9san9.prizebot.actors.storage.giveaways_storage.locale
 import me.y9san9.prizebot.actors.storage.participants_storage.ParticipantsStorage
-import me.y9san9.prizebot.logic.utils.plusIf
+import me.y9san9.prizebot.extensions.list.plusIf
 import me.y9san9.prizebot.resources.*
 import me.y9san9.telegram.updates.primitives.DIUpdate
 

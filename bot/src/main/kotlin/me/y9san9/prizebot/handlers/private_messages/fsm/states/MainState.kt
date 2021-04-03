@@ -1,11 +1,10 @@
 package me.y9san9.prizebot.handlers.private_messages.fsm.states
 
 import me.y9san9.fsm.FSMStateResult
-import me.y9san9.fsm.result
+import me.y9san9.fsm.stateResult
 import me.y9san9.prizebot.actors.telegram.sender.*
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.TitleInputState
 import me.y9san9.prizebot.extensions.telegram.commandOrDefault
-import me.y9san9.prizebot.extensions.telegram.locale
 import me.y9san9.prizebot.extensions.telegram.PrizebotFSMState
 import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
 import me.y9san9.prizebot.resources.Emoji
@@ -34,13 +33,13 @@ object MainState : PrizebotFSMState<Unit> {
             }
             case("/giveaway", Emoji.GIFT) {
                 GiveawayTitleInputSender.send(event)
-                return result(TitleInputState)
+                return stateResult(TitleInputState)
             }
             case("/my_giveaways", Emoji.SETTINGS) {
                 SelfGiveawaysSender.send(event)
             }
         }
 
-        return result(MainState)
+        return stateResult(MainState)
     }
 }

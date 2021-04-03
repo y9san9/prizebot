@@ -1,11 +1,8 @@
 package me.y9san9.prizebot.resources.locales
 
 import dev.inmo.tgbotapi.CommonAbstracts.plus
-import dev.inmo.tgbotapi.types.MessageEntity.textsources.bold
-import dev.inmo.tgbotapi.types.MessageEntity.textsources.italic
-import dev.inmo.tgbotapi.types.MessageEntity.textsources.link
-import dev.inmo.tgbotapi.types.MessageEntity.textsources.regular
-import me.y9san9.prizebot.extensions.awesomeCut
+import dev.inmo.tgbotapi.types.MessageEntity.textsources.*
+import me.y9san9.prizebot.extensions.string.awesomeCut
 import me.y9san9.prizebot.resources.Emoji
 import me.y9san9.prizebot.resources.MAX_TITLE_LEN
 
@@ -96,4 +93,31 @@ object RuLocale : Locale() {
     override val deleteGiveawayConfirmation = "удалить розыгрыш"
 
     override val raffleGiveawayConfirmation = "разыграть приз"
+
+    override val enterRaffleDateInput = regular("Введите дату для автоматического розыгрыша в одном из форматов: ") +
+            bold("00:00") + ", " +
+            bold("00:00 13.01") + ", " +
+            bold("00:00 13.01.2020") + " (используйте /skip, чтобы пропустить, и /cancel, чтобы отменить)"
+
+    override val invalidDateFormat = "Неверный формат даты, попробуйте ещё раз"
+
+    override val selectTimezone = "Выберите часовой пояс с помощью кнопок"
+
+    override val customTimezone = "Другой часовой пояс"
+
+    override val `UTC-4` = "Нью-Йорк -4"
+    override val GMT = "Гринвич +0"
+    override val UTC1 = "Берлин +1"
+    override val UTC2 = "Киев +2"
+    override val UTC3 = "Москва +3"
+    override val UTC5_30 = "Индия +5:30"
+    override val UTC8 = "Пекин +8"
+    override val UTC9 = "Токио +9"
+
+    override val customTimezoneInput = regular("Введите часовой пояс в одном из форматов: ") +
+            bold("+9") + ", " + bold("-9:30")
+
+    override val invalidTimezoneFormat = "Неправильный формат часового пояса, попробуйте ещё раз"
+
+    override val raffleDate = "Дата розыгрыша"
 }
