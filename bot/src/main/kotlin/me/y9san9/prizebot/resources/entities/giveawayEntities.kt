@@ -6,12 +6,11 @@ import dev.inmo.tgbotapi.types.MessageEntity.textsources.bold
 import dev.inmo.tgbotapi.types.MessageEntity.textsources.italic
 import dev.inmo.tgbotapi.types.MessageEntity.textsources.regular
 import dev.inmo.tgbotapi.types.MessageEntity.textsources.underline
+import me.y9san9.prizebot.actors.storage.giveaways_storage.ActiveGiveaway
 import me.y9san9.prizebot.actors.storage.giveaways_storage.FinishedGiveaway
 import me.y9san9.prizebot.actors.storage.giveaways_storage.Giveaway
 import me.y9san9.prizebot.actors.storage.giveaways_storage.locale
-import me.y9san9.prizebot.extensions.telegram.PrizebotLocalizedBotUpdate
 import me.y9san9.telegram.updates.primitives.BotUpdate
-import me.y9san9.telegram.updates.primitives.DIUpdate
 import me.y9san9.telegram.utils.getUserLink
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -33,11 +32,14 @@ suspend fun giveawayEntities (
         underline(locale.raffleDate) + ": $date" + "\n\n"
     }
 
-    val ending = if(giveaway is FinishedGiveaway) {
+    val winner = if(giveaway is FinishedGiveaway) {
         val link = update.bot.getUserLink(giveaway.winnerId, locale.deletedUser)
         regular("${locale.winner}: ") + link
-    } else
-        listOf(italic(locale.giveawayParticipateHint))
+    } else listOf()
 
-    return title + untilTime + ending
+    val participateHint = if(giveaway is ActiveGiveaway)
+        italic(locale.giveawayParticipateHint)
+    else regular("")
+
+    return title + untilTime + winner + participateHint
 }
