@@ -27,7 +27,7 @@ suspend fun giveawayEntities (
 
     val untilTime = if(giveaway.raffleDate == null) listOf() else {
         val format = DateTimeFormatter.ofPattern (
-            "HH:mm dd.MM X", Locale.forLanguageTag(giveaway.languageCode)
+            "d MMMM, HH:mm (XXX)", Locale.forLanguageTag(giveaway.languageCode)
         )
         val date = giveaway.raffleDate!!.format(format)
         underline(locale.raffleDate) + ": $date" + "\n\n"
