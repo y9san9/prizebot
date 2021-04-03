@@ -3,7 +3,9 @@ There is no open source telegram bot that can purely raffle prizes, so I decided
 
 The official bot is hosted at [@secure_prize_bot](https://t.me/secure_prize_bot)
 
-# Running 
+# Running
+    Dockerfile available for running, please check Dockerfile and prizebot.env
+
 To run this bot by yourself provide the bot token with `BOT_TOKEN` environment variable.
 
 ### Database
