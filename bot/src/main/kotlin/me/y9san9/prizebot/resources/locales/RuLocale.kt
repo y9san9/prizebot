@@ -120,4 +120,7 @@ object RuLocale : Locale() {
     override val invalidTimezoneFormat = "Неправильный формат часового пояса, попробуйте ещё раз"
 
     override val raffleDate = "Дата розыгрыша"
+
+    override fun cannotRaffleGiveaway(title: String) =
+        "Не получилось автоматически разыграть '$title', вы можете сделать это вручную позже"
 }

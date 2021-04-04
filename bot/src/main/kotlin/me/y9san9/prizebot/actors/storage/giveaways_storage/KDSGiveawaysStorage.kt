@@ -24,6 +24,14 @@ internal class KDSGiveawaysStorage : GiveawaysStorage {
         }
     }
 
+    override fun removeRaffleDate(giveawayId: Long) = KDS.giveaways
+        .replaceFirst({ it.id == giveawayId }) {
+            when(it) {
+                is ActiveGiveaway -> it.copy(raffleDate = null)
+                is FinishedGiveaway -> it.copy(raffleDate = null)
+            }
+        }
+
     override fun finishGiveaway(giveawayId: Long, winnerId: Long) = KDS.giveaways
         .replaceFirst({ it.id == giveawayId }) {
             FinishedGiveaway (

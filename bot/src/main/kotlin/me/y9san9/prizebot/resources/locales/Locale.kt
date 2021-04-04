@@ -131,6 +131,9 @@ open class Locale {
 
     open val raffleDate = "Raffle date"
 
+    open fun cannotRaffleGiveaway(title: String) =
+        "Cannot automatically raffle giveaway '$title', so now you can raffle it manually later"
+
     companion object {
         fun with(language: String?) = locales
             .firstOrNull { it.code == language }

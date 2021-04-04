@@ -7,6 +7,7 @@ import me.y9san9.prizebot.actors.storage.giveaways_storage.TableGiveawaysStorage
 import me.y9san9.prizebot.actors.storage.giveaways_storage.TableGiveawaysStorage.Giveaways.GIVEAWAY_RAFFLE_DATE
 import me.y9san9.prizebot.actors.storage.giveaways_storage.TableGiveawaysStorage.Giveaways.GIVEAWAY_TITLE
 import me.y9san9.prizebot.actors.storage.giveaways_storage.TableGiveawaysStorage.Giveaways.GIVEAWAY_WINNER_ID
+import me.y9san9.prizebot.extensions.any.unit
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.OffsetDateTime
@@ -57,11 +58,17 @@ internal class TableGiveawaysStorage (
         )
     }
 
+    override fun removeRaffleDate(giveawayId: Long) = transaction(database) {
+        Giveaways.update({ GIVEAWAY_ID eq giveawayId }) {
+            it[GIVEAWAY_RAFFLE_DATE] = null
+        }
+    }.unit
+
     override fun finishGiveaway(giveawayId: Long, winnerId: Long) = transaction(database) {
         Giveaways.update({ GIVEAWAY_ID eq giveawayId }) {
             it[GIVEAWAY_WINNER_ID] = winnerId
         }
-    }.let { }
+    }.unit
 
     override fun getUserGiveaways(ownerId: Long, count: Int, offset: Long) = transaction(database) {
         Giveaways.select { GIVEAWAY_OWNER_ID eq ownerId }
