@@ -1,6 +1,7 @@
 package me.y9san9.telegram.updates.extensions.command
 
 import me.y9san9.telegram.updates.primitives.HasTextUpdate
+import org.intellij.lang.annotations.Language
 
 
 data class Command (
@@ -9,7 +10,7 @@ data class Command (
     val args: List<String>
 )
 
-fun String.parseCommand(splitter: String = "\\s+"): Command {
+fun String.parseCommand(@Language("RegExp") splitter: String = "\\s+"): Command {
     val source = trim()
     val parts = source.split(Regex(splitter))
     return Command(source = source, parts.first(), parts.drop(n = 1))

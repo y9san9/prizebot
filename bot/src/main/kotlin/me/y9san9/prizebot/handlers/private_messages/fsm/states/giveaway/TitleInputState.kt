@@ -1,8 +1,8 @@
 package me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway
 
 import me.y9san9.fsm.FSMStateResult
-import me.y9san9.fsm.result
-import me.y9san9.prizebot.actors.telegram.sender.CancellationSender
+import me.y9san9.fsm.stateResult
+import me.y9san9.prizebot.actors.telegram.sender.CancellationToMainStateSender
 import me.y9san9.prizebot.actors.telegram.sender.GiveawayParticipateTextInputSender
 import me.y9san9.prizebot.actors.telegram.sender.TooLongGiveawayTitleSender
 import me.y9san9.prizebot.extensions.telegram.textOrDefault
@@ -17,15 +17,15 @@ object TitleInputState : PrizebotFSMState<Unit> {
 
         event.textOrDefault { text ->
             return when {
-                text == "/cancel" -> result(MainState)
-                    .apply { CancellationSender.send(event) }
-                text.length > MAX_TITLE_LEN -> result(TitleInputState)
+                text == "/cancel" -> stateResult(MainState)
+                    .apply { CancellationToMainStateSender.send(event) }
+                text.length > MAX_TITLE_LEN -> stateResult(TitleInputState)
                     .apply { TooLongGiveawayTitleSender.send(event) }
-                else -> result(ParticipateTextInputState, GiveawayTitle(title = text))
+                else -> stateResult(ParticipateTextInputState, GiveawayTitle(title = text))
                     .apply { GiveawayParticipateTextInputSender.send(event) }
             }
         }
 
-        return result(TitleInputState)
+        return stateResult(TitleInputState)
     }
 }

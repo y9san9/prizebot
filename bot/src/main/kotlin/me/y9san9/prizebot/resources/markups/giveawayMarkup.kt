@@ -7,13 +7,13 @@ import me.y9san9.prizebot.actors.storage.giveaways_storage.FinishedGiveaway
 import me.y9san9.prizebot.actors.storage.giveaways_storage.Giveaway
 import me.y9san9.prizebot.actors.storage.giveaways_storage.locale
 import me.y9san9.prizebot.actors.storage.participants_storage.ParticipantsStorage
-import me.y9san9.prizebot.logic.utils.plusIf
+import me.y9san9.prizebot.extensions.list.plusIf
 import me.y9san9.prizebot.resources.*
 import me.y9san9.telegram.updates.primitives.DIUpdate
 
 
 fun giveawayMarkup (
-    update: DIUpdate<out ParticipantsStorage>,
+    update: DIUpdate<ParticipantsStorage>,
     giveaway: Giveaway,
     demo: Boolean = false
 ) = giveawayMarkup(update.di.getParticipantsCount(giveaway.id), giveaway, demo)
@@ -33,7 +33,8 @@ fun giveawayMarkup (
 
     fun participateButtonUpdateAction() = CallbackDataInlineKeyboardButton (
         participateText,
-        callbackData = "${CALLBACK_ACTION_UPDATE_COUNTER}_${giveaway.id}"
+        callbackData = "${if(demo) CALLBACK_ACTION_UPDATE_DEMO_COUNTER 
+        else CALLBACK_ACTION_UPDATE_COUNTER}_${giveaway.id}"
     )
 
     return InlineKeyboardMarkup (
@@ -42,12 +43,16 @@ fun giveawayMarkup (
             listOf (
                 CallbackDataInlineKeyboardButton (
                     text = locale.delete,
-                    callbackData = "${CALLBACK_ACTION_DELETE_GIVEAWAY}_${giveaway.id}"
+                    callbackData = "${CALLBACK_ACTION_CONFIRM}_" +
+                            "${CALLBACK_ACTION_DELETE_GIVEAWAY}+${giveaway.id}_" +
+                            "${CALLBACK_ACTION_UPDATE_DEMO_COUNTER}+${giveaway.id}"
                 )
             ).plusIf(!finished) {
                 CallbackDataInlineKeyboardButton (
                     text = locale.raffle,
-                    callbackData = "${CALLBACK_ACTION_RAFFLE_GIVEAWAY}_${giveaway.id}"
+                    callbackData = "${CALLBACK_ACTION_CONFIRM}_" +
+                            "${CALLBACK_ACTION_RAFFLE_GIVEAWAY}+${giveaway.id}_" +
+                            "${CALLBACK_ACTION_UPDATE_DEMO_COUNTER}+${giveaway.id}"
                 )
             },
             listOf (

@@ -2,14 +2,18 @@ package me.y9san9.prizebot
 
 import dev.inmo.micro_utils.coroutines.subscribeSafely
 import dev.inmo.tgbotapi.bot.Ktor.telegramBot
+import dev.inmo.tgbotapi.bot.TelegramBot
 import dev.inmo.tgbotapi.extensions.utils.updates.retrieving.longPolling
 import dev.inmo.tgbotapi.types.message.abstracts.PrivateContentMessage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import me.y9san9.fsm.FSM
 import me.y9san9.fsm.statesOf
+import me.y9san9.prizebot.actors.giveaway.AutoRaffleActor
 import me.y9san9.prizebot.actors.storage.giveaways_active_messages_storage.GiveawaysActiveMessagesStorage
 import me.y9san9.prizebot.actors.storage.giveaways_storage.GiveawayStorage
+import me.y9san9.prizebot.actors.storage.language_codes_storage.LanguageCodesStorage
 import me.y9san9.prizebot.actors.storage.participants_storage.ParticipantsStorage
 import me.y9san9.prizebot.actors.storage.states_storage.PrizebotFSMStorage
 import me.y9san9.prizebot.handlers.callback_queries.CallbackQueryHandler
@@ -17,16 +21,16 @@ import me.y9san9.prizebot.handlers.choosen_inline_result.ChosenInlineResultHandl
 import me.y9san9.prizebot.handlers.inline_queries.InlineQueryHandler
 import me.y9san9.prizebot.handlers.private_messages.fsm.prizebotPrivateMessages
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.MainState
-import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.ParticipateTextInputState
-import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.TitleInputState
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.statesSerializers
 import me.y9san9.prizebot.models.DatabaseConfig
 import me.y9san9.prizebot.models.di.PrizebotDI
 import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
+import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.*
 import me.y9san9.telegram.updates.CallbackQueryUpdate
 import me.y9san9.telegram.updates.ChosenInlineResultUpdate
 import me.y9san9.telegram.updates.InlineQueryUpdate
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.transactions.transaction
 
 
 class Prizebot (
@@ -42,8 +46,10 @@ class Prizebot (
         val di = PrizebotDI (
             giveawaysStorage = GiveawayStorage(database),
             participantsStorage = ParticipantsStorage(database),
-            giveawaysActiveMessagesStorage = GiveawaysActiveMessagesStorage(database)
+            giveawaysActiveMessagesStorage = GiveawaysActiveMessagesStorage(database),
+            languageCodesStorage = LanguageCodesStorage(database)
         )
+        scheduleRaffles(bot, di)
 
         val messages = messageFlow
             .mapNotNull { it.data as? PrivateContentMessage<*> }
@@ -64,11 +70,17 @@ class Prizebot (
             .subscribeSafely(scope, ::logException, ChosenInlineResultHandler::handle)
     }
 
+    private fun scheduleRaffles(bot: TelegramBot, di: PrizebotDI) = scope.launch {
+        AutoRaffleActor.scheduleAll(bot, di)
+    }
+
     private fun createFSM(events: Flow<PrizebotPrivateMessageUpdate>) = FSM.prizebotPrivateMessages (
         events,
         states = statesOf (
             initial = MainState,
-            TitleInputState, ParticipateTextInputState
+            TitleInputState, ParticipateTextInputState,
+            RaffleDateInputState, TimezoneInputState,
+            CustomTimezoneInputState
         ),
         storage = storage,
         scope = scope

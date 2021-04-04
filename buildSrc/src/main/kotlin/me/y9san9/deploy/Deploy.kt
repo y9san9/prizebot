@@ -63,7 +63,10 @@ class Deploy : Plugin<Project> {
             target.extensions.create<SSH>("sshSession", target, webServer)
 
             val fatJar = target.task("fatJar", type = Jar::class) {
+                dependsOn("build")
+
                 group = "build"
+                archiveFileName.set("app.jar")
 
                 manifest {
                     attributes["Implementation-Title"] = configuration.implementationTitle

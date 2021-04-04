@@ -3,7 +3,9 @@ There is no open source telegram bot that can purely raffle prizes, so I decided
 
 The official bot is hosted at [@secure_prize_bot](https://t.me/secure_prize_bot)
 
-# Running 
+# Running
+    Dockerfile available for running, please check Dockerfile and prizebot.env
+
 To run this bot by yourself provide the bot token with `BOT_TOKEN` environment variable.
 
 ### Database
@@ -38,6 +40,7 @@ title | TEXT NOT NULL
 participateButton | TEXT NOT NULL
 languageCode | TEXT DEFAULT NULL
 winnerId | BIGINT DEFAULT NULL
+raffleDate | TEXT DEFAULT NULL
 
 Table `giveaways_active_messages`:
 
@@ -46,6 +49,13 @@ field | type
 rowId | BIGINT AUTOINCREMENT
 giveawayId | BIGINT NOT NULL
 inlineMessageId | TEXT NOT NULL
+
+Table `language_codes`:
+
+field | type
+---|---
+userId | BIGINT NOT NULL
+languageCode | TEXT NOT NULL
 
 # Licence
 [MIT](https://github.com/y9san9/prizebot/LICENCE)

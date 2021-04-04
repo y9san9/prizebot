@@ -23,7 +23,7 @@ object GiveawayCallbackQueryMessageUpdater {
 
     suspend fun update (
         update: PrizebotCallbackQueryUpdate,
-        giveaway: Giveaway?,
+        giveaway: Giveaway,
         demo: Boolean = false
     ) {
         val inlineMessageId = update.inlineMessageId

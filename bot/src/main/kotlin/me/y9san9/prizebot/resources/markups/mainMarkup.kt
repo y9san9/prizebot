@@ -4,13 +4,13 @@ import dev.inmo.tgbotapi.types.buttons.KeyboardMarkup
 import dev.inmo.tgbotapi.types.buttons.ReplyKeyboardMarkup
 import dev.inmo.tgbotapi.types.buttons.SimpleKeyboardButton
 import me.y9san9.prizebot.actors.storage.giveaways_storage.GiveawaysStorage
+import me.y9san9.prizebot.actors.storage.language_codes_storage.LanguageCodesStorage
 import me.y9san9.prizebot.extensions.telegram.locale
-import me.y9san9.telegram.updates.hierarchies.FromChatLocalizedUpdate
-import me.y9san9.telegram.updates.primitives.DIUpdate
+import me.y9san9.telegram.updates.hierarchies.FromChatLocalizedDIBotUpdate
 
 
-fun <TUpdate> mainMarkup(update: TUpdate): KeyboardMarkup where
-        TUpdate : DIUpdate<out GiveawaysStorage>, TUpdate : FromChatLocalizedUpdate {
+fun <T> mainMarkup(update: FromChatLocalizedDIBotUpdate<T>): KeyboardMarkup where
+        T : GiveawaysStorage, T : LanguageCodesStorage {
     val storage = update.di
     val userId = update.chatId
     val locale = update.locale

@@ -1,4 +1,4 @@
-package me.y9san9.prizebot.extensions
+package me.y9san9.prizebot.extensions.string
 
 
 fun String.awesomeCut(maxLength: Int, postfix: String = "…"): String {
