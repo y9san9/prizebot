@@ -4,7 +4,7 @@
     <a href="https://hitsofcode.com/github/y9san9/prizebot/view?branch=master"><img alt="HoC" src="https://hitsofcode.com/github/y9san9/prizebot?branch=master"/></a>
     <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/y9san9/prizebot&title=views%20daily/total" alt="Views" />
     <br><br>
-    An open source telegram bot to purely raffle prizes with <a href="https://random.org">random.org</a>. 
+    An open source telegram bot to purely raffle prizes with <a href="https://random.org">random.org</a>. <br>
     The official bot hosted at <a href="https://t.me/secure_prize_bot">@secure_prize_bot</a>, all discussions are welcome in issues and <a href="https://t.me/tg_offtop">telegram</a>
 </p>
 
