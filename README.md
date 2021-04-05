@@ -7,13 +7,13 @@
     An open source telegram bot to purely raffle prizes with <a href="https://random.org">random.org</a>
 </p>
 
-The official bot is hosted at [@secure_prize_bot](https://t.me/secure_prize_bot)
+The official bot hosted at [@secure_prize_bot](https://t.me/secure_prize_bot), all discussions are welcome in issues and [telegram](https://t.me/tg_offtop)
 
-# 🚩 TODO
-- [Road](https://github.com/y9san9/prizebot/milestone/1) to production 
+## 🚩 TODO
+There is a huge plans to do most convenient prize raffling in the universe via this bot. Some of this accumulated [there](https://github.com/y9san9/prizebot/milestone/1)
 
-# 🚀 Running
+## 🚀 Running
 To run this bot by yourself, read [this](https://github.com/y9san9/prizebot/wiki/Running-Tutorial) wiki page
 
-# 📖 Licence
-[MIT](https://github.com/y9san9/prizebot/blob/master/LICENCE)
+## 📖 Licence
+This sofware is absolutely free and using [MIT](https://github.com/y9san9/prizebot/blob/master/LICENCE) licence
