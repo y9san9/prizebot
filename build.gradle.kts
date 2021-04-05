@@ -46,6 +46,10 @@ if(deployPropertiesFile.exists()) {
         user = properties.getProperty("user")
         password = properties.getProperty("password")
         deployPath = properties.getProperty("deployPath")
+        // On linux should be something like /home/user/.ssh/known_hosts
+        // Or Default Allow Any Hosts if this value is not specified,
+        // But than MITM may be performed
+        knownHostsFile = properties.getProperty("knownHosts")
     }
 
     task("stop") {
