@@ -8,6 +8,8 @@ The official bot is hosted at [@secure_prize_bot](https://t.me/secure_prize_bot)
 
 To run this bot by yourself provide the bot token with `BOT_TOKEN` environment variable.
 
+You can always specify `LOG_CHAT_ID` if you want to send crashes to some chat.
+
 ### Database
 By default, all data stored in `/data/` directory in json for startup convenience, but you can configure the database as following.
 

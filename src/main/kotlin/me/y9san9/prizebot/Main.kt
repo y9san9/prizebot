@@ -1,11 +1,13 @@
 package me.y9san9.prizebot
 
 import kotlinx.coroutines.coroutineScope
+import me.y9san9.prizebot.extensions.any.unit
 import me.y9san9.prizebot.models.DatabaseConfig
 
 
 suspend fun main() = coroutineScope {
     val token = System.getenv("BOT_TOKEN") ?: error("Provide BOT_TOKEN environment variable")
+    val logChatId = System.getenv("LOG_CHAT_ID")?.toLongOrNull()
 
     val databaseConfig = getDatabaseConfig (
         url = System.getenv("DATABASE_URL"),
@@ -17,11 +19,10 @@ suspend fun main() = coroutineScope {
     Prizebot (
         botToken = token,
         databaseConfig = databaseConfig,
+        logChatId = logChatId,
         scope = this
     ).start()
-
-    return@coroutineScope
-}
+}.unit
 
 
 private fun getDatabaseConfig (
