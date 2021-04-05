@@ -30,7 +30,6 @@ import me.y9san9.telegram.updates.CallbackQueryUpdate
 import me.y9san9.telegram.updates.ChosenInlineResultUpdate
 import me.y9san9.telegram.updates.InlineQueryUpdate
 import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.transactions.transaction
 
 
 class Prizebot (
@@ -40,7 +39,6 @@ class Prizebot (
 ) {
     private val bot = telegramBot(botToken)
     private val database = connectDatabase(databaseConfig)
-    private val storage = PrizebotFSMStorage(database, statesSerializers)
 
     fun start() = bot.longPolling {
         val di = PrizebotDI (
@@ -82,8 +80,9 @@ class Prizebot (
             RaffleDateInputState, TimezoneInputState,
             CustomTimezoneInputState
         ),
-        storage = storage,
-        scope = scope
+        storage = PrizebotFSMStorage(database, statesSerializers),
+        scope = scope,
+        throwableHandler = ::logException
     )
 
     private fun connectDatabase(config: DatabaseConfig?) = config?.run {
