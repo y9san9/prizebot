@@ -9,7 +9,7 @@
 </p>
 
 ## 🚩 TODO
-There is a huge plans to do most convenient prize raffling in the universe via this bot. Some of this accumulated [there](https://github.com/y9san9/prizebot/milestone/1)
+There is a huge plans to do the most convenient prize raffling in the universe via this bot. Some of this accumulated [there](https://github.com/y9san9/prizebot/milestone/1)
 
 ## 🚀 Running
 To run this bot by yourself, read [this](https://github.com/y9san9/prizebot/wiki/Running-Tutorial) wiki page
