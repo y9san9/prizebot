@@ -3,7 +3,9 @@ package me.y9san9.prizebot
 import dev.inmo.micro_utils.coroutines.subscribeSafely
 import dev.inmo.tgbotapi.bot.Ktor.telegramBot
 import dev.inmo.tgbotapi.bot.TelegramBot
+import dev.inmo.tgbotapi.extensions.api.send.sendMessage
 import dev.inmo.tgbotapi.extensions.utils.updates.retrieving.longPolling
+import dev.inmo.tgbotapi.types.ChatId
 import dev.inmo.tgbotapi.types.message.abstracts.PrivateContentMessage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
@@ -30,17 +32,16 @@ import me.y9san9.telegram.updates.CallbackQueryUpdate
 import me.y9san9.telegram.updates.ChosenInlineResultUpdate
 import me.y9san9.telegram.updates.InlineQueryUpdate
 import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.transactions.transaction
 
 
 class Prizebot (
     botToken: String,
     databaseConfig: DatabaseConfig?,
+    private val logChatId: Long?,
     private val scope: CoroutineScope
 ) {
     private val bot = telegramBot(botToken)
     private val database = connectDatabase(databaseConfig)
-    private val storage = PrizebotFSMStorage(database, statesSerializers)
 
     fun start() = bot.longPolling {
         val di = PrizebotDI (
@@ -82,8 +83,9 @@ class Prizebot (
             RaffleDateInputState, TimezoneInputState,
             CustomTimezoneInputState
         ),
-        storage = storage,
-        scope = scope
+        storage = PrizebotFSMStorage(database, statesSerializers),
+        scope = scope,
+        throwableHandler = ::logException
     )
 
     private fun connectDatabase(config: DatabaseConfig?) = config?.run {
@@ -94,8 +96,13 @@ class Prizebot (
         }
     }
 
-    private fun logException(throwable: Throwable) {
-        System.err.println("Unexpected exception occurred: ${throwable.stackTraceToString()}")
+    private suspend fun logException(throwable: Throwable) {
+        val stacktrace = throwable.stackTraceToString()
+
+        System.err.println("Unexpected exception occurred: $stacktrace")
         println("But still working")
+
+        logChatId ?: return
+        bot.sendMessage(ChatId(logChatId), stacktrace)
     }
 }

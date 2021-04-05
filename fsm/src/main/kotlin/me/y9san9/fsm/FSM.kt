@@ -11,7 +11,8 @@ class FSM <TChannel, TEvent> (
     private val events: Flow<TEvent>,
     private val states: FSMStates<TEvent>,
     storage: FSMStorage<TChannel, Any?> = MemoryStorage(),
-    private val scope: CoroutineScope = CoroutineScope (context = GlobalScope.coroutineContext + Job()),
+    private val scope: CoroutineScope = CoroutineScope(context = GlobalScope.coroutineContext + Job()),
+    private val throwableHandler: suspend (Throwable) -> Unit = { throw it },
     /**
      *  Used to split FSM states by channels. For example in telegram bot there will be Peer as event splitter.
      *  In android or text quests you should use [singleChannel] constructor.
@@ -23,12 +24,14 @@ class FSM <TChannel, TEvent> (
             events: Flow<TEvent>,
             states: FSMStates<TEvent>,
             storage: FSMStorage<Unit, Any?> = MemoryStorage(),
-            scope: CoroutineScope = CoroutineScope (context = GlobalScope.coroutineContext + Job())
+            scope: CoroutineScope = CoroutineScope(context = GlobalScope.coroutineContext + Job()),
+            throwableHandler: suspend (Throwable) -> Unit = { throw it },
         ): SingleChannelFSM<TEvent> = FSM (
             events = events,
             states = states,
             storage = storage,
-            scope = scope
+            scope = scope,
+            throwableHandler = throwableHandler
         ) { }
     }
 
@@ -56,8 +59,11 @@ class FSM <TChannel, TEvent> (
             @Suppress("UNCHECKED_CAST")
             suspend fun <TDataIn> uncheckedProcess(processingState: FSMState<TDataIn, TEvent>) {
                 // This cast is always successful because of state data out == next state data in
-                val result = withContext(context = scope.coroutineContext + SupervisorJob()) {
+                val result = try {
                     processingState.process(context.data as TDataIn, event)
+                } catch (throwable: Throwable) {
+                    throwableHandler(throwable)
+                    return
                 }
 
                 contextManager.set (

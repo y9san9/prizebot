@@ -7,6 +7,7 @@ import org.gradle.jvm.tasks.Jar
 import org.gradle.kotlin.dsl.*
 import org.hidetake.groovy.ssh.connection.AllowAnyHosts
 import org.hidetake.groovy.ssh.core.Remote
+import java.io.File
 
 
 open class DeployConfiguration {
@@ -17,6 +18,8 @@ open class DeployConfiguration {
     lateinit var password: String
     lateinit var serviceName: String
     lateinit var deployPath: String
+
+    var knownHostsFile: String? = null
 
     internal val mainClassNameInitialized get() = ::mainClassName.isInitialized
     internal val implementationTitleInitialized get() = ::implementationTitle.isInitialized
@@ -55,8 +58,7 @@ class Deploy : Plugin<Project> {
                     "host" to configuration.host,
                     "user" to configuration.user,
                     "password" to configuration.password,
-                    // Help wanted: #17 issue
-                    "knownHosts" to AllowAnyHosts.instance
+                    "knownHosts" to (configuration.knownHostsFile?.let(::File) ?: AllowAnyHosts.instance)
                 )
             )
 
