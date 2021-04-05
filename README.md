@@ -10,8 +10,10 @@
 
 ## 👀 Demo
 Simple demo how the bot works. It is very intuitive and cool, also may be localized for any locale.
-![Demo-Gif](https://user-images.githubusercontent.com/46930374/113611429-2ca0f800-9657-11eb-8908-d11ff248c939.gif)
 
+<p align="center">
+    <img alt="Demo-Gif" src="https://user-images.githubusercontent.com/46930374/113611429-2ca0f800-9657-11eb-8908-d11ff248c939.gif"/>
+</p>
 
 ## 🚩 TODO
 There is a huge plans to do the most convenient prize raffling in the universe via this bot. Some of this accumulated [there](https://github.com/y9san9/prizebot/milestone/1)
