@@ -9,7 +9,7 @@
 </p>
 
 ## 👀 Demo
-Simple demo how the bot works. It is very intuitive and cool, also may be localized for any locale.
+Simple demo how the bot works. It is very intuitive and cool, also have ability of full localization (only en, ru now).
 
 <p align="center">
     <img alt="Demo-Gif" src="https://user-images.githubusercontent.com/46930374/113611429-2ca0f800-9657-11eb-8908-d11ff248c939.gif"/>
