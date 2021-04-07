@@ -4,6 +4,8 @@ import org.jetbrains.exposed.sql.Database
 import java.time.OffsetDateTime
 
 
+fun GiveawaysStorage(database: Database): GiveawaysStorage = TableGiveawaysStorage(database)
+
 interface GiveawaysStorage {
     fun getGiveawayById(id: Long): Giveaway?
     fun saveGiveaway (
@@ -19,8 +21,3 @@ interface GiveawaysStorage {
     fun getAllGiveaways(): List<Giveaway>
     fun deleteGiveaway(id: Long)
 }
-
-@Suppress("FunctionName")
-fun GiveawayStorage(database: Database?): GiveawaysStorage =
-    if(database == null) KDSGiveawaysStorage() else TableGiveawaysStorage(database)
-

@@ -14,7 +14,7 @@ import me.y9san9.fsm.FSM
 import me.y9san9.fsm.statesOf
 import me.y9san9.prizebot.actors.giveaway.AutoRaffleActor
 import me.y9san9.prizebot.actors.storage.giveaways_active_messages_storage.GiveawaysActiveMessagesStorage
-import me.y9san9.prizebot.actors.storage.giveaways_storage.GiveawayStorage
+import me.y9san9.prizebot.actors.storage.giveaways_storage.GiveawaysStorage
 import me.y9san9.prizebot.actors.storage.language_codes_storage.LanguageCodesStorage
 import me.y9san9.prizebot.actors.storage.participants_storage.ParticipantsStorage
 import me.y9san9.prizebot.actors.storage.states_storage.PrizebotFSMStorage
@@ -36,7 +36,7 @@ import org.jetbrains.exposed.sql.Database
 
 class Prizebot (
     botToken: String,
-    databaseConfig: DatabaseConfig?,
+    databaseConfig: DatabaseConfig,
     private val logChatId: Long?,
     private val scope: CoroutineScope
 ) {
@@ -45,7 +45,7 @@ class Prizebot (
 
     fun start() = bot.longPolling {
         val di = PrizebotDI (
-            giveawaysStorage = GiveawayStorage(database),
+            giveawaysStorage = GiveawaysStorage(database),
             participantsStorage = ParticipantsStorage(database),
             giveawaysActiveMessagesStorage = GiveawaysActiveMessagesStorage(database),
             languageCodesStorage = LanguageCodesStorage(database)
@@ -88,7 +88,7 @@ class Prizebot (
         throwableHandler = ::logException
     )
 
-    private fun connectDatabase(config: DatabaseConfig?) = config?.run {
+    private fun connectDatabase(config: DatabaseConfig) = config.run {
         if(driver != null) {
             Database.connect(url, driver, user, password)
         } else {
