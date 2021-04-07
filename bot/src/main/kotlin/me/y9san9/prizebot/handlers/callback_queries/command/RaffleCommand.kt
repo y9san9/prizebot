@@ -21,9 +21,9 @@ object RaffleCommand {
                 .raffle(giveaway.id, update.di)
 
             if (success)
-                return update.answer(text = update.locale.nobodyIsParticipatingYet)
-            else
                 updateMessage(update, update.di.getGiveawayById(giveaway.id)!!)
+            else
+                return update.answer(text = update.locale.nobodyIsParticipatingYet)
 
         } else updateMessage(update, giveaway)
 
