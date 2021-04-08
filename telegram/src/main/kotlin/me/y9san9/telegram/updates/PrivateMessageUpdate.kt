@@ -5,7 +5,7 @@ import dev.inmo.tgbotapi.types.message.abstracts.PrivateContentMessage
 import dev.inmo.tgbotapi.types.message.content.TextContent
 import me.y9san9.telegram.updates.hierarchies.FromChatLocalizedDIBotUpdate
 import me.y9san9.telegram.updates.primitives.*
-import me.y9san9.telegram.utils.languageCode
+import me.y9san9.telegram.extensions.languageCode
 
 
 class PrivateMessageUpdate<out DI> (

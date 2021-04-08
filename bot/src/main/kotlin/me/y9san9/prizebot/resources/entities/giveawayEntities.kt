@@ -11,7 +11,7 @@ import me.y9san9.prizebot.actors.storage.giveaways_storage.FinishedGiveaway
 import me.y9san9.prizebot.actors.storage.giveaways_storage.Giveaway
 import me.y9san9.prizebot.actors.storage.giveaways_storage.locale
 import me.y9san9.telegram.updates.primitives.BotUpdate
-import me.y9san9.telegram.utils.getUserLink
+import me.y9san9.telegram.extensions.telegram_bot.getUserLink
 import java.time.format.DateTimeFormatter
 import java.util.*
 

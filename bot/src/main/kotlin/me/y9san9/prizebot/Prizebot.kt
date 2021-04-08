@@ -6,6 +6,7 @@ import dev.inmo.tgbotapi.bot.TelegramBot
 import dev.inmo.tgbotapi.extensions.api.send.sendMessage
 import dev.inmo.tgbotapi.extensions.utils.updates.retrieving.longPolling
 import dev.inmo.tgbotapi.types.ChatId
+import dev.inmo.tgbotapi.types.MessageEntity.textsources.regular
 import dev.inmo.tgbotapi.types.message.abstracts.PrivateContentMessage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
@@ -14,7 +15,7 @@ import me.y9san9.fsm.FSM
 import me.y9san9.fsm.statesOf
 import me.y9san9.prizebot.actors.giveaway.AutoRaffleActor
 import me.y9san9.prizebot.actors.storage.giveaways_active_messages_storage.GiveawaysActiveMessagesStorage
-import me.y9san9.prizebot.actors.storage.giveaways_storage.GiveawayStorage
+import me.y9san9.prizebot.actors.storage.giveaways_storage.GiveawaysStorage
 import me.y9san9.prizebot.actors.storage.language_codes_storage.LanguageCodesStorage
 import me.y9san9.prizebot.actors.storage.participants_storage.ParticipantsStorage
 import me.y9san9.prizebot.actors.storage.states_storage.PrizebotFSMStorage
@@ -28,15 +29,17 @@ import me.y9san9.prizebot.models.DatabaseConfig
 import me.y9san9.prizebot.models.di.PrizebotDI
 import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.*
+import me.y9san9.prizebot.resources.images.Image
 import me.y9san9.telegram.updates.CallbackQueryUpdate
 import me.y9san9.telegram.updates.ChosenInlineResultUpdate
 import me.y9san9.telegram.updates.InlineQueryUpdate
+import me.y9san9.telegram.updates.extensions.send_message.sendPhotoCached
 import org.jetbrains.exposed.sql.Database
 
 
 class Prizebot (
     botToken: String,
-    databaseConfig: DatabaseConfig?,
+    databaseConfig: DatabaseConfig,
     private val logChatId: Long?,
     private val scope: CoroutineScope
 ) {
@@ -45,7 +48,7 @@ class Prizebot (
 
     fun start() = bot.longPolling {
         val di = PrizebotDI (
-            giveawaysStorage = GiveawayStorage(database),
+            giveawaysStorage = GiveawaysStorage(database),
             participantsStorage = ParticipantsStorage(database),
             giveawaysActiveMessagesStorage = GiveawaysActiveMessagesStorage(database),
             languageCodesStorage = LanguageCodesStorage(database)
@@ -88,7 +91,7 @@ class Prizebot (
         throwableHandler = ::logException
     )
 
-    private fun connectDatabase(config: DatabaseConfig?) = config?.run {
+    private fun connectDatabase(config: DatabaseConfig) = config.run {
         if(driver != null) {
             Database.connect(url, driver, user, password)
         } else {
