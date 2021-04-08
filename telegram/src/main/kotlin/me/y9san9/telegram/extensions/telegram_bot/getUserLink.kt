@@ -1,4 +1,4 @@
-package me.y9san9.telegram.utils
+package me.y9san9.telegram.extensions.telegram_bot
 
 import dev.inmo.tgbotapi.bot.TelegramBot
 import dev.inmo.tgbotapi.extensions.api.chat.get.getChat

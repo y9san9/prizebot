@@ -6,6 +6,7 @@ import dev.inmo.tgbotapi.bot.TelegramBot
 import dev.inmo.tgbotapi.extensions.api.send.sendMessage
 import dev.inmo.tgbotapi.extensions.utils.updates.retrieving.longPolling
 import dev.inmo.tgbotapi.types.ChatId
+import dev.inmo.tgbotapi.types.MessageEntity.textsources.regular
 import dev.inmo.tgbotapi.types.message.abstracts.PrivateContentMessage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
@@ -28,9 +29,11 @@ import me.y9san9.prizebot.models.DatabaseConfig
 import me.y9san9.prizebot.models.di.PrizebotDI
 import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.*
+import me.y9san9.prizebot.resources.images.Image
 import me.y9san9.telegram.updates.CallbackQueryUpdate
 import me.y9san9.telegram.updates.ChosenInlineResultUpdate
 import me.y9san9.telegram.updates.InlineQueryUpdate
+import me.y9san9.telegram.updates.extensions.send_message.sendPhotoCached
 import org.jetbrains.exposed.sql.Database
 
 

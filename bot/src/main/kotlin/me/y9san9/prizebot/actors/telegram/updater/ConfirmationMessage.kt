@@ -4,7 +4,7 @@ import dev.inmo.tgbotapi.extensions.api.edit.text.editMessageText
 import me.y9san9.prizebot.extensions.telegram.PrizebotCallbackQueryUpdate
 import me.y9san9.prizebot.extensions.telegram.locale
 import me.y9san9.prizebot.resources.markups.confirmationMarkup
-import me.y9san9.telegram.utils.asTextContentMessage
+import me.y9san9.telegram.extensions.asTextContentMessage
 
 
 object ConfirmationMessage {

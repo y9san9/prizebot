@@ -1,4 +1,4 @@
-package me.y9san9.telegram.utils
+package me.y9san9.telegram.extensions
 
 import dev.inmo.tgbotapi.types.CommonUser
 import dev.inmo.tgbotapi.types.message.abstracts.ContentMessage

@@ -4,7 +4,7 @@ import dev.inmo.tgbotapi.extensions.api.edit.text.editMessageText
 import me.y9san9.prizebot.extensions.telegram.PrizebotCallbackQueryUpdate
 import me.y9san9.prizebot.resources.content.selfGiveawaysContent
 import me.y9san9.telegram.updates.extensions.command.requireCommand
-import me.y9san9.telegram.utils.asTextContentMessage
+import me.y9san9.telegram.extensions.asTextContentMessage
 
 
 object SelfGiveawaysButtonsCommand {

@@ -22,13 +22,11 @@ suspend fun FromChatBotUpdate.sendMessage (
     replyToMessageId: MessageIdentifier? = null,
     allowSendingWithoutReply: Boolean? = null,
     replyMarkup: KeyboardMarkup? = null
-) {
-    bot.sendMessage (
-        ChatId(chatId), text, parseMode,
-        disableWebPagePreview, disableNotification, replyToMessageId,
-        allowSendingWithoutReply, replyMarkup
-    )
-}
+) = bot.sendMessage (
+    ChatId(chatId), text, parseMode,
+    disableWebPagePreview, disableNotification, replyToMessageId,
+    allowSendingWithoutReply, replyMarkup
+)
 
 
 suspend fun FromChatBotUpdate.sendMessage (
@@ -42,18 +40,4 @@ suspend fun FromChatBotUpdate.sendMessage (
     ChatId(chatId), entities, disableWebPagePreview,
     disableNotification, replyToMessageId,
     allowSendingWithoutReply, replyMarkup
-)
-
-suspend fun FromChatBotUpdate.sendPhoto (
-    file: MultipartFile,
-    entities: List<TextSource>,
-    disableNotification: Boolean = false,
-    replyToMessageId: MessageIdentifier? = null,
-    allowSendingWithoutReply: Boolean? = null,
-    replyMarkup: KeyboardMarkup? = null
-) = bot.sendPhoto (
-    ChatId(chatId), file,
-    entities, disableNotification,
-    replyToMessageId, allowSendingWithoutReply,
-    replyMarkup
 )
