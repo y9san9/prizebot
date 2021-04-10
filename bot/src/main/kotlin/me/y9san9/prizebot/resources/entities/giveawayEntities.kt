@@ -29,8 +29,12 @@ suspend fun giveawayEntities (
             "d MMMM, HH:mm (XXX)", Locale.forLanguageTag(giveaway.languageCode)
         )
         val date = giveaway.raffleDate!!.format(format)
-        underline(locale.raffleDate) + ": $date" + "\n\n"
+        underline(locale.raffleDate) + ": $date" + "\n"
     }
+
+    val winnersCount = if(giveaway is ActiveGiveaway && giveaway.winnersCount.value > 1)
+        underline(locale.winnersCount) + ": ${giveaway.winnersCount.value}\n"
+    else listOf()
 
     val winner = if(giveaway is FinishedGiveaway) {
         val links = giveaway.winnerIds
@@ -44,5 +48,5 @@ suspend fun giveawayEntities (
         italic(locale.giveawayParticipateHint)
     else regular("")
 
-    return title + untilTime + winner + participateHint
+    return title + winnersCount + untilTime + "\n" + winner + participateHint
 }

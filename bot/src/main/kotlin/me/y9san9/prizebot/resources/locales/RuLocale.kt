@@ -124,4 +124,13 @@ object RuLocale : Locale() {
 
     override fun cannotRaffleGiveaway(title: String) =
         "Не получилось автоматически разыграть '$title', вы можете сделать это вручную позже"
+
+    override val winnersCountIsOutOfRange =
+        "Количество победителей должно быть от 1 до 50 000"
+
+    override val winnersCount = "Количество победителей"
+
+    override val enterNumber = "Пожалуйста, ведите число"
+
+    override val enterWinnersCount = "Введите количество победителей"
 }

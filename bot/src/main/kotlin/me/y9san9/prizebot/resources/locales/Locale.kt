@@ -141,6 +141,8 @@ open class Locale {
 
     open val enterWinnersCount = "Enter giveaway winners count (use /skip to set default value (1) or /cancel to cancel)"
 
+    open val winnersCount = "Winners count"
+
     companion object {
         fun with(language: String?) = locales
             .firstOrNull { it.code == language }
