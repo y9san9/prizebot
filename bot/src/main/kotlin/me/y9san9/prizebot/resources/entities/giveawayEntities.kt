@@ -33,8 +33,11 @@ suspend fun giveawayEntities (
     }
 
     val winner = if(giveaway is FinishedGiveaway) {
-        val link = update.bot.getUserLink(giveaway.winnerId, locale.deletedUser)
-        regular("${locale.winner}: ") + link
+        val links = giveaway.winnerIds
+            .map { id -> update.bot.getUserLink(id, locale.deletedUser) }
+
+        regular("${locale.winner(plural = giveaway.winnerIds.size > 1)}: ") +
+                links.flatMap { it + ", " }.dropLast(n = 1)
     } else listOf()
 
     val participateHint = if(giveaway is ActiveGiveaway)

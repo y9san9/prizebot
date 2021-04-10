@@ -82,11 +82,12 @@ open class Locale {
 
     open val raffle = "Raffle ${Emoji.GIFT}"
 
-    open val winner = "Winner"
+    open fun winner(plural: Boolean) = if(plural) "Winners" else "Winner"
 
     open val deletedUser = "Deleted user"
 
-    open val nobodyIsParticipatingYet = "Nobody is participating in giveaway yet!"
+    open val participantsCountIsNotEnough =
+        "There is not enough participants to raffle!"
 
     open val giveawayFinished = "Giveaway already finished!"
 
@@ -133,6 +134,12 @@ open class Locale {
 
     open fun cannotRaffleGiveaway(title: String) =
         "Cannot automatically raffle giveaway '$title', so now you can raffle it manually later"
+
+    open val winnersCountIsOutOfRange = "Winners count may be from 1 up to 50 000"
+
+    open val enterNumber = "Please, enter number"
+
+    open val enterWinnersCount = "Enter giveaway winners count (use /skip to set default value (1) or /cancel to cancel)"
 
     companion object {
         fun with(language: String?) = locales

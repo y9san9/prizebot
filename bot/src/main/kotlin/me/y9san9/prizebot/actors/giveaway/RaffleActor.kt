@@ -1,5 +1,6 @@
 package me.y9san9.prizebot.actors.giveaway
 
+import me.y9san9.prizebot.actors.storage.giveaways_storage.ActiveGiveaway
 import me.y9san9.prizebot.actors.storage.giveaways_storage.GiveawaysStorage
 import me.y9san9.prizebot.actors.storage.participants_storage.ParticipantsStorage
 import me.y9san9.random.extensions.shuffledRandomOrg
@@ -7,19 +8,20 @@ import me.y9san9.random.extensions.shuffledRandomOrg
 
 object RaffleActor {
     suspend fun <T> raffle (
-        giveawayId: Long,
+        giveaway: ActiveGiveaway,
         di: T
     ): Boolean where T : ParticipantsStorage, T : GiveawaysStorage {
-        val winner = chooseWinner(giveawayId, di) ?: return false
-        di.finishGiveaway(giveawayId, winner)
+        val winnerIds = chooseWinners(giveaway, di) ?: return false
+        di.finishGiveaway(giveaway.id, winnerIds)
         return true
     }
 
-    private suspend fun <T> chooseWinner (
-        giveawayId: Long,
+    private suspend fun <T> chooseWinners (
+        giveaway: ActiveGiveaway,
         di: T
     ) where T : ParticipantsStorage =
-        di.getParticipantsIds(giveawayId)
-        .shuffledRandomOrg()
-        .firstOrNull()
+        di.getParticipantsIds(giveaway.id)
+            .shuffledRandomOrg()
+            .take(giveaway.winnersCount.value)
+            .takeIf { it.size == giveaway.winnersCount.value }
 }

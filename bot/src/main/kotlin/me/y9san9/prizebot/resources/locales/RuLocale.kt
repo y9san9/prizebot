@@ -72,11 +72,12 @@ object RuLocale : Locale() {
 
     override val raffle = "Разыграть ${Emoji.GIFT}"
 
-    override val winner = "Победитель"
+    override fun winner(plural: Boolean) = if(plural) "Победители" else "Победитель"
 
     override val deletedUser = "Пользователь удалён"
 
-    override val nobodyIsParticipatingYet = "Никто ещё не участвует в розыгрыше!"
+    override val participantsCountIsNotEnough =
+        "Участников недостаточно, чтобы выбрать победителей!"
 
     override val giveawayFinished = "Розыгрыш уже закончен!"
 

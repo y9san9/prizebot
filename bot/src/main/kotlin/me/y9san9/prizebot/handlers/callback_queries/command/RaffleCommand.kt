@@ -18,12 +18,12 @@ object RaffleCommand {
 
         if(giveaway is ActiveGiveaway) {
             val success = RaffleActor
-                .raffle(giveaway.id, update.di)
+                .raffle(giveaway, update.di)
 
             if (success)
                 updateMessage(update, update.di.getGiveawayById(giveaway.id)!!)
             else
-                return update.answer(text = update.locale.nobodyIsParticipatingYet)
+                return update.answer(text = update.locale.participantsCountIsNotEnough)
 
         } else updateMessage(update, giveaway)
 

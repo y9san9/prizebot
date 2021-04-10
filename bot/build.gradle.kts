@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     kotlin(plugin.jvm)
     kotlin(plugin.serialization)
@@ -15,4 +17,9 @@ dependencies {
     implementation(fsm)
     implementation(telegram)
     implementation(random)
+}
+
+val compileKotlin: KotlinCompile by tasks
+compileKotlin.kotlinOptions {
+    freeCompilerArgs = listOf("-Xinline-classes")
 }

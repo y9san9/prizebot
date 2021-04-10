@@ -6,6 +6,7 @@ import kotlinx.serialization.modules.polymorphic
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.GiveawayTitle
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.RaffleDateInputData
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.TimezoneInputData
+import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.WinnersCountData
 
 
 val statesSerializers = SerializersModule {
@@ -16,5 +17,6 @@ val statesSerializers = SerializersModule {
         subclass(GiveawayTitle::class, GiveawayTitle.serializer())
         subclass(RaffleDateInputData::class, RaffleDateInputData.serializer())
         subclass(TimezoneInputData::class, TimezoneInputData.serializer())
+        subclass(WinnersCountData::class, WinnersCountData.serializer())
     }
 }

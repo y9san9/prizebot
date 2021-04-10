@@ -84,7 +84,7 @@ class Prizebot (
             initial = MainState,
             TitleInputState, ParticipateTextInputState,
             RaffleDateInputState, TimezoneInputState,
-            CustomTimezoneInputState
+            CustomTimezoneInputState, WinnersCountInputState
         ),
         storage = PrizebotFSMStorage(database, statesSerializers),
         scope = scope,

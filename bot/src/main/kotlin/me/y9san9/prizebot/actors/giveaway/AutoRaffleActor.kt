@@ -52,7 +52,7 @@ object AutoRaffleActor : CoroutineScope {
                 scheduledMutex.withLock {
                     if (giveaway.id in scheduled && di.getGiveawayById(giveaway.id) != null) {
                         scheduled.remove(giveaway.id)
-                        handleRaffleResult(bot, di, giveaway, RaffleActor.raffle(giveaway.id, di))
+                        handleRaffleResult(bot, di, giveaway, RaffleActor.raffle(giveaway, di))
                     }
                 }
             }

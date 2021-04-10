@@ -45,15 +45,16 @@ object RaffleDateInputState : PrizebotFSMState<RaffleDateInputData> {
         raffleDate: String?
     ): FSMStateResult<*> {
         if(raffleDate == null)
-            return CreateGiveawayActor.create(update, data.title, data.participateText, raffleDate = null)
+            return WinnersCountInputState (
+                update,
+                WinnersCountData(data.title, data.participateText, raffleDate = null)
+            )
         else if(!isDateValid(raffleDate))
             return stateResult(RaffleDateInputState, data) {
                 update.sendMessage(update.locale.invalidDateFormat)
             }
 
-        return stateResult(TimezoneInputState, TimezoneInputData(data.title, data.participateText, raffleDate)) {
-            update.sendMessage(update.locale.selectTimezone, replyMarkup = timezoneKeyboard(update))
-        }
+        return TimezoneInputState(update, TimezoneInputData(data.title, data.participateText, raffleDate))
     }
 
     private fun isDateValid(date: String): Boolean {

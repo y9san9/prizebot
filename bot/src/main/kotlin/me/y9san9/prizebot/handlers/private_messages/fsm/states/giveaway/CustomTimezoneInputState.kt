@@ -2,7 +2,6 @@ package me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway
 
 import me.y9san9.fsm.FSMStateResult
 import me.y9san9.fsm.stateResult
-import me.y9san9.prizebot.actors.giveaway.CreateGiveawayActor
 import me.y9san9.prizebot.actors.telegram.sender.CancellationToMainStateSender
 import me.y9san9.prizebot.extensions.any.unit
 import me.y9san9.prizebot.extensions.telegram.PrizebotFSMState
@@ -28,9 +27,10 @@ object CustomTimezoneInputState : PrizebotFSMState<TimezoneInputData> {
             val parsedOffset = parseOffset(offset)
                 ?: return@textOrDefault event.sendMessage(event.locale.invalidTimezoneFormat).unit
 
-            return CreateGiveawayActor.create (
-                event, data.title, data.participateText,
-                OffsetDateTime.of(LocalDateTime.parse(data.localDate, dateTimeFormatter), parsedOffset)
+            val date = OffsetDateTime.of(LocalDateTime.parse(data.localDate, dateTimeFormatter), parsedOffset)
+
+            return WinnersCountInputState (
+                event, WinnersCountData(data.title, data.participateText, date)
             )
         }
 

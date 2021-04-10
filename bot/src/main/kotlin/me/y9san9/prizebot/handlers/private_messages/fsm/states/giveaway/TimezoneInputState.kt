@@ -4,13 +4,11 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import me.y9san9.fsm.FSMStateResult
 import me.y9san9.fsm.stateResult
-import me.y9san9.prizebot.actors.giveaway.CreateGiveawayActor
 import me.y9san9.prizebot.actors.telegram.sender.CancellationToMainStateSender
 import me.y9san9.prizebot.extensions.telegram.*
-import me.y9san9.prizebot.handlers.private_messages.fsm.states.MainState
 import me.y9san9.prizebot.resources.locales.Locale
+import me.y9san9.prizebot.resources.markups.timezoneKeyboard
 import me.y9san9.telegram.updates.extensions.send_message.sendMessage
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
@@ -71,8 +69,18 @@ object TimezoneInputState : PrizebotFSMState<TimezoneInputData> {
         update: PrizebotPrivateMessageUpdate,
         data: TimezoneInputData,
         offset: ZoneOffset
-    ) = CreateGiveawayActor.create (
-        update, data.title, data.participateText,
-        OffsetDateTime.of(LocalDateTime.parse(data.localDate, dateTimeFormatter), offset)
-    )
+    ): FSMStateResult<*> {
+        val date = OffsetDateTime.of(LocalDateTime.parse(data.localDate, dateTimeFormatter), offset)
+
+        return WinnersCountInputState (
+            update, WinnersCountData(data.title, data.participateText, date)
+        )
+    }
 }
+
+
+@Suppress("FunctionName")
+suspend fun TimezoneInputState(update: PrizebotPrivateMessageUpdate, data: TimezoneInputData) =
+    stateResult(TimezoneInputState, data) {
+        update.sendMessage(update.locale.selectTimezone, replyMarkup = timezoneKeyboard(update))
+    }
