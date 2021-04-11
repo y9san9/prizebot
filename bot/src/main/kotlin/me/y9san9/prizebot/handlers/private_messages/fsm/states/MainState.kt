@@ -7,10 +7,21 @@ import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.TitleInp
 import me.y9san9.prizebot.extensions.telegram.commandOrDefault
 import me.y9san9.prizebot.extensions.telegram.PrizebotFSMState
 import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
+import me.y9san9.prizebot.extensions.telegram.locale
 import me.y9san9.prizebot.resources.Emoji
+import me.y9san9.prizebot.resources.markups.mainMarkup
+import me.y9san9.telegram.updates.extensions.send_message.sendMessage
 
 
 object MainState : PrizebotFSMState<Unit> {
+
+    suspend fun cancellation(event: PrizebotPrivateMessageUpdate) = stateResult(MainState) {
+        event.sendMessage (
+            event.locale.cancelled,
+            replyMarkup = mainMarkup(event)
+        )
+    }
+
     override suspend fun process(data: Unit, event: PrizebotPrivateMessageUpdate): FSMStateResult<*> {
         event.commandOrDefault {
             case("/start") {

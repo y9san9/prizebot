@@ -19,6 +19,13 @@ allprojects {
         jcenter()
         maven(url = "https://dl.bintray.com/y9san9/kotlingang")
     }
+
+    tasks.withType<KotlinCompile>() {
+        kotlinOptions {
+            useIR = true
+            freeCompilerArgs = listOf("-Xinline-classes")
+        }
+    }
 }
 
 dependencies {

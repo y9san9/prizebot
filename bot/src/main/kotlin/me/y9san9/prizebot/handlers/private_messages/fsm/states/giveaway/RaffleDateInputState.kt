@@ -4,13 +4,11 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import me.y9san9.fsm.FSMStateResult
 import me.y9san9.fsm.stateResult
-import me.y9san9.prizebot.actors.giveaway.CreateGiveawayActor
-import me.y9san9.prizebot.actors.telegram.sender.CancellationToMainStateSender
 import me.y9san9.prizebot.extensions.telegram.PrizebotFSMState
 import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
 import me.y9san9.prizebot.extensions.telegram.locale
 import me.y9san9.prizebot.extensions.telegram.textOrDefault
-import me.y9san9.prizebot.resources.markups.timezoneKeyboard
+import me.y9san9.prizebot.handlers.private_messages.fsm.states.MainState
 import me.y9san9.telegram.updates.extensions.send_message.sendMessage
 import java.time.LocalDateTime
 import java.time.format.DateTimeParseException
@@ -30,7 +28,7 @@ object RaffleDateInputState : PrizebotFSMState<RaffleDateInputData> {
     ): FSMStateResult<*> {
         event.textOrDefault { text ->
             return when(text) {
-                "/cancel" -> CancellationToMainStateSender.send(event)
+                "/cancel" -> MainState.cancellation(event)
                 "/skip" -> nextState(event, data, raffleDate = null)
                 else -> nextState(event, data, text.trim())
             }

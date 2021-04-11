@@ -18,8 +18,3 @@ dependencies {
     implementation(telegram)
     implementation(random)
 }
-
-val compileKotlin: KotlinCompile by tasks
-compileKotlin.kotlinOptions {
-    freeCompilerArgs = listOf("-Xinline-classes")
-}

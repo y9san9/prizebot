@@ -1,7 +1,7 @@
 object Version {
     const val JVM = "1.8"
 
-    const val KOTLIN = "1.4.31"
+    const val KOTLIN = "1.4.30"
     const val SERIALIZATION = "1.0.1"
     const val SERIALIZATION_PLUGIN = "1.4.21"
     const val COROUTINES = "1.4.2"

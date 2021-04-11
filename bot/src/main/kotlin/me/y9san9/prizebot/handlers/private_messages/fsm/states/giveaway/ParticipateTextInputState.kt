@@ -4,11 +4,11 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import me.y9san9.fsm.FSMStateResult
 import me.y9san9.fsm.stateResult
-import me.y9san9.prizebot.actors.telegram.sender.CancellationToMainStateSender
 import me.y9san9.prizebot.extensions.telegram.textOrDefault
 import me.y9san9.prizebot.extensions.telegram.PrizebotFSMState
 import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
 import me.y9san9.prizebot.extensions.telegram.locale
+import me.y9san9.prizebot.handlers.private_messages.fsm.states.MainState
 import me.y9san9.prizebot.resources.Emoji
 import me.y9san9.telegram.updates.extensions.send_message.sendMessage
 
@@ -23,7 +23,7 @@ object ParticipateTextInputState : PrizebotFSMState<GiveawayTitle> {
     override suspend fun process (data: GiveawayTitle, event: PrizebotPrivateMessageUpdate): FSMStateResult<*> {
         event.textOrDefault { text ->
             return when (text) {
-                "/cancel" -> CancellationToMainStateSender.send(event)
+                "/cancel" -> MainState.cancellation(event)
                 "/skip" -> raffleDateInput(event, data.title, participateText = Emoji.HEART)
                 else -> raffleDateInput(event, data.title, text)
             }

@@ -4,8 +4,8 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import me.y9san9.fsm.FSMStateResult
 import me.y9san9.fsm.stateResult
-import me.y9san9.prizebot.actors.telegram.sender.CancellationToMainStateSender
 import me.y9san9.prizebot.extensions.telegram.*
+import me.y9san9.prizebot.handlers.private_messages.fsm.states.MainState
 import me.y9san9.prizebot.resources.locales.Locale
 import me.y9san9.prizebot.resources.markups.timezoneKeyboard
 import me.y9san9.telegram.updates.extensions.send_message.sendMessage
@@ -29,7 +29,7 @@ object TimezoneInputState : PrizebotFSMState<TimezoneInputData> {
     ): FSMStateResult<*> {
         event.commandOrDefault {
             raw("/cancel") {
-                return CancellationToMainStateSender.send(event)
+                return MainState.cancellation(event)
             }
             raw(Locale::customTimezone) {
                 return stateResult(CustomTimezoneInputState, data) {
