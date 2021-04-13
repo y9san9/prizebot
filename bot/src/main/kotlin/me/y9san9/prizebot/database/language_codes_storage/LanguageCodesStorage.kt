@@ -1,4 +1,4 @@
-package me.y9san9.prizebot.actors.storage.language_codes_storage
+package me.y9san9.prizebot.database.language_codes_storage
 
 import org.jetbrains.exposed.sql.Database
 

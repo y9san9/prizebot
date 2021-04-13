@@ -2,7 +2,7 @@ package me.y9san9.prizebot.actors.telegram.updater
 
 import dev.inmo.micro_utils.coroutines.safelyWithoutExceptions
 import dev.inmo.tgbotapi.extensions.api.edit.text.editMessageText
-import me.y9san9.prizebot.actors.storage.giveaways_storage.Giveaway
+import me.y9san9.prizebot.database.giveaways_storage.Giveaway
 import me.y9san9.prizebot.actors.telegram.extractor.GiveawayFromCommandExtractor
 import me.y9san9.prizebot.extensions.telegram.PrizebotCallbackQueryUpdate
 import me.y9san9.prizebot.resources.content.giveawayContent

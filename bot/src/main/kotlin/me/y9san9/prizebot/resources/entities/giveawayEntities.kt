@@ -6,10 +6,10 @@ import dev.inmo.tgbotapi.types.MessageEntity.textsources.bold
 import dev.inmo.tgbotapi.types.MessageEntity.textsources.italic
 import dev.inmo.tgbotapi.types.MessageEntity.textsources.regular
 import dev.inmo.tgbotapi.types.MessageEntity.textsources.underline
-import me.y9san9.prizebot.actors.storage.giveaways_storage.ActiveGiveaway
-import me.y9san9.prizebot.actors.storage.giveaways_storage.FinishedGiveaway
-import me.y9san9.prizebot.actors.storage.giveaways_storage.Giveaway
-import me.y9san9.prizebot.actors.storage.giveaways_storage.locale
+import me.y9san9.prizebot.database.giveaways_storage.ActiveGiveaway
+import me.y9san9.prizebot.database.giveaways_storage.FinishedGiveaway
+import me.y9san9.prizebot.database.giveaways_storage.Giveaway
+import me.y9san9.prizebot.database.giveaways_storage.locale
 import me.y9san9.telegram.updates.primitives.BotUpdate
 import me.y9san9.telegram.extensions.telegram_bot.getUserLink
 import java.time.format.DateTimeFormatter

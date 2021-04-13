@@ -5,14 +5,10 @@ import dev.inmo.tgbotapi.extensions.api.edit.text.editMessageText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import me.y9san9.prizebot.actors.storage.giveaways_active_messages_storage.GiveawaysActiveMessagesStorage
-import me.y9san9.prizebot.actors.storage.giveaways_storage.GiveawaysStorage
-import me.y9san9.prizebot.actors.storage.language_codes_storage.LanguageCodesStorage
-import me.y9san9.prizebot.actors.storage.participants_storage.ParticipantsStorage
+import me.y9san9.prizebot.database.giveaways_active_messages_storage.GiveawaysActiveMessagesStorage
+import me.y9san9.prizebot.database.giveaways_storage.GiveawaysStorage
 import me.y9san9.prizebot.resources.content.giveawayContent
 import me.y9san9.telegram.updates.hierarchies.DIBotUpdate
-import me.y9san9.telegram.updates.hierarchies.FromChatLocalizedDIBotUpdate
-import me.y9san9.telegram.updates.primitives.DIUpdate
 
 
 object GiveawayActiveMessagesUpdater {
@@ -20,8 +16,7 @@ object GiveawayActiveMessagesUpdater {
 
     fun <TDI> update (
         update: DIBotUpdate<TDI>, giveawayId: Long
-    ) where TDI : ParticipantsStorage,
-            TDI : GiveawaysActiveMessagesStorage,
+    ) where TDI : GiveawaysActiveMessagesStorage,
             TDI : GiveawaysStorage = scope.launch {
 
         val giveaway = update.di.getGiveawayById(giveawayId) ?: return@launch

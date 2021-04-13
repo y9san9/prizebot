@@ -1,4 +1,4 @@
-package me.y9san9.prizebot.actors.storage.giveaways_active_messages_storage
+package me.y9san9.prizebot.database.giveaways_active_messages_storage
 
 import dev.inmo.tgbotapi.types.InlineMessageIdentifier
 import me.y9san9.prizebot.resources.ACTIVE_MESSAGES_LIMIT

@@ -2,9 +2,9 @@ package me.y9san9.prizebot.resources.content
 
 import dev.inmo.tgbotapi.CommonAbstracts.TextSourcesList
 import dev.inmo.tgbotapi.types.buttons.InlineKeyboardMarkup
-import me.y9san9.prizebot.actors.storage.giveaways_storage.Giveaway
-import me.y9san9.prizebot.actors.storage.giveaways_storage.GiveawaysStorage
-import me.y9san9.prizebot.actors.storage.language_codes_storage.LanguageCodesStorage
+import me.y9san9.prizebot.database.giveaways_storage.Giveaway
+import me.y9san9.prizebot.database.giveaways_storage.GiveawaysStorage
+import me.y9san9.prizebot.database.language_codes_storage.LanguageCodesStorage
 import me.y9san9.prizebot.resources.entities.selfGiveawaysEntities
 import me.y9san9.prizebot.resources.markups.selfGiveawaysMarkup
 import me.y9san9.telegram.updates.hierarchies.FromChatLocalizedDIBotUpdate

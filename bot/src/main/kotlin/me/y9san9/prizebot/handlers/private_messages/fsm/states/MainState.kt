@@ -11,6 +11,7 @@ import me.y9san9.prizebot.extensions.telegram.locale
 import me.y9san9.prizebot.resources.Emoji
 import me.y9san9.prizebot.resources.markups.mainMarkup
 import me.y9san9.telegram.updates.extensions.send_message.sendMessage
+import me.y9san9.telegram.updates.primitives.HasTextUpdate
 
 
 object MainState : PrizebotFSMState<Unit> {

@@ -1,7 +1,7 @@
 package me.y9san9.prizebot.handlers.callback_queries.command
 
-import me.y9san9.prizebot.actors.storage.giveaways_storage.FinishedGiveaway
-import me.y9san9.prizebot.actors.storage.participants_storage.ParticipantsStorage
+import me.y9san9.prizebot.database.giveaways_storage.FinishedGiveaway
+import me.y9san9.prizebot.database.participants_storage.ParticipantsStorage
 import me.y9san9.prizebot.actors.telegram.extractor.GiveawayFromCommandExtractor
 import me.y9san9.prizebot.actors.telegram.updater.GiveawayCallbackQueryMessageUpdater
 import me.y9san9.prizebot.extensions.telegram.locale
@@ -10,7 +10,6 @@ import me.y9san9.prizebot.extensions.telegram.PrizebotCallbackQueryUpdate
 
 object ParticipateCommand {
     suspend fun handle(update: PrizebotCallbackQueryUpdate) {
-        val storage = update.di as ParticipantsStorage
         val participantId = update.chatId
         val locale = update.locale
 
@@ -22,11 +21,11 @@ object ParticipateCommand {
             giveaway.ownerId == participantId -> {
                 locale.cannotParticipateInSelfGiveaway
             }
-            storage.isParticipant(giveaway.id, participantId) -> {
+            giveaway.isParticipant(participantId) -> {
                 locale.alreadyParticipating
             }
             else -> {
-                storage.saveParticipant(giveaway.id, participantId)
+                giveaway.saveParticipant(participantId)
                 locale.nowParticipating
             }
         }

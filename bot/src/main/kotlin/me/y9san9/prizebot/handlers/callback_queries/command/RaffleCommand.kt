@@ -1,8 +1,8 @@
 package me.y9san9.prizebot.handlers.callback_queries.command
 
 import me.y9san9.prizebot.actors.giveaway.RaffleActor
-import me.y9san9.prizebot.actors.storage.giveaways_storage.ActiveGiveaway
-import me.y9san9.prizebot.actors.storage.giveaways_storage.Giveaway
+import me.y9san9.prizebot.database.giveaways_storage.ActiveGiveaway
+import me.y9san9.prizebot.database.giveaways_storage.Giveaway
 import me.y9san9.prizebot.actors.telegram.extractor.GiveawayFromCommandExtractor
 import me.y9san9.prizebot.actors.telegram.updater.GiveawayActiveMessagesUpdater
 import me.y9san9.prizebot.actors.telegram.updater.GiveawayCallbackQueryMessageUpdater
@@ -18,7 +18,7 @@ object RaffleCommand {
 
         if(giveaway is ActiveGiveaway) {
             val success = RaffleActor
-                .raffle(giveaway, update.di)
+                .raffle(giveaway)
 
             if (success)
                 updateMessage(update, update.di.getGiveawayById(giveaway.id)!!)

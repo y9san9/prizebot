@@ -1,9 +1,9 @@
-package me.y9san9.prizebot.actors.storage.giveaways_active_messages_storage
+package me.y9san9.prizebot.database.giveaways_active_messages_storage
 
 import dev.inmo.tgbotapi.types.InlineMessageIdentifier
-import me.y9san9.prizebot.actors.storage.giveaways_active_messages_storage.TableGiveawaysActiveMessagesStorage.Storage.GIVEAWAY_ID
-import me.y9san9.prizebot.actors.storage.giveaways_active_messages_storage.TableGiveawaysActiveMessagesStorage.Storage.MESSAGE_ID
-import me.y9san9.prizebot.actors.storage.giveaways_active_messages_storage.TableGiveawaysActiveMessagesStorage.Storage.ROW_ID
+import me.y9san9.prizebot.database.giveaways_active_messages_storage.TableGiveawaysActiveMessagesStorage.Storage.GIVEAWAY_ID
+import me.y9san9.prizebot.database.giveaways_active_messages_storage.TableGiveawaysActiveMessagesStorage.Storage.MESSAGE_ID
+import me.y9san9.prizebot.database.giveaways_active_messages_storage.TableGiveawaysActiveMessagesStorage.Storage.ROW_ID
 import me.y9san9.prizebot.extensions.any.unit
 import me.y9san9.prizebot.resources.ACTIVE_MESSAGES_LIMIT
 import org.jetbrains.exposed.sql.*

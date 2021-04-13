@@ -1,12 +1,12 @@
-package me.y9san9.prizebot.actors.storage.participants_storage
+package me.y9san9.prizebot.database.participants_storage
 
 import org.jetbrains.exposed.sql.Database
 
 
-fun ParticipantsStorage(database: Database): ParticipantsStorage =
+internal fun ParticipantsStorage(database: Database): ParticipantsStorage =
     TableParticipantsStorage(database)
 
-interface ParticipantsStorage {
+internal interface ParticipantsStorage {
     fun saveParticipant(giveawayId: Long, userId: Long)
     fun getParticipantsIds(giveawayId: Long): List<Long>
     fun getParticipantsCount(giveawayId: Long): Int

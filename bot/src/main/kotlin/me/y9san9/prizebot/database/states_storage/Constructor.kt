@@ -1,8 +1,7 @@
-package me.y9san9.prizebot.actors.storage.states_storage
+package me.y9san9.prizebot.database.states_storage
 
 import kotlinx.serialization.modules.SerializersModule
 import me.y9san9.fsm.FSMStorage
-import me.y9san9.fsm.storage.KDSStorage
 import org.jetbrains.exposed.sql.Database
 
 

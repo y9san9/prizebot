@@ -1,13 +1,15 @@
-package me.y9san9.prizebot.actors.storage.giveaways_storage
+package me.y9san9.prizebot.database.giveaways_storage
 
-import me.y9san9.prizebot.actors.storage.giveaways_storage.TableGiveawaysStorage.Giveaways.GIVEAWAY_ID
-import me.y9san9.prizebot.actors.storage.giveaways_storage.TableGiveawaysStorage.Giveaways.GIVEAWAY_LANGUAGE_CODE
-import me.y9san9.prizebot.actors.storage.giveaways_storage.TableGiveawaysStorage.Giveaways.GIVEAWAY_OWNER_ID
-import me.y9san9.prizebot.actors.storage.giveaways_storage.TableGiveawaysStorage.Giveaways.GIVEAWAY_PARTICIPATE_BUTTON
-import me.y9san9.prizebot.actors.storage.giveaways_storage.TableGiveawaysStorage.Giveaways.GIVEAWAY_RAFFLE_DATE
-import me.y9san9.prizebot.actors.storage.giveaways_storage.TableGiveawaysStorage.Giveaways.GIVEAWAY_TITLE
-import me.y9san9.prizebot.actors.storage.giveaways_storage.TableGiveawaysStorage.Giveaways.GIVEAWAY_WINNERS_COUNT
-import me.y9san9.prizebot.actors.storage.winners_storage.WinnersStorage
+import me.y9san9.prizebot.database.giveaways_storage.Giveaways.GIVEAWAY_ID
+import me.y9san9.prizebot.database.giveaways_storage.Giveaways.GIVEAWAY_LANGUAGE_CODE
+import me.y9san9.prizebot.database.giveaways_storage.Giveaways.GIVEAWAY_OWNER_ID
+import me.y9san9.prizebot.database.giveaways_storage.Giveaways.GIVEAWAY_PARTICIPATE_BUTTON
+import me.y9san9.prizebot.database.giveaways_storage.Giveaways.GIVEAWAY_RAFFLE_DATE
+import me.y9san9.prizebot.database.giveaways_storage.Giveaways.GIVEAWAY_TITLE
+import me.y9san9.prizebot.database.giveaways_storage.Giveaways.GIVEAWAY_WINNERS_COUNT
+import me.y9san9.prizebot.database.giveaways_storage.giveaways_patch_storage.GiveawaysPatchStorage
+import me.y9san9.prizebot.database.participants_storage.ParticipantsStorage
+import me.y9san9.prizebot.database.winners_storage.WinnersStorage
 import me.y9san9.prizebot.extensions.any.unit
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -18,18 +20,9 @@ internal class TableGiveawaysStorage (
     private val database: Database
 ) : GiveawaysStorage {
 
-    // TODO: Add there also participantsStorage
+    private val participantsStorage = ParticipantsStorage(database)
     private val winnersStorage = WinnersStorage(database)
-
-    private object Giveaways : Table(name = "giveaways") {
-        val GIVEAWAY_ID = long("id").autoIncrement()
-        val GIVEAWAY_OWNER_ID = long("ownerId")
-        val GIVEAWAY_TITLE = text("title")
-        val GIVEAWAY_PARTICIPATE_BUTTON = text("participateButton")
-        val GIVEAWAY_RAFFLE_DATE = text("raffleDate").nullable()
-        val GIVEAWAY_LANGUAGE_CODE = text("languageCode").nullable()
-        val GIVEAWAY_WINNERS_COUNT = integer("winnersCount")
-    }
+    private val giveawaysPatchStorage = GiveawaysPatchStorage(database, winnersStorage)
 
     init {
         transaction(database) {
@@ -61,18 +54,9 @@ internal class TableGiveawaysStorage (
         ActiveGiveaway (
             id = data[GIVEAWAY_ID],
             ownerId, title, participateButton,
-            languageCode, raffleDate, winnersCount
+            languageCode, raffleDate, participantsStorage,
+            giveawaysPatchStorage, winnersCount
         )
-    }
-
-    override fun removeRaffleDate(giveawayId: Long) = transaction(database) {
-        Giveaways.update({ GIVEAWAY_ID eq giveawayId }) {
-            it[GIVEAWAY_RAFFLE_DATE] = null
-        }
-    }.unit
-
-    override fun finishGiveaway(giveawayId: Long, winnerIds: List<Long>) {
-        winnersStorage.setWinners(giveawayId, winnerIds)
     }
 
     override fun getUserGiveaways(ownerId: Long, count: Int, offset: Long) = transaction(database) {
@@ -86,15 +70,8 @@ internal class TableGiveawaysStorage (
         Giveaways.selectAll().map { it.toGiveaway() }
     }
 
-    override fun deleteGiveaway(id: Long) = transaction(database) {
-        Giveaways.deleteWhere { GIVEAWAY_ID eq id }
-        return@transaction
-    }
-
     private fun ResultRow.toGiveaway(): Giveaway {
-        val winnerIds = winnersStorage.getWinners(this[GIVEAWAY_ID])
-
-        return if(winnerIds.isEmpty())
+        return if(winnersStorage.hasWinners(this[GIVEAWAY_ID]))
             ActiveGiveaway (
                 this[GIVEAWAY_ID],
                 this[GIVEAWAY_OWNER_ID],
@@ -102,6 +79,7 @@ internal class TableGiveawaysStorage (
                 this[GIVEAWAY_PARTICIPATE_BUTTON],
                 this[GIVEAWAY_LANGUAGE_CODE],
                 this[GIVEAWAY_RAFFLE_DATE]?.let(OffsetDateTime::parse),
+                participantsStorage, giveawaysPatchStorage,
                 WinnersCount(this[GIVEAWAY_WINNERS_COUNT])
             )
         else
@@ -112,7 +90,7 @@ internal class TableGiveawaysStorage (
                 this[GIVEAWAY_PARTICIPATE_BUTTON],
                 this[GIVEAWAY_LANGUAGE_CODE],
                 this[GIVEAWAY_RAFFLE_DATE]?.let(OffsetDateTime::parse),
-                winnerIds
+                participantsStorage, giveawaysPatchStorage, winnersStorage
             )
     }
 }

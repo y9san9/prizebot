@@ -3,8 +3,8 @@ package me.y9san9.prizebot.resources.markups
 import dev.inmo.tgbotapi.types.buttons.KeyboardMarkup
 import dev.inmo.tgbotapi.types.buttons.ReplyKeyboardMarkup
 import dev.inmo.tgbotapi.types.buttons.SimpleKeyboardButton
-import me.y9san9.prizebot.actors.storage.giveaways_storage.GiveawaysStorage
-import me.y9san9.prizebot.actors.storage.language_codes_storage.LanguageCodesStorage
+import me.y9san9.prizebot.database.giveaways_storage.GiveawaysStorage
+import me.y9san9.prizebot.database.language_codes_storage.LanguageCodesStorage
 import me.y9san9.prizebot.extensions.telegram.locale
 import me.y9san9.telegram.updates.hierarchies.FromChatLocalizedDIBotUpdate
 

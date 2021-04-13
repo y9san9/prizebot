@@ -2,7 +2,6 @@ package me.y9san9.prizebot
 
 import kotlinx.coroutines.coroutineScope
 import me.y9san9.prizebot.extensions.any.unit
-import me.y9san9.prizebot.models.DatabaseConfig
 
 
 suspend fun main() = coroutineScope {

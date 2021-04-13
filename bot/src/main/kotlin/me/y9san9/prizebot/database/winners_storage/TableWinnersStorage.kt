@@ -1,13 +1,12 @@
-package me.y9san9.prizebot.actors.storage.winners_storage
+package me.y9san9.prizebot.database.winners_storage
 
-import me.y9san9.prizebot.actors.storage.winners_storage.TableWinnersStorage.Winners.GIVEAWAY_ID
-import me.y9san9.prizebot.actors.storage.winners_storage.TableWinnersStorage.Winners.WINNER_ID
-import me.y9san9.prizebot.extensions.any.unit
+import me.y9san9.prizebot.database.winners_storage.TableWinnersStorage.Winners.GIVEAWAY_ID
+import me.y9san9.prizebot.database.winners_storage.TableWinnersStorage.Winners.WINNER_ID
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
 
-class TableWinnersStorage(private val database: Database) : WinnersStorage {
+internal class TableWinnersStorage(private val database: Database) : WinnersStorage {
     private object Winners : Table(name = "winners") {
         val GIVEAWAY_ID = long("giveawayId")
         val WINNER_ID = long("winnerId")
@@ -26,6 +25,11 @@ class TableWinnersStorage(private val database: Database) : WinnersStorage {
                 it[WINNER_ID] = winner
             }
         }
+    }
+
+    override fun hasWinners(giveawayId: Long): Boolean = transaction(database) {
+        Winners.select { GIVEAWAY_ID eq giveawayId }
+            .firstOrNull() == null
     }
 
     override fun getWinners(giveawayId: Long): List<Long> = transaction(database) {

@@ -1,11 +1,10 @@
 package me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.*
 import me.y9san9.fsm.FSMStateResult
 import me.y9san9.fsm.stateResult
 import me.y9san9.prizebot.actors.giveaway.CreateGiveawayActor
-import me.y9san9.prizebot.actors.storage.giveaways_storage.WinnersCount
+import me.y9san9.prizebot.database.giveaways_storage.WinnersCount
 import me.y9san9.prizebot.extensions.any.unit
 import me.y9san9.prizebot.extensions.offset_date_time.OffsetDateTimeSerializer
 import me.y9san9.prizebot.extensions.telegram.PrizebotFSMState

@@ -1,9 +1,9 @@
-package me.y9san9.prizebot.actors.storage.states_storage
+package me.y9san9.prizebot.database.states_storage
 
 import kotlinx.serialization.modules.SerializersModule
 import me.y9san9.fsm.storage.SerializableStorage
-import me.y9san9.prizebot.actors.storage.states_storage.TableStorage.StatesTable.channel
-import me.y9san9.prizebot.actors.storage.states_storage.TableStorage.StatesTable.data
+import me.y9san9.prizebot.database.states_storage.TableStorage.StatesTable.channel
+import me.y9san9.prizebot.database.states_storage.TableStorage.StatesTable.data
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 

@@ -3,29 +3,21 @@ package me.y9san9.prizebot.resources.markups
 import dev.inmo.tgbotapi.types.buttons.InlineKeyboardButtons.CallbackDataInlineKeyboardButton
 import dev.inmo.tgbotapi.types.buttons.InlineKeyboardButtons.SwitchInlineQueryInlineKeyboardButton
 import dev.inmo.tgbotapi.types.buttons.InlineKeyboardMarkup
-import me.y9san9.prizebot.actors.storage.giveaways_storage.FinishedGiveaway
-import me.y9san9.prizebot.actors.storage.giveaways_storage.Giveaway
-import me.y9san9.prizebot.actors.storage.giveaways_storage.locale
-import me.y9san9.prizebot.actors.storage.participants_storage.ParticipantsStorage
+import me.y9san9.prizebot.database.giveaways_storage.FinishedGiveaway
+import me.y9san9.prizebot.database.giveaways_storage.Giveaway
+import me.y9san9.prizebot.database.giveaways_storage.locale
 import me.y9san9.prizebot.extensions.list.plusIf
 import me.y9san9.prizebot.resources.*
-import me.y9san9.telegram.updates.primitives.DIUpdate
 
 
 fun giveawayMarkup (
-    update: DIUpdate<ParticipantsStorage>,
-    giveaway: Giveaway,
-    demo: Boolean = false
-) = giveawayMarkup(update.di.getParticipantsCount(giveaway.id), giveaway, demo)
-
-fun giveawayMarkup (
-    participantsCount: Int,
     giveaway: Giveaway?,
     demo: Boolean = false,
 ): InlineKeyboardMarkup? {
     giveaway ?: return null
 
     val locale = giveaway.locale
+    val participantsCount = giveaway.participantsCount
 
     val participateText = "${giveaway.participateText}${if(participantsCount == 0) "" else " $participantsCount"}"
 

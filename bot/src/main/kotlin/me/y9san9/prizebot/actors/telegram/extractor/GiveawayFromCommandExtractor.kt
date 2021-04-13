@@ -1,7 +1,7 @@
 package me.y9san9.prizebot.actors.telegram.extractor
 
-import me.y9san9.prizebot.actors.storage.giveaways_storage.Giveaway
-import me.y9san9.prizebot.actors.storage.giveaways_storage.GiveawaysStorage
+import me.y9san9.prizebot.database.giveaways_storage.Giveaway
+import me.y9san9.prizebot.database.giveaways_storage.GiveawaysStorage
 import me.y9san9.telegram.updates.extensions.command.command
 import me.y9san9.telegram.updates.primitives.DIUpdate
 import me.y9san9.telegram.updates.primitives.HasTextUpdate
