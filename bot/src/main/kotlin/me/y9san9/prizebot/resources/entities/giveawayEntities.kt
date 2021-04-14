@@ -2,10 +2,7 @@ package me.y9san9.prizebot.resources.entities
 
 import dev.inmo.tgbotapi.CommonAbstracts.TextSourcesList
 import dev.inmo.tgbotapi.CommonAbstracts.plus
-import dev.inmo.tgbotapi.types.MessageEntity.textsources.bold
-import dev.inmo.tgbotapi.types.MessageEntity.textsources.italic
-import dev.inmo.tgbotapi.types.MessageEntity.textsources.regular
-import dev.inmo.tgbotapi.types.MessageEntity.textsources.underline
+import dev.inmo.tgbotapi.types.MessageEntity.textsources.*
 import me.y9san9.prizebot.database.giveaways_storage.ActiveGiveaway
 import me.y9san9.prizebot.database.giveaways_storage.FinishedGiveaway
 import me.y9san9.prizebot.database.giveaways_storage.Giveaway
@@ -37,11 +34,13 @@ suspend fun giveawayEntities (
     else listOf()
 
     val winner = if(giveaway is FinishedGiveaway) {
+
         val links = giveaway.winnerIds
             .map { id -> update.bot.getUserLink(id, locale.deletedUser) }
+            .flatMap { it + ", " }
+            .dropLast(n = 1)
 
-        regular("${locale.winner(plural = giveaway.winnerIds.size > 1)}: ") +
-                links.flatMap { it + ", " }.dropLast(n = 1)
+        regular("${locale.winner(plural = giveaway.winnerIds.size > 1)}: ") + links
     } else listOf()
 
     val participateHint = if(giveaway is ActiveGiveaway)
