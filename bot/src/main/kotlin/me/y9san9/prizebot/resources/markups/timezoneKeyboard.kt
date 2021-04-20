@@ -24,5 +24,6 @@ fun timezoneKeyboard(update: PrizebotLocalizedUpdate) = ReplyKeyboardMarkup (
             SimpleKeyboardButton(update.locale.UTC9)
         )
     ),
-    resizeKeyboard = true
+    resizeKeyboard = true,
+    oneTimeKeyboard = true
 )
