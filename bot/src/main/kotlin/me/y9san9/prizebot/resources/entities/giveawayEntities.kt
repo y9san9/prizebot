@@ -20,23 +20,23 @@ suspend fun giveawayEntities (
 ): TextSourcesList {
     val locale = giveaway.locale
 
-    val title = bold(giveaway.title) + "\n\n"
+    val title = bold(giveaway.title) + ""
 
     val untilTime = if(giveaway.raffleDate == null) listOf() else {
         val format = DateTimeFormatter.ofPattern (
             "d MMMM, HH:mm (XXX)", Locale.forLanguageTag(giveaway.languageCode)
         )
         val date = giveaway.raffleDate!!.format(format)
-        underline(locale.raffleDate) + ": $date" + "\n"
+        bold(locale.raffleDate) + ": $date" + ""
     }
 
     val winnersCount = if(giveaway is ActiveGiveaway && giveaway.winnersCount.value > 1)
-        underline(locale.winnersCount) + ": ${giveaway.winnersCount.value}\n"
+        bold(locale.winnersCount) + ": ${giveaway.winnersCount.value}"
     else listOf()
 
     val conditions = giveaway.conditions.list
     val conditionsEntities = if(conditions.isNotEmpty()) {
-        bold(underline(locale.giveawayConditions)) + "\n" +
+        bold(locale.giveawayConditions) + "\n" +
                 conditions
                     .sortedBy { if(it is Condition.Invitations) 0 else 1 }
                     .flatMap { condition ->
@@ -46,7 +46,7 @@ suspend fun giveawayEntities (
                             is Condition.Invitations ->
                                 regular("• ") + locale.inviteFriends(condition.count.int)
                         } + "\n"
-                    } + "\n\n"
+                    }.dropLast(n = 1)
     } else listOf()
 
     val winner = if(giveaway is FinishedGiveaway) {
@@ -59,8 +59,11 @@ suspend fun giveawayEntities (
     } else listOf()
 
     val participateHint = if(giveaway is ActiveGiveaway)
-        italic(locale.giveawayParticipateHint)
-    else regular("")
+        italic(locale.giveawayParticipateHint) + ""
+    else listOf()
 
-    return title + winnersCount + untilTime + conditionsEntities + winner + participateHint
+    return listOf (
+        title, winnersCount, untilTime, conditionsEntities, winner, participateHint
+    ).flatMap { if(it.isEmpty()) it else it + "\n\n" }
+        .dropLast(n = 1)
 }
