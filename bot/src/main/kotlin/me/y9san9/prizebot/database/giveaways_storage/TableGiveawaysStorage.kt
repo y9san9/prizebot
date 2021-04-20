@@ -7,10 +7,11 @@ import me.y9san9.prizebot.database.giveaways_storage.Giveaways.GIVEAWAY_PARTICIP
 import me.y9san9.prizebot.database.giveaways_storage.Giveaways.GIVEAWAY_RAFFLE_DATE
 import me.y9san9.prizebot.database.giveaways_storage.Giveaways.GIVEAWAY_TITLE
 import me.y9san9.prizebot.database.giveaways_storage.Giveaways.GIVEAWAY_WINNERS_COUNT
+import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.ConditionsStorage
+import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.GiveawayConditions
 import me.y9san9.prizebot.database.giveaways_storage.giveaways_patch_storage.GiveawaysPatchStorage
-import me.y9san9.prizebot.database.participants_storage.ParticipantsStorage
-import me.y9san9.prizebot.database.winners_storage.WinnersStorage
-import me.y9san9.prizebot.extensions.any.unit
+import me.y9san9.prizebot.database.giveaways_storage.participants_storage.ParticipantsStorage
+import me.y9san9.prizebot.database.giveaways_storage.winners_storage.WinnersStorage
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.OffsetDateTime
@@ -22,6 +23,7 @@ internal class TableGiveawaysStorage (
 
     private val participantsStorage = ParticipantsStorage(database)
     private val winnersStorage = WinnersStorage(database)
+    private val conditionsStorage = ConditionsStorage(database)
     private val giveawaysPatchStorage = GiveawaysPatchStorage(database, winnersStorage)
 
     init {
@@ -40,7 +42,8 @@ internal class TableGiveawaysStorage (
         participateButton: String,
         languageCode: String?,
         raffleDate: OffsetDateTime?,
-        winnersCount: WinnersCount
+        winnersCount: WinnersCount,
+        conditions: GiveawayConditions
     ) = transaction(database) {
         Giveaways.insert {
             it[GIVEAWAY_OWNER_ID] = ownerId
@@ -51,11 +54,12 @@ internal class TableGiveawaysStorage (
             it[GIVEAWAY_WINNERS_COUNT] = winnersCount.value
         }
     }.let { data ->
+        conditionsStorage.addConditions(data[GIVEAWAY_ID], conditions)
         ActiveGiveaway (
             id = data[GIVEAWAY_ID],
             ownerId, title, participateButton,
             languageCode, raffleDate, participantsStorage,
-            giveawaysPatchStorage, winnersCount
+            giveawaysPatchStorage, conditionsStorage, winnersCount
         )
     }
 
@@ -79,7 +83,7 @@ internal class TableGiveawaysStorage (
                 this[GIVEAWAY_PARTICIPATE_BUTTON],
                 this[GIVEAWAY_LANGUAGE_CODE],
                 this[GIVEAWAY_RAFFLE_DATE]?.let(OffsetDateTime::parse),
-                participantsStorage, giveawaysPatchStorage,
+                participantsStorage, giveawaysPatchStorage, conditionsStorage,
                 WinnersCount(this[GIVEAWAY_WINNERS_COUNT])
             )
         else
@@ -90,7 +94,8 @@ internal class TableGiveawaysStorage (
                 this[GIVEAWAY_PARTICIPATE_BUTTON],
                 this[GIVEAWAY_LANGUAGE_CODE],
                 this[GIVEAWAY_RAFFLE_DATE]?.let(OffsetDateTime::parse),
-                participantsStorage, giveawaysPatchStorage, winnersStorage
+                participantsStorage, giveawaysPatchStorage,
+                conditionsStorage, winnersStorage
             )
     }
 }

@@ -73,7 +73,7 @@ object TimezoneInputState : PrizebotFSMState<TimezoneInputData> {
         val date = OffsetDateTime.of(LocalDateTime.parse(data.localDate, dateTimeFormatter), offset)
 
         return WinnersCountInputState (
-            update, WinnersCountData(data.title, data.participateText, date)
+            update, WinnersCountInputData(data.title, data.participateText, date)
         )
     }
 }

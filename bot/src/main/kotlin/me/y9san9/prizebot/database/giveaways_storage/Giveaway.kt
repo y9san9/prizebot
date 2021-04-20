@@ -1,12 +1,15 @@
 package me.y9san9.prizebot.database.giveaways_storage
 
+import kotlinx.serialization.Serializable
+import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.ConditionsStorage
 import me.y9san9.prizebot.database.giveaways_storage.giveaways_patch_storage.GiveawaysPatchStorage
-import me.y9san9.prizebot.database.participants_storage.ParticipantsStorage
-import me.y9san9.prizebot.database.winners_storage.WinnersStorage
+import me.y9san9.prizebot.database.giveaways_storage.participants_storage.ParticipantsStorage
+import me.y9san9.prizebot.database.giveaways_storage.winners_storage.WinnersStorage
 import me.y9san9.prizebot.resources.locales.Locale
 import java.time.OffsetDateTime
 
 
+@Serializable
 inline class WinnersCount(val value: Int)  {
     init {
         require(value in 1..50_000) { "Winners count is out of range" }
@@ -36,6 +39,12 @@ sealed class Giveaway {
     internal abstract val giveawaysPatchStorage: GiveawaysPatchStorage
 
     fun delete() = giveawaysPatchStorage.deleteGiveaway(id)
+
+    /* Conditions composition */
+
+    internal abstract val conditionsStorage: ConditionsStorage
+
+    val conditions by lazy { conditionsStorage.loadConditions(id) }
 }
 
 data class ActiveGiveaway internal constructor (
@@ -47,6 +56,7 @@ data class ActiveGiveaway internal constructor (
     override val raffleDate: OffsetDateTime?,
     override val participantsStorage: ParticipantsStorage,
     override val giveawaysPatchStorage: GiveawaysPatchStorage,
+    override val conditionsStorage: ConditionsStorage,
     val winnersCount: WinnersCount
 ) : Giveaway() {
     fun removeRaffleDate() = giveawaysPatchStorage.removeRaffleDate(id)
@@ -62,6 +72,7 @@ data class FinishedGiveaway internal constructor (
     override val raffleDate: OffsetDateTime?,
     override val participantsStorage: ParticipantsStorage,
     override val giveawaysPatchStorage: GiveawaysPatchStorage,
+    override val conditionsStorage: ConditionsStorage,
     private val winnersStorage: WinnersStorage
 ) : Giveaway() {
     val winnerIds by lazy { winnersStorage.getWinners(id) }

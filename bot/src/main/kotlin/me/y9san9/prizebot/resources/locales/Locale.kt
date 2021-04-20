@@ -143,6 +143,53 @@ open class Locale {
 
     open val winnersCount = "Winners count"
 
+    open val chooseConditions = "Now you can choose conditions for giveaway members (use /next to create giveaway without conditions or /cancel to cancel)"
+
+    open val chooseMoreConditions = "Choose next condition (use /next to create giveaway or /cancel to cancel)"
+
+    open val invitations = "Invite friends"
+
+    open val channelSubscription = "Join channel"
+
+    open val youHaveAlreadyAddedInvitations = "You have already added invitations condition!"
+
+    open val enterInvitationsCount = "Enter invitations count for participation"
+
+    open val selectLinkedChat = "Select linked chat with buttons below (use /help for channel linking help, or use /cancel to cancel giveaway creation)"
+
+    open val updateChannels = "Update linked channels"
+
+    open val channelsUpdated = "Linked channels updated!"
+
+    open val channelLinkingHelp = underline("To link a channel you should follow these 4 steps:\n\n") +
+            "• Add @secure_prize_bot to channel you want link (" + bold("it must have username") + " so anyone can join with it), " +
+            "later it will be used to check if member joined\n" +
+            "• Grant 'Delete messages' permission, it will be used to immediately delete message from next step (Optional)\n" +
+            "• Type /connect_prizebot in your channel\n" +
+            "• Click the update button and then select your channel"
+
+    open val channelIsNotLinked = "This channel is not linked!"
+
+    open val channelIsAlreadyInConditions = "This channel is already in conditions"
+
+    open val giveawayConditions = "Giveaway conditions:"
+
+    open fun subscribeToChannel(username: String) = regular("Subscribe to channel ") + bold(username)
+
+    open fun inviteFriends(count: Int) = regular("Invite ") + bold("$count") + " friend" +
+            (if(count > 1) "s" else "") + " in giveaway"
+
+    open val atLeastOneChannelSubscriptionRequired = "At least one channel subscription required if you want to add " +
+            "friends invitations"
+
+    open val invitationsCountShouldBePositive = "Invitation count should be positive number"
+
+    open val giveawayInvalid = "Contact organizer because giveaway seems to be invalid"
+
+    open val notSubscribedToConditions = "You have not subscribed to all channels"
+
+    open fun friendsAreNotInvited(invitedCount: Int, requiredCount: Int) = "You have invited $invitedCount / $requiredCount friends"
+
     companion object {
         fun with(language: String?) = locales
             .firstOrNull { it.code == language }

@@ -6,6 +6,7 @@ import dev.inmo.tgbotapi.types.MessageEntity.textsources.*
 import me.y9san9.prizebot.database.giveaways_storage.ActiveGiveaway
 import me.y9san9.prizebot.database.giveaways_storage.FinishedGiveaway
 import me.y9san9.prizebot.database.giveaways_storage.Giveaway
+import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.Condition
 import me.y9san9.prizebot.database.giveaways_storage.locale
 import me.y9san9.telegram.updates.primitives.BotUpdate
 import me.y9san9.telegram.extensions.telegram_bot.getUserLink
@@ -33,8 +34,22 @@ suspend fun giveawayEntities (
         underline(locale.winnersCount) + ": ${giveaway.winnersCount.value}\n"
     else listOf()
 
-    val winner = if(giveaway is FinishedGiveaway) {
+    val conditions = giveaway.conditions.list
+    val conditionsEntities = if(conditions.isNotEmpty()) {
+        bold(underline(locale.giveawayConditions)) + "\n" +
+                conditions
+                    .sortedBy { if(it is Condition.Invitations) 0 else 1 }
+                    .flatMap { condition ->
+                        when(condition) {
+                            is Condition.Subscription ->
+                                regular("• ") + locale.subscribeToChannel(condition.channelUsername)
+                            is Condition.Invitations ->
+                                regular("• ") + locale.inviteFriends(condition.count.int)
+                        } + "\n"
+                    } + "\n\n"
+    } else listOf()
 
+    val winner = if(giveaway is FinishedGiveaway) {
         val links = giveaway.winnerIds
             .map { id -> update.bot.getUserLink(id, locale.deletedUser) }
             .flatMap { it + ", " }
@@ -47,5 +62,5 @@ suspend fun giveawayEntities (
         italic(locale.giveawayParticipateHint)
     else regular("")
 
-    return title + winnersCount + untilTime + "\n" + winner + participateHint
+    return title + winnersCount + untilTime + conditionsEntities + winner + participateHint
 }

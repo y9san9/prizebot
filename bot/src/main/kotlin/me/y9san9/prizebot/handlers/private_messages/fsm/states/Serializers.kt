@@ -3,10 +3,8 @@ package me.y9san9.prizebot.handlers.private_messages.fsm.states
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.polymorphic
-import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.GiveawayTitle
-import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.RaffleDateInputData
-import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.TimezoneInputData
-import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.WinnersCountData
+import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.*
+import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.conditions.SubscriptionChannelInputData
 
 
 val statesSerializers = SerializersModule {
@@ -17,6 +15,8 @@ val statesSerializers = SerializersModule {
         subclass(GiveawayTitle::class, GiveawayTitle.serializer())
         subclass(RaffleDateInputData::class, RaffleDateInputData.serializer())
         subclass(TimezoneInputData::class, TimezoneInputData.serializer())
-        subclass(WinnersCountData::class, WinnersCountData.serializer())
+        subclass(WinnersCountInputData::class, WinnersCountInputData.serializer())
+        subclass(ConditionInputData::class, ConditionInputData.serializer())
+        subclass(SubscriptionChannelInputData::class, SubscriptionChannelInputData.serializer())
     }
 }

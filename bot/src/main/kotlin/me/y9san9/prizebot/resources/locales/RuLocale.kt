@@ -1,5 +1,6 @@
 package me.y9san9.prizebot.resources.locales
 
+import dev.inmo.tgbotapi.CommonAbstracts.TextSource
 import dev.inmo.tgbotapi.CommonAbstracts.plus
 import dev.inmo.tgbotapi.types.MessageEntity.textsources.*
 import me.y9san9.prizebot.extensions.string.awesomeCut
@@ -133,4 +134,53 @@ object RuLocale : Locale() {
     override val enterNumber = "Пожалуйста, ведите число"
 
     override val enterWinnersCount = "Введите количество победителей"
+
+    override val chooseConditions = "Теперь выберите условия участия (используйте /next, чтобы создать розыгрыш без условий, или /cancel, чтобы отменить)"
+
+    override val chooseMoreConditions = "Выберите следующее условие (используйте /next, чтобы создать розыгрыш, или /cancel, чтобы отменить)"
+
+    override val invitations = "Пригласить друзей"
+
+    override val channelSubscription = "Присоединиться к каналу"
+
+    override val youHaveAlreadyAddedInvitations = "Вы уже добавили условие с приглашением друзей!"
+
+    override val enterInvitationsCount = "Введите количество приглашений для участия"
+
+    override val selectLinkedChat = "Выберите подключённый чат (используйте /help, чтобы узнать как привязать канал, или /cancel, чтобы отменить создание розыгрыша)"
+
+    override val updateChannels = "Обновить привязанные каналы"
+
+    override val channelsUpdated = "Обновлено!"
+
+    override val channelLinkingHelp = underline("Чтобы привязать канал вам нужно выполнить следующие 4 шага:\n\n") +
+            "• Добавить @secure_prize_bot в ваш канал " + bold("с username") + ", который вы хотите привязать, (чтобы любой мог присоединиться к нему), позже это будет использовано для проверки участников\n" +
+            "• Разрешить боту удалять сообщения, чтобы бот моментально удалил сообщение из следующего шага (Не обязательно)\n" +
+            "• Напишите /connect_prizebot в вашем канале\n" +
+            "• Нажмите кнопку обновления и выберите привязанный канал"
+
+    override val channelIsNotLinked = "Этот канал не привязан"
+
+    override val channelIsAlreadyInConditions = "Этот канал уже есть в условиях участия"
+
+    override val giveawayConditions = "Условия участия:"
+
+    override fun subscribeToChannel(username: String) = regular("Подписаться на канал ") + bold(username)
+
+    override fun inviteFriends(count: Int) = regular("Пригласить ") + bold("$count") + " ${getValidFriendsForm(count)} в розыгрыш"
+
+    private fun getValidFriendsForm(count: Int) = when {
+        count % 10 == 1 -> "друга"
+        else -> "друзей"
+    }
+
+    override val atLeastOneChannelSubscriptionRequired = "Добавьте хотя бы одну подписку на канал, чтобы использовать приглашения"
+
+    override val invitationsCountShouldBePositive = "Количество приглашений должно быть больше нуля"
+
+    override val giveawayInvalid = "Свяжитесь с организаторами, розыгрыш некорретный"
+
+    override val notSubscribedToConditions = "Вы не подписались на все каналы"
+
+    override fun friendsAreNotInvited(invitedCount: Int, requiredCount: Int) = "Вы пригласили $invitedCount / $requiredCount друзей"
 }

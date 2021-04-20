@@ -18,7 +18,7 @@ object RaffleCommand {
 
         if(giveaway is ActiveGiveaway) {
             val success = RaffleActor
-                .raffle(giveaway)
+                .raffle(update.bot, giveaway)
 
             if (success)
                 updateMessage(update, update.di.getGiveawayById(giveaway.id)!!)

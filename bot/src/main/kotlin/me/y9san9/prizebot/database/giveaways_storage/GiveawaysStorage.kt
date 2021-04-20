@@ -1,5 +1,6 @@
 package me.y9san9.prizebot.database.giveaways_storage
 
+import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.GiveawayConditions
 import org.jetbrains.exposed.sql.Database
 import java.time.OffsetDateTime
 
@@ -14,7 +15,8 @@ interface GiveawaysStorage {
         participateButton: String,
         languageCode: String?,
         raffleDate: OffsetDateTime?,
-        winnersCount: WinnersCount
+        winnersCount: WinnersCount,
+        conditions: GiveawayConditions
     ): ActiveGiveaway
     fun getUserGiveaways(ownerId: Long, count: Int = 20, offset: Long = 0): List<Giveaway>
     fun getAllGiveaways(): List<Giveaway>

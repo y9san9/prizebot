@@ -22,6 +22,7 @@ allprojects {
 
     tasks.withType<KotlinCompile>() {
         kotlinOptions {
+            useIR = true
             freeCompilerArgs = listOf("-Xinline-classes")
         }
     }

@@ -45,7 +45,7 @@ object RaffleDateInputState : PrizebotFSMState<RaffleDateInputData> {
         if(raffleDate == null)
             return WinnersCountInputState (
                 update,
-                WinnersCountData(data.title, data.participateText, raffleDate = null)
+                WinnersCountInputData(data.title, data.participateText, raffleDate = null)
             )
         else if(!isDateValid(raffleDate))
             return stateResult(RaffleDateInputState, data) {

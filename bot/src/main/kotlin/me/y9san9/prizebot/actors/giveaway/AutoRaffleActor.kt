@@ -8,10 +8,8 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import me.y9san9.prizebot.database.giveaways_active_messages_storage.GiveawaysActiveMessagesStorage
 import me.y9san9.prizebot.database.giveaways_storage.ActiveGiveaway
-import me.y9san9.prizebot.database.giveaways_storage.Giveaway
 import me.y9san9.prizebot.database.giveaways_storage.GiveawaysStorage
 import me.y9san9.prizebot.database.language_codes_storage.LanguageCodesStorage
-import me.y9san9.prizebot.database.participants_storage.ParticipantsStorage
 import me.y9san9.prizebot.actors.telegram.updater.GiveawayActiveMessagesUpdater
 import me.y9san9.prizebot.resources.locales.Locale
 import me.y9san9.telegram.updates.hierarchies.DIBotUpdate
@@ -52,7 +50,7 @@ object AutoRaffleActor : CoroutineScope {
                 scheduledMutex.withLock {
                     if (giveaway.id in scheduled && di.getGiveawayById(giveaway.id) != null) {
                         scheduled.remove(giveaway.id)
-                        handleRaffleResult(bot, di, giveaway, RaffleActor.raffle(giveaway))
+                        handleRaffleResult(bot, di, giveaway, RaffleActor.raffle(bot, giveaway))
                     }
                 }
             }

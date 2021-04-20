@@ -3,7 +3,6 @@ package me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway
 import kotlinx.serialization.Serializable
 import me.y9san9.fsm.FSMStateResult
 import me.y9san9.fsm.stateResult
-import me.y9san9.prizebot.actors.giveaway.CreateGiveawayActor
 import me.y9san9.prizebot.database.giveaways_storage.WinnersCount
 import me.y9san9.prizebot.extensions.any.unit
 import me.y9san9.prizebot.extensions.offset_date_time.OffsetDateTimeSerializer
@@ -17,30 +16,32 @@ import java.time.OffsetDateTime
 
 
 @Serializable
-data class WinnersCountData (
+data class WinnersCountInputData (
     val title: String,
     val participateText: String,
     @Serializable(with = OffsetDateTimeSerializer::class)
     val raffleDate: OffsetDateTime?
 )
 
-object WinnersCountInputState : PrizebotFSMState<WinnersCountData> {
+object WinnersCountInputState : PrizebotFSMState<WinnersCountInputData> {
     override suspend fun process (
-        data: WinnersCountData,
+        data: WinnersCountInputData,
         event: PrizebotPrivateMessageUpdate
     ): FSMStateResult<*> {
 
-        suspend fun createGiveaway(winnersCount: WinnersCount = WinnersCount(1)) =
-            CreateGiveawayActor.create (
-                event, data.title,
-                data.participateText, data.raffleDate,
-                winnersCount
+        suspend fun next(winnersCount: WinnersCount = WinnersCount(1)) =
+            ConditionInputState (
+                event,
+                ConditionInputData (
+                    data.title, data.participateText,
+                    data.raffleDate, winnersCount
+                )
             )
 
         event.textOrDefault { text ->
             when(text) {
                 "/cancel" -> return MainState.cancellation(event)
-                "/skip" -> return createGiveaway()
+                "/skip" -> return next()
             }
 
             val winnersCount = try {
@@ -52,7 +53,7 @@ object WinnersCountInputState : PrizebotFSMState<WinnersCountData> {
                 return@textOrDefault event.sendMessage(event.locale.winnersCountIsOutOfRange).unit
             }
 
-            return createGiveaway(winnersCount)
+            return next(winnersCount)
         }
 
         return stateResult(WinnersCountInputState, data)
@@ -62,7 +63,7 @@ object WinnersCountInputState : PrizebotFSMState<WinnersCountData> {
 @Suppress("FunctionName")
 suspend fun WinnersCountInputState (
     update: PrizebotPrivateMessageUpdate,
-    data: WinnersCountData
+    data: WinnersCountInputData
 ) = stateResult(WinnersCountInputState, data) {
     update.sendMessage (
         update.locale.enterWinnersCount

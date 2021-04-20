@@ -1,7 +1,7 @@
-package me.y9san9.prizebot.database.winners_storage
+package me.y9san9.prizebot.database.giveaways_storage.winners_storage
 
-import me.y9san9.prizebot.database.winners_storage.TableWinnersStorage.Winners.GIVEAWAY_ID
-import me.y9san9.prizebot.database.winners_storage.TableWinnersStorage.Winners.WINNER_ID
+import me.y9san9.prizebot.database.giveaways_storage.winners_storage.TableWinnersStorage.Winners.GIVEAWAY_ID
+import me.y9san9.prizebot.database.giveaways_storage.winners_storage.TableWinnersStorage.Winners.WINNER_ID
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 

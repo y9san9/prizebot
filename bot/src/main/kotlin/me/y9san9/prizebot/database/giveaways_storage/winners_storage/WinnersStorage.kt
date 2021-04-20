@@ -1,4 +1,4 @@
-package me.y9san9.prizebot.database.winners_storage
+package me.y9san9.prizebot.database.giveaways_storage.winners_storage
 
 import org.jetbrains.exposed.sql.Database
 
