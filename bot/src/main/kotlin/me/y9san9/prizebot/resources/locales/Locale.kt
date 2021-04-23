@@ -108,7 +108,8 @@ open class Locale {
     open val enterRaffleDateInput = regular("Enter auto-raffle date in one of this formats: ") +
             bold("00:00") + ", " +
             bold("00:00 13.01") + ", " +
-            bold("00:00 13.01.2020") + " (use /skip to skip or /cancel to cancel)"
+            bold("00:00 13.01.2020") + " (use /skip to skip or /cancel to cancel). " +
+            "You can choose time offset on the next step."
 
     open val invalidDateFormat = "Invalid date format, try again"
 
