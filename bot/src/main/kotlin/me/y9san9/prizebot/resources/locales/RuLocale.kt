@@ -103,9 +103,9 @@ object RuLocale : Locale() {
 
     override val invalidDateFormat = "Неверный формат даты, попробуйте ещё раз"
 
-    override val selectTimezone = "Выберите часовой пояс с помощью кнопок"
+    override val selectOffset = "Выберите смещение времени с помощью кнопок"
 
-    override val customTimezone = "Другой часовой пояс"
+    override val customTimeOffset = "Другое смещение"
 
     override val `UTC-4` = "Нью-Йорк -4"
     override val GMT = "Гринвич +0"

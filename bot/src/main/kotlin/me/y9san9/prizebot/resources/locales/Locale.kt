@@ -112,9 +112,9 @@ open class Locale {
 
     open val invalidDateFormat = "Invalid date format, try again"
 
-    open val selectTimezone = "Select timezone with buttons below"
+    open val selectOffset = "Select time offset with buttons below"
 
-    open val customTimezone = "Custom timezone"
+    open val customTimeOffset = "Custom offset"
 
     open val `UTC-4` = "New York -4"
     open val GMT = "GMT +0"

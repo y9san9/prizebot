@@ -70,6 +70,10 @@ class Prizebot (
 
         createFSM(events = privateMessages)
 
+        chatMemberUpdatedFlow
+            .onEach { println(it) }
+            .launchIn(scope)
+
         channelPostFlow
             .mapNotNull { it.data as? ChannelContentMessage<*> }
             .map { ChannelPostUpdate(bot, di, message = it) }
