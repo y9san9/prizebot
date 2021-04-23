@@ -6,6 +6,7 @@ import dev.inmo.tgbotapi.extensions.api.chat.get.getChat
 import dev.inmo.tgbotapi.extensions.api.chat.members.getChatMember
 import dev.inmo.tgbotapi.types.ChatId
 import dev.inmo.tgbotapi.types.ChatMember.MemberChatMember
+import dev.inmo.tgbotapi.types.ChatMember.abstracts.AdministratorChatMember
 import dev.inmo.tgbotapi.types.UserId
 import dev.inmo.tgbotapi.types.chat.abstracts.UsernameChat
 import me.y9san9.prizebot.database.giveaways_storage.ActiveGiveaway
@@ -47,7 +48,7 @@ object ConditionsChecker {
 
                 try {
                     bot.getChatMember(ChatId(condition.channelId), UserId(participantId))
-                        .takeIf { it is MemberChatMember }
+                        .takeIf { it is MemberChatMember || it is AdministratorChatMember }
                 } catch (_: RequestException) { null }
                     ?: return CheckConditionsResult.NotSubscribedToConditions
 
