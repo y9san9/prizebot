@@ -165,9 +165,10 @@ open class Locale {
     open val channelLinkingHelp = bold("To link a channel you should follow these steps:\n\n") +
             "• Add @secure_prize_bot to channel/chat you want link as administrator (" + bold("it must have username") + " so anyone can join with it), " +
             "later it will be used to check if member is joined\n" +
-            "• Than just click update button and select the channel\n" +
-            "• In case the bot is already in the chat, type /connect_prizebot and click update button\n" +
-            "• Optionally you allow bot to delete messages, so the message from previous step will be immediately deleted " +
+            "• Than just click update button and select the channel\n\n" +
+            bold("In case the bot is already in the chat:\n\n") +
+            "• Type /connect_prizebot and click update button\n" +
+            "• Optionally you can allow bot to delete messages, so the message from previous step will be immediately deleted " +
             "(it can help to silently connect bot in big channels)"
 
     open val channelIsNotLinked = "This channel is not linked!"
