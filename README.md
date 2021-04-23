@@ -13,9 +13,9 @@
 Simple demo how the bot works. It is very intuitive and cool, also have ability of full localization (only en, ru now).
 
 <p align="center">
-    This is how the message with giveaway looks like:<br>
+    This is how the message with giveaway looks like:<br><br>
     <img alt="Demo-Image" src="https://user-images.githubusercontent.com/46930374/115927440-1be0e680-a48d-11eb-8d8c-f2ca7e4b62da.png"/> <br><br>
-    And this is how the giveaways managing looks like:<br>
+    And this is how the giveaways managing looks like:<br><br>
     <img alt="Demo-Gif" src="https://user-images.githubusercontent.com/46930374/113611429-2ca0f800-9657-11eb-8908-d11ff248c939.gif"/>
 </p>
 
