@@ -1,6 +1,7 @@
 package me.y9san9.telegram.updates
 
 import dev.inmo.tgbotapi.bot.TelegramBot
+import dev.inmo.tgbotapi.bot.exceptions.RequestException
 import dev.inmo.tgbotapi.extensions.api.answers.answerInlineQuery
 import dev.inmo.tgbotapi.types.CommonUser
 import dev.inmo.tgbotapi.types.InlineQueries.InlineQueryResult.abstracts.InlineQueryResult
@@ -29,10 +30,12 @@ class InlineQueryUpdate <DI> (
         nextOffset: String? = null,
         switchPmText: String? = null,
         switchPmParameter: String? = null
-    ) = bot.answerInlineQuery (
-        query.data, results, cachedTime, isPersonal,
-        nextOffset, switchPmText, switchPmParameter
-    ).let { }
+    ) = try {
+        bot.answerInlineQuery (
+            query.data, results, cachedTime, isPersonal,
+            nextOffset, switchPmText, switchPmParameter
+        ).let { }
+    } catch (_: RequestException) {}
 
     suspend fun answer (
         result: InlineQueryResult,

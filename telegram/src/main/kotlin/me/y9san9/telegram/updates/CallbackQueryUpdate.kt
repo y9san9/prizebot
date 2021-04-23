@@ -1,6 +1,7 @@
 package me.y9san9.telegram.updates
 
 import dev.inmo.tgbotapi.bot.TelegramBot
+import dev.inmo.tgbotapi.bot.exceptions.RequestException
 import dev.inmo.tgbotapi.extensions.api.answers.answerCallbackQuery
 import dev.inmo.tgbotapi.types.CallbackQuery.DataCallbackQuery
 import dev.inmo.tgbotapi.types.CallbackQuery.InlineMessageIdCallbackQuery
@@ -30,9 +31,11 @@ class CallbackQueryUpdate <DI> (
         showAlert: Boolean? = null,
         url: String? = null,
         cachedTimeSeconds: Int? = null
-    ) = bot.answerCallbackQuery (
-        query.data, text, showAlert, url, cachedTimeSeconds
-    ).let { }
+    ) = try {
+        bot.answerCallbackQuery (
+            query.data, text, showAlert, url, cachedTimeSeconds
+        ).let { }
+    } catch (_: RequestException) {}
 
     override suspend fun answer() = answer(text = null)
 }

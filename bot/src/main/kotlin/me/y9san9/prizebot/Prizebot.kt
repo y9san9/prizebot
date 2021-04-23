@@ -17,6 +17,9 @@ import me.y9san9.fsm.statesOf
 import me.y9san9.prizebot.actors.giveaway.AutoRaffleActor
 import me.y9san9.prizebot.database.giveaways_active_messages_storage.GiveawaysActiveMessagesStorage
 import me.y9san9.prizebot.database.giveaways_storage.GiveawaysStorage
+import me.y9san9.prizebot.database.giveaways_storage.WinnersCount
+import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.Condition
+import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.GiveawayConditions
 import me.y9san9.prizebot.database.language_codes_storage.LanguageCodesStorage
 import me.y9san9.prizebot.database.linked_channels_storage.LinkedChannelsStorage
 import me.y9san9.prizebot.database.states_storage.PrizebotFSMStorage

@@ -1,10 +1,7 @@
 package me.y9san9.prizebot.actors.giveaway
 
 import dev.inmo.tgbotapi.bot.TelegramBot
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.flow.*
 import me.y9san9.prizebot.database.giveaways_storage.ActiveGiveaway
 import me.y9san9.random.extensions.shuffledRandomOrg
 
@@ -14,7 +11,9 @@ object RaffleActor {
         bot: TelegramBot,
         giveaway: ActiveGiveaway
     ): Boolean {
-        val winnerIds = chooseWinners(bot, giveaway) ?: return false
+        val winnerIds = chooseWinners (
+            bot, giveaway, ConditionsChecker.cacheChatsUsernames(bot, giveaway)
+        ) ?: return false
         giveaway.finish(winnerIds)
         return true
     }
@@ -22,11 +21,17 @@ object RaffleActor {
     private suspend fun chooseWinners (
         bot: TelegramBot,
         giveaway: ActiveGiveaway,
-    ) = giveaway.participants
-        .shuffledRandomOrg()
-        .asFlow()
-        .filter { userId -> ConditionsChecker.check(bot, userId, giveaway) is CheckConditionsResult.Success }
-        .take(giveaway.winnersCount.value)
-        .toList()
-        .takeIf { it.size == giveaway.winnersCount.value }
+        cachedChatsUsernames: Map<Long, String>
+    ): List<Long>? {
+        return giveaway.participants
+            .shuffledRandomOrg()
+            .asFlow()
+            .map { userId -> userId to ConditionsChecker.check(bot, userId, giveaway, cachedChatsUsernames) }
+            .takeWhile { (_, check) -> check !is CheckConditionsResult.GiveawayInvalid }
+            .filter { (_, check) -> check is CheckConditionsResult.Success }
+            .map { (userId, _) -> userId }
+            .take(giveaway.winnersCount.value)
+            .toList()
+            .takeIf { it.size == giveaway.winnersCount.value }
+    }
 }

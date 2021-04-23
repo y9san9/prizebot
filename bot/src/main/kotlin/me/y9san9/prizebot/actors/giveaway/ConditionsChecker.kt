@@ -21,19 +21,32 @@ sealed class CheckConditionsResult {
 }
 
 object ConditionsChecker {
-    suspend fun check(bot: TelegramBot, participantId: Long, giveaway: ActiveGiveaway): CheckConditionsResult {
+    suspend fun cacheChatsUsernames(bot: TelegramBot, giveaway: ActiveGiveaway): Map<Long, String> =
+        giveaway.conditions.list
+            .filterIsInstance<Condition.Subscription>()
+            .mapNotNull { condition ->
+                val username = (bot.getChat(ChatId(condition.channelId)) as? UsernameChat)
+                    ?.username?.username ?: return@mapNotNull null
+
+                condition.channelId to username
+            }.associate { it }
+
+    suspend fun check (
+        bot: TelegramBot, participantId: Long,
+        giveaway: ActiveGiveaway
+    ): CheckConditionsResult = check(bot, participantId, giveaway, cacheChatsUsernames(bot, giveaway))
+
+    suspend fun check (
+        bot: TelegramBot, participantId: Long,
+        giveaway: ActiveGiveaway, cachedChatsUsernames: Map<Long, String>
+    ): CheckConditionsResult {
         giveaway.conditions.list
             .on { condition: Condition.Subscription ->
-                val channel = try {
-                    bot.getChat(ChatId(condition.channelId)) as? UsernameChat
-                } catch (_: RequestException) { null }
-                    ?: return CheckConditionsResult.GiveawayInvalid
-
-                if(channel.username?.username != condition.channelUsername)
+                if(cachedChatsUsernames[condition.channelId] != condition.channelUsername)
                     return CheckConditionsResult.GiveawayInvalid
 
                 try {
-                    bot.getChatMember(channel.id, UserId(participantId))
+                    bot.getChatMember(ChatId(condition.channelId), UserId(participantId))
                         .takeIf { it is MemberChatMember }
                 } catch (_: RequestException) { null }
                     ?: return CheckConditionsResult.NotSubscribedToConditions
