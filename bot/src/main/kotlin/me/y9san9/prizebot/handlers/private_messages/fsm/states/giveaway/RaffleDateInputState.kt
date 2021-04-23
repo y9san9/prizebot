@@ -59,7 +59,7 @@ object RaffleDateInputState : PrizebotFSMState<RaffleDateInputData> {
         try {
             LocalDateTime.parse(date, dateTimeFormatter)
             return true
-        } catch (t: DateTimeParseException) {}
+        } catch (t: DateTimeParseException) { }
 
         return false
     }

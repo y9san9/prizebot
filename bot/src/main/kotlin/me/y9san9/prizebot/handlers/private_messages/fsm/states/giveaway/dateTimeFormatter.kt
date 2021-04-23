@@ -11,6 +11,6 @@ val dateTimeFormatter: DateTimeFormatter get() = run {
     return@run DateTimeFormatterBuilder().appendPattern("HH:mm[ dd.MM[.yyyy]]")
         .parseDefaulting(ChronoField.DAY_OF_MONTH, currentDate.getLong(ChronoField.DAY_OF_MONTH))
         .parseDefaulting(ChronoField.MONTH_OF_YEAR, currentDate.getLong(ChronoField.MONTH_OF_YEAR))
-        .parseDefaulting(ChronoField.YEAR, currentDate.getLong(ChronoField.YEAR))
+        .parseDefaulting(ChronoField.YEAR_OF_ERA, currentDate.getLong(ChronoField.YEAR_OF_ERA))
         .toFormatter()
 }
