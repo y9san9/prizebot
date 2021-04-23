@@ -7,12 +7,12 @@ import me.y9san9.prizebot.actors.telegram.sender.TooLongGiveawayTitleSender
 import me.y9san9.prizebot.extensions.telegram.textOrDefault
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.MainState
 import me.y9san9.prizebot.extensions.telegram.PrizebotFSMState
-import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
+import me.y9san9.prizebot.extensions.telegram.PrizebotMessageUpdate
 import me.y9san9.prizebot.resources.MAX_TITLE_LEN
 
 
 object TitleInputState : PrizebotFSMState<Unit> {
-    override suspend fun process(data: Unit, event: PrizebotPrivateMessageUpdate): FSMStateResult<*> {
+    override suspend fun process(data: Unit, event: PrizebotMessageUpdate): FSMStateResult<*> {
 
         event.textOrDefault { text ->
             return when {

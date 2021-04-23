@@ -9,7 +9,7 @@ import me.y9san9.fsm.stateResult
 import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.Condition
 import me.y9san9.prizebot.extensions.any.unit
 import me.y9san9.prizebot.extensions.telegram.PrizebotFSMState
-import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
+import me.y9san9.prizebot.extensions.telegram.PrizebotMessageUpdate
 import me.y9san9.prizebot.extensions.telegram.locale
 import me.y9san9.prizebot.extensions.telegram.textOrDefault
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.MainState
@@ -35,7 +35,7 @@ data class SubscriptionChannelInputData (
 object SubscriptionChannelInputState : PrizebotFSMState<SubscriptionChannelInputData> {
     override suspend fun process (
         data: SubscriptionChannelInputData,
-        event: PrizebotPrivateMessageUpdate
+        event: PrizebotMessageUpdate
     ): FSMStateResult<*> {
         event.textOrDefault { username ->
             when(username) {
@@ -82,7 +82,7 @@ object SubscriptionChannelInputState : PrizebotFSMState<SubscriptionChannelInput
 
 @Suppress("FunctionName")
 suspend fun SubscriptionChannelInputState (
-    update: PrizebotPrivateMessageUpdate,
+    update: PrizebotMessageUpdate,
     data: ConditionInputData
 ): FSMStateResult<*> {
     val channels = getUserChannels(update)
@@ -94,7 +94,7 @@ suspend fun SubscriptionChannelInputState (
     }
 }
 
-private suspend fun getUserChannels(update: PrizebotPrivateMessageUpdate) =
+private suspend fun getUserChannels(update: PrizebotMessageUpdate) =
     update.di.getChannels(update.chatId)
         .mapNotNull { channelId ->
             val username = try {

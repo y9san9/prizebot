@@ -4,7 +4,7 @@ import me.y9san9.fsm.FSMStateResult
 import me.y9san9.fsm.stateResult
 import me.y9san9.prizebot.extensions.any.unit
 import me.y9san9.prizebot.extensions.telegram.PrizebotFSMState
-import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
+import me.y9san9.prizebot.extensions.telegram.PrizebotMessageUpdate
 import me.y9san9.prizebot.extensions.telegram.locale
 import me.y9san9.prizebot.extensions.telegram.textOrDefault
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.MainState
@@ -18,7 +18,7 @@ import java.time.ZoneOffset
 object CustomTimezoneInputState : PrizebotFSMState<TimezoneInputData> {
     override suspend fun process (
         data: TimezoneInputData,
-        event: PrizebotPrivateMessageUpdate
+        event: PrizebotMessageUpdate
     ): FSMStateResult<*> {
         event.textOrDefault { offset ->
             if(offset == "/cancel")

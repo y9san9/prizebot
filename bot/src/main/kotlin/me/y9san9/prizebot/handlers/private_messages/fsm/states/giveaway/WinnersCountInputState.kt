@@ -7,7 +7,7 @@ import me.y9san9.prizebot.database.giveaways_storage.WinnersCount
 import me.y9san9.prizebot.extensions.any.unit
 import me.y9san9.prizebot.extensions.offset_date_time.OffsetDateTimeSerializer
 import me.y9san9.prizebot.extensions.telegram.PrizebotFSMState
-import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
+import me.y9san9.prizebot.extensions.telegram.PrizebotMessageUpdate
 import me.y9san9.prizebot.extensions.telegram.locale
 import me.y9san9.prizebot.extensions.telegram.textOrDefault
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.MainState
@@ -26,7 +26,7 @@ data class WinnersCountInputData (
 object WinnersCountInputState : PrizebotFSMState<WinnersCountInputData> {
     override suspend fun process (
         data: WinnersCountInputData,
-        event: PrizebotPrivateMessageUpdate
+        event: PrizebotMessageUpdate
     ): FSMStateResult<*> {
 
         suspend fun next(winnersCount: WinnersCount = WinnersCount(1)) =
@@ -62,7 +62,7 @@ object WinnersCountInputState : PrizebotFSMState<WinnersCountInputData> {
 
 @Suppress("FunctionName")
 suspend fun WinnersCountInputState (
-    update: PrizebotPrivateMessageUpdate,
+    update: PrizebotMessageUpdate,
     data: WinnersCountInputData
 ) = stateResult(WinnersCountInputState, data) {
     update.sendMessage (

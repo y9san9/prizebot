@@ -5,14 +5,14 @@ import me.y9san9.fsm.stateResult
 import me.y9san9.prizebot.database.giveaways_storage.WinnersCount
 import me.y9san9.prizebot.actors.telegram.sender.GiveawayCreatedSender
 import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.GiveawayConditions
-import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
+import me.y9san9.prizebot.extensions.telegram.PrizebotMessageUpdate
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.MainState
 import java.time.OffsetDateTime
 
 
 object CreateGiveawayActor {
     suspend fun create (
-        update: PrizebotPrivateMessageUpdate,
+        update: PrizebotMessageUpdate,
         title: String,
         participateText: String,
         raffleDate: OffsetDateTime?,

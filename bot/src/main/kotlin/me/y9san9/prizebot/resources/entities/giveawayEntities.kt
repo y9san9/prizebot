@@ -42,7 +42,7 @@ suspend fun giveawayEntities (
                     .flatMap { condition ->
                         when(condition) {
                             is Condition.Subscription ->
-                                regular("• ") + locale.subscribeToChannel(condition.channelUsername)
+                                regular("• ") + locale.subscribeTo(condition.channelUsername)
                             is Condition.Invitations ->
                                 regular("• ") + locale.inviteFriends(condition.count.int)
                         } + "\n"

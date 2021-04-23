@@ -166,7 +166,7 @@ object RuLocale : Locale() {
 
     override val giveawayConditions = "Условия участия:"
 
-    override fun subscribeToChannel(username: String) = regular("Подписаться на канал ") + bold(username)
+    override fun subscribeTo(username: String) = regular("Подписаться на ") + bold(username)
 
     override fun inviteFriends(count: Int) = regular("Пригласить ") + bold("$count") + " ${getValidFriendsForm(count)} в розыгрыш"
 
@@ -181,7 +181,7 @@ object RuLocale : Locale() {
 
     override val giveawayInvalid = "Свяжитесь с организаторами, розыгрыш некорретный"
 
-    override val notSubscribedToConditions = "Вы не подписались на все каналы"
+    override val notSubscribedToConditions = "Вы не подписались на все каналы/чаты"
 
     override fun friendsAreNotInvited(invitedCount: Int, requiredCount: Int) = "Вы пригласили $invitedCount / $requiredCount друзей"
 }

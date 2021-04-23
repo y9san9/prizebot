@@ -31,7 +31,7 @@ data class ConditionInputData (
 object ConditionInputState : PrizebotFSMState<ConditionInputData> {
     override suspend fun process (
         data: ConditionInputData,
-        event: PrizebotPrivateMessageUpdate
+        event: PrizebotMessageUpdate
     ): FSMStateResult<*> {
         event.commandOrDefault {
             case("/cancel") {
@@ -68,7 +68,7 @@ object ConditionInputState : PrizebotFSMState<ConditionInputData> {
 
 @Suppress("FunctionName")
 suspend fun ConditionInputState (
-    update: PrizebotPrivateMessageUpdate,
+    update: PrizebotMessageUpdate,
     data: ConditionInputData,
     text: String = update.locale.chooseConditions
 ) = stateResult(ConditionInputState, data) {

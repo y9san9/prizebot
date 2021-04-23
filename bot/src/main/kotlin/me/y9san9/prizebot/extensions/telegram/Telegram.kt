@@ -9,12 +9,12 @@ import me.y9san9.telegram.updates.hierarchies.FromChatLocalizedDIBotUpdate
 import me.y9san9.telegram.updates.hierarchies.FromChatLocalizedDIUpdate
 
 
-typealias PrizebotPrivateMessageUpdate = PrivateMessageUpdate<PrizebotDI>
+typealias PrizebotMessageUpdate = MessageUpdate<PrizebotDI>
 typealias PrizebotInlineQueryUpdate = InlineQueryUpdate<PrizebotDI>
 typealias PrizebotChosenInlineResultUpdate = ChosenInlineResultUpdate<PrizebotDI>
 typealias PrizebotCallbackQueryUpdate = CallbackQueryUpdate<PrizebotDI>
-typealias PrizebotChannelPostUpdate = ChannelPostUpdate<PrizebotDI>
+typealias PrizebotMyChatMemberUpdate = MyChatMemberUpdate<PrizebotDI>
 typealias PrizebotFSMStorage = FSMStorage<Long, Any?>
-typealias PrizebotFSMState<TDataIn> = FSMState<TDataIn, PrizebotPrivateMessageUpdate>
+typealias PrizebotFSMState<TDataIn> = FSMState<TDataIn, PrizebotMessageUpdate>
 typealias PrizebotLocalizedUpdate = FromChatLocalizedDIUpdate<LanguageCodesStorage>
 typealias PrizebotLocalizedBotUpdate = FromChatLocalizedDIBotUpdate<LanguageCodesStorage>

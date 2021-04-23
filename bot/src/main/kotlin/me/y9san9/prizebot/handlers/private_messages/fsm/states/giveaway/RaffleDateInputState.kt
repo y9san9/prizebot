@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 import me.y9san9.fsm.FSMStateResult
 import me.y9san9.fsm.stateResult
 import me.y9san9.prizebot.extensions.telegram.PrizebotFSMState
-import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
+import me.y9san9.prizebot.extensions.telegram.PrizebotMessageUpdate
 import me.y9san9.prizebot.extensions.telegram.locale
 import me.y9san9.prizebot.extensions.telegram.textOrDefault
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.MainState
@@ -24,7 +24,7 @@ data class RaffleDateInputData (
 object RaffleDateInputState : PrizebotFSMState<RaffleDateInputData> {
     override suspend fun process (
         data: RaffleDateInputData,
-        event: PrizebotPrivateMessageUpdate
+        event: PrizebotMessageUpdate
     ): FSMStateResult<*> {
         event.textOrDefault { text ->
             return when(text) {
@@ -38,7 +38,7 @@ object RaffleDateInputState : PrizebotFSMState<RaffleDateInputData> {
     }
 
     private suspend fun nextState (
-        update: PrizebotPrivateMessageUpdate,
+        update: PrizebotMessageUpdate,
         data: RaffleDateInputData,
         raffleDate: String?
     ): FSMStateResult<*> {

@@ -134,7 +134,7 @@ open class Locale {
     open val raffleDate = "Raffle date"
 
     open fun cannotRaffleGiveaway(title: String) =
-        "Cannot automatically raffle giveaway '$title', so now you can raffle it manually later"
+        "Cannot automatically raffle giveaway '$title', so you can raffle it manually later"
 
     open val winnersCountIsOutOfRange = "Winners count may be from 1 up to 50 000"
 
@@ -162,12 +162,13 @@ open class Locale {
 
     open val channelsUpdated = "Linked channels updated!"
 
-    open val channelLinkingHelp = underline("To link a channel you should follow these 4 steps:\n\n") +
-            "• Add @secure_prize_bot to channel you want link (" + bold("it must have username") + " so anyone can join with it), " +
-            "later it will be used to check if member joined\n" +
-            "• Grant 'Delete messages' permission, it will be used to immediately delete message from next step (Optional)\n" +
-            "• Type /connect_prizebot in your channel\n" +
-            "• Click the update button and then select your channel"
+    open val channelLinkingHelp = bold("To link a channel you should follow these steps:\n\n") +
+            "• Add @secure_prize_bot to channel/chat you want link as administrator (" + bold("it must have username") + " so anyone can join with it), " +
+            "later it will be used to check if member is joined\n" +
+            "• Than just click update button and select the channel\n" +
+            "• In case the bot is already in the chat, type /connect_prizebot and click update button\n" +
+            "• Optionally you allow bot to delete messages, so the message from previous step will be immediately deleted " +
+            "(it can help to silently connect bot in big channels)"
 
     open val channelIsNotLinked = "This channel is not linked!"
 
@@ -175,7 +176,7 @@ open class Locale {
 
     open val giveawayConditions = "Giveaway conditions:"
 
-    open fun subscribeToChannel(username: String) = regular("Subscribe to channel ") + bold(username)
+    open fun subscribeTo(username: String) = regular("Subscribe to ") + bold(username)
 
     open fun inviteFriends(count: Int) = regular("Invite ") + bold("$count") + " friend" +
             (if(count > 1) "s" else "") + " in giveaway"
@@ -187,7 +188,7 @@ open class Locale {
 
     open val giveawayInvalid = "Contact organizer because giveaway seems to be invalid"
 
-    open val notSubscribedToConditions = "You have not subscribed to all channels"
+    open val notSubscribedToConditions = "You have not joined all chats/channels"
 
     open fun friendsAreNotInvited(invitedCount: Int, requiredCount: Int) = "You have invited $invitedCount / $requiredCount friends"
 

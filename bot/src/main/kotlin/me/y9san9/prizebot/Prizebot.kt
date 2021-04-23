@@ -27,15 +27,13 @@ import me.y9san9.prizebot.handlers.private_messages.fsm.prizebotPrivateMessages
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.MainState
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.statesSerializers
 import me.y9san9.prizebot.di.PrizebotDI
-import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
-import me.y9san9.prizebot.handlers.channel_posts.ChannelPostsHandler
+import me.y9san9.prizebot.extensions.telegram.PrizebotMessageUpdate
+import me.y9san9.prizebot.handlers.channel_group_messages.ChannelGroupMessagesHandler
+import me.y9san9.prizebot.handlers.my_chat_member_updated.MyChatMemberUpdateHandler
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.*
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.conditions.InvitationsCountInputState
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.conditions.SubscriptionChannelInputState
-import me.y9san9.telegram.updates.CallbackQueryUpdate
-import me.y9san9.telegram.updates.ChosenInlineResultUpdate
-import me.y9san9.telegram.updates.ChannelPostUpdate
-import me.y9san9.telegram.updates.InlineQueryUpdate
+import me.y9san9.telegram.updates.*
 import org.jetbrains.exposed.sql.Database
 
 
@@ -66,18 +64,18 @@ class Prizebot (
 
         val privateMessages = messageFlow
             .mapNotNull { it.data as? PrivateContentMessage<*> }
-            .map { PrizebotPrivateMessageUpdate(bot, di, message = it) }
+            .map { MessageUpdate(bot, di, message = it) }
 
         createFSM(events = privateMessages)
 
-        chatMemberUpdatedFlow
-            .onEach { println(it) }
-            .launchIn(scope)
+        messageFlow
+            .mapNotNull { it.data as? PublicContentMessage<*> ?: it.data as? ChannelContentMessage<*> }
+            .map { MessageUpdate(bot, di, message = it) }
+            .subscribeSafely(scope, ::logException, ChannelGroupMessagesHandler::handle)
 
-        channelPostFlow
-            .mapNotNull { it.data as? ChannelContentMessage<*> }
-            .map { ChannelPostUpdate(bot, di, message = it) }
-            .subscribeSafely(scope, ::logException, ChannelPostsHandler::handle)
+        myChatMemberUpdatedFlow
+            .map { MyChatMemberUpdate(bot, di, update = it) }
+            .subscribeSafely(scope, ::logException, MyChatMemberUpdateHandler::handle)
 
         inlineQueryFlow
             .map { InlineQueryUpdate(bot, di, query = it) }
@@ -96,7 +94,7 @@ class Prizebot (
         AutoRaffleActor.scheduleAll(bot, di)
     }
 
-    private fun createFSM(events: Flow<PrizebotPrivateMessageUpdate>) = FSM.prizebotPrivateMessages (
+    private fun createFSM(events: Flow<PrizebotMessageUpdate>) = FSM.prizebotPrivateMessages (
         events,
         states = statesOf (
             initial = MainState,
