@@ -4,7 +4,8 @@ import dev.inmo.tgbotapi.types.buttons.ReplyKeyboardRemove
 import me.y9san9.fsm.FSMStateResult
 import me.y9san9.fsm.stateResult
 import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.Condition
-import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.wrapPositiveInt
+import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.PositiveInt
+import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.PositiveIntRequired
 import me.y9san9.prizebot.extensions.any.unit
 import me.y9san9.prizebot.extensions.telegram.PrizebotFSMState
 import me.y9san9.prizebot.extensions.telegram.PrizebotMessageUpdate
@@ -24,15 +25,17 @@ object InvitationsCountInputState : PrizebotFSMState<ConditionInputData> {
             val number = text.toIntOrNull()
                 ?: return@textOrDefault event.sendMessage(event.locale.enterNumber).unit
 
-            if(number > 0) {
-                val conditions = data.conditions + Condition.Invitations(number.wrapPositiveInt())
-                return ConditionInputState(
-                    event,
-                    data.copy(conditions = conditions),
-                    event.locale.chooseMoreConditions
-                )
-            } else
-                event.sendMessage(event.locale.invitationsCountShouldBePositive)
+            when(val positiveInt = PositiveInt.createChecked(number)) {
+                is PositiveIntRequired -> event.sendMessage(event.locale.invitationsCountShouldBePositive)
+                is PositiveInt -> {
+                    val conditions = data.conditions + Condition.Invitations(positiveInt)
+                    return ConditionInputState(
+                        event,
+                        data.copy(conditions = conditions),
+                        event.locale.chooseMoreConditions
+                    )
+                }
+            }
         }
 
         return stateResult(InvitationsCountInputState, data)

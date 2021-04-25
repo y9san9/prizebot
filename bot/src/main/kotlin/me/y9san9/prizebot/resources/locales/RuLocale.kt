@@ -177,7 +177,7 @@ object RuLocale : Locale() {
         else -> "друзей"
     }
 
-    override val atLeastOneChannelSubscriptionRequired = "Добавьте хотя бы одну подписку на канал, чтобы использовать приглашения"
+    override val channelConditionRequiredForInvitations = "Добавьте хотя бы одну подписку на канал, чтобы использовать приглашения"
 
     override val invitationsCountShouldBePositive = "Количество приглашений должно быть больше нуля"
 

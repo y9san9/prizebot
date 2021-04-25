@@ -182,7 +182,7 @@ open class Locale {
     open fun inviteFriends(count: Int) = regular("Invite ") + bold("$count") + " friend" +
             (if(count > 1) "s" else "") + " in giveaway"
 
-    open val atLeastOneChannelSubscriptionRequired = "At least one channel subscription required if you want to add " +
+    open val channelConditionRequiredForInvitations = "At least one channel subscription required if you want to add " +
             "friends invitations"
 
     open val invitationsCountShouldBePositive = "Invitation count should be positive number"

@@ -9,10 +9,26 @@ import me.y9san9.prizebot.resources.locales.Locale
 import java.time.OffsetDateTime
 
 
+sealed interface CheckedWinnersCount {
+    object OutOfRange : CheckedWinnersCount
+}
+
 @Serializable
-inline class WinnersCount(val value: Int)  {
-    init {
-        require(value in 1..50_000) { "Winners count is out of range" }
+inline class WinnersCount private constructor(val value: Int) : CheckedWinnersCount  {
+    companion object {
+        fun create(value: Int): WinnersCount {
+            val createTry = createChecked(value)
+            require(createTry is WinnersCount)
+            return createTry
+        }
+
+        /**
+         * @param value should be in range from 1 to 50_000
+         */
+        fun createChecked(value: Int) = when(value) {
+            !in 1..50_000 -> CheckedWinnersCount.OutOfRange
+            else -> WinnersCount(value)
+        }
     }
 }
 

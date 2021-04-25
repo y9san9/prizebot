@@ -3,6 +3,7 @@ package me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway
 import kotlinx.serialization.Serializable
 import me.y9san9.fsm.FSMStateResult
 import me.y9san9.fsm.stateResult
+import me.y9san9.prizebot.database.giveaways_storage.CheckedWinnersCount
 import me.y9san9.prizebot.database.giveaways_storage.WinnersCount
 import me.y9san9.prizebot.extensions.any.unit
 import me.y9san9.prizebot.extensions.offset_date_time.OffsetDateTimeSerializer
@@ -29,7 +30,7 @@ object WinnersCountInputState : PrizebotFSMState<WinnersCountInputData> {
         event: PrizebotMessageUpdate
     ): FSMStateResult<*> {
 
-        suspend fun next(winnersCount: WinnersCount = WinnersCount(1)) =
+        suspend fun next(winnersCount: WinnersCount = WinnersCount.create(1)) =
             ConditionInputState (
                 event,
                 ConditionInputData (
@@ -39,21 +40,18 @@ object WinnersCountInputState : PrizebotFSMState<WinnersCountInputData> {
             )
 
         event.textOrDefault { text ->
-            when(text) {
+            when (text) {
                 "/cancel" -> return MainState.cancellation(event)
                 "/skip" -> return next()
             }
 
-            val winnersCount = try {
-                WinnersCount (
-                    text.toIntOrNull()
-                        ?: return@textOrDefault event.sendMessage(event.locale.enterNumber).unit
-                )
-            } catch (_: IllegalArgumentException) {
-                return@textOrDefault event.sendMessage(event.locale.winnersCountIsOutOfRange).unit
-            }
+            val number = text.toIntOrNull() ?: return@textOrDefault event.sendMessage(event.locale.enterNumber).unit
 
-            return next(winnersCount)
+            when (val winnersCount = WinnersCount.createChecked(number)) {
+                is CheckedWinnersCount.OutOfRange ->
+                    return@textOrDefault event.sendMessage(event.locale.winnersCountIsOutOfRange).unit
+                is WinnersCount -> return next(winnersCount)
+            }
         }
 
         return stateResult(WinnersCountInputState, data)

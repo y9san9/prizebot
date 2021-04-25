@@ -1,19 +1,27 @@
-@file:Suppress("MemberVisibilityCanBePrivate", "CanBeParameter")
-
 package me.y9san9.prizebot.database.giveaways_storage.conditions_storage
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 
+sealed interface CheckedPositiveInt
+
+object PositiveIntRequired : CheckedPositiveInt
+
 @Serializable
-inline class PositiveInt internal constructor(val int: Int) {
-    init {
-        require(int > 0) { "The value must be positive" }
+inline class PositiveInt private constructor(val int: Int) : CheckedPositiveInt {
+    companion object {
+        fun create(int: Int): PositiveInt {
+            val createTry = createChecked(int)
+            require(createTry is PositiveInt)
+            return createTry
+        }
+        fun createChecked(int: Int) = when {
+            int <= 0 -> PositiveIntRequired
+            else -> PositiveInt(int)
+        }
     }
 }
-
-fun Int.wrapPositiveInt() = PositiveInt(this)
 
 
 @Serializable
@@ -33,20 +41,29 @@ sealed class Condition {
 }
 
 
+sealed interface CheckedGiveawayConditions
+
+object OnlyOneInvitationConditionAllowed : CheckedGiveawayConditions
+object ChannelConditionRequiredForInvitations : CheckedGiveawayConditions
+
 @Serializable
 // It is not inline because of serialization bug :(
-/*inline*/ class GiveawayConditions internal constructor (
+/*inline*/ class GiveawayConditions private constructor (
     val list: List<Condition>
-) {
-    init {
-        require(list.count { it is Condition.Invitations } <= 1) {
-            "Only one invitations condition allowed"
+) : CheckedGiveawayConditions {
+
+    companion object {
+        fun create(list: List<Condition>): GiveawayConditions {
+            val createTry = createChecked(list)
+            require(createTry is GiveawayConditions)
+            return createTry
         }
-        require(list.filterIsInstance<Condition.Invitations>().isEmpty()
-                || list.filterIsInstance<Condition.Subscription>().isNotEmpty()) {
-            "You should add at least one channel in case you want to invite friends"
+        fun createChecked(list: List<Condition>) = when {
+            list.count { it is Condition.Invitations } > 1 -> OnlyOneInvitationConditionAllowed
+            list.filterIsInstance<Condition.Invitations>().isNotEmpty() &&
+                    list.filterIsInstance<Condition.Subscription>().isEmpty() ->
+                ChannelConditionRequiredForInvitations
+            else -> GiveawayConditions(list)
         }
     }
 }
-
-fun List<Condition>.wrapGiveawayConditions() = GiveawayConditions(list = this)

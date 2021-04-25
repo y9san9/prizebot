@@ -5,8 +5,7 @@ import me.y9san9.fsm.FSMStateResult
 import me.y9san9.fsm.stateResult
 import me.y9san9.prizebot.actors.giveaway.CreateGiveawayActor
 import me.y9san9.prizebot.database.giveaways_storage.WinnersCount
-import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.Condition
-import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.wrapGiveawayConditions
+import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.*
 import me.y9san9.prizebot.extensions.offset_date_time.OffsetDateTimeSerializer
 import me.y9san9.prizebot.extensions.telegram.*
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.MainState
@@ -38,14 +37,16 @@ object ConditionInputState : PrizebotFSMState<ConditionInputData> {
                 return MainState.cancellation(event)
             }
             case("/next") {
-                if(data.conditions.filterIsInstance<Condition.Invitations>().isEmpty() ||
-                        data.conditions.filterIsInstance<Condition.Subscription>().isNotEmpty())
-                    return CreateGiveawayActor.create (
+                when(val conditions = GiveawayConditions.createChecked(data.conditions)) {
+                    is ChannelConditionRequiredForInvitations ->
+                        event.sendMessage(event.locale.channelConditionRequiredForInvitations)
+                    is OnlyOneInvitationConditionAllowed -> error("Checked before")
+                    is GiveawayConditions -> return CreateGiveawayActor.create (
                         event, data.title,
                         data.participateText, data.raffleDate,
-                        data.winnersCount, data.conditions.wrapGiveawayConditions()
+                        data.winnersCount, conditions
                     )
-                else event.sendMessage(event.locale.atLeastOneChannelSubscriptionRequired)
+                }
             }
             raw(Locale::invitations) {
                 if(data.conditions.count { it is Condition.Invitations } > 0)

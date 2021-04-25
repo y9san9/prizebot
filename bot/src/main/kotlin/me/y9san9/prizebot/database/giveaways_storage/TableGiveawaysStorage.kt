@@ -84,7 +84,7 @@ internal class TableGiveawaysStorage (
                 this[GIVEAWAY_LANGUAGE_CODE],
                 this[GIVEAWAY_RAFFLE_DATE]?.let(OffsetDateTime::parse),
                 participantsStorage, giveawaysPatchStorage, conditionsStorage,
-                WinnersCount(this[GIVEAWAY_WINNERS_COUNT])
+                WinnersCount.create(this[GIVEAWAY_WINNERS_COUNT])
             )
         else
             FinishedGiveaway (

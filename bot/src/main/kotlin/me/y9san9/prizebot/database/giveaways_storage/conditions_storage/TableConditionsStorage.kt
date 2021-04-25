@@ -42,7 +42,7 @@ internal class TableConditionsStorage (
     override fun loadConditions(giveawayId: Long): GiveawayConditions = transaction(database) {
         Conditions.select { GIVEAWAY_ID eq giveawayId }
             .map { it.toCondition() }
-            .wrapGiveawayConditions()
+            .let(GiveawayConditions.Companion::create)
     }
 
     private fun ResultRow.toCondition(): Condition {
@@ -51,7 +51,7 @@ internal class TableConditionsStorage (
                 channelId,
                 channelUsername = this[SUBSCRIPTION_CHANNEL_USERNAME] ?: error("Username must be present"))
         }
-        this[INVITATIONS_COUNT]?.let { return Condition.Invitations(it.wrapPositiveInt()) }
+        this[INVITATIONS_COUNT]?.let { return Condition.Invitations(PositiveInt.create(it)) }
 
         error("This condition is not valid")
     }
