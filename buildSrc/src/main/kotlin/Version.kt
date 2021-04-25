@@ -7,8 +7,7 @@ object Version {
     const val COROUTINES = "1.4.2"
 
     const val SLF4J = "1.6.1"
-    const val KDS = "1.2.11"
-    const val EXPOSED = "0.24.1"
+    const val EXPOSED = "0.30.2"
     const val POSTGRESQL = "42.2.18"
     const val TG_BOT_API = "0.33.4"
     const val KTOR = "1.5.1"
