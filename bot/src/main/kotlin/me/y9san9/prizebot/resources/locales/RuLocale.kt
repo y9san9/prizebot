@@ -55,7 +55,7 @@ object RuLocale : Locale() {
 
     override val nowParticipating = "Теперь ты участвуешь в розыгрыше!"
 
-    override val alreadyParticipating = "Ты уже участвуешь в розыгрыше!"
+    override val youHaveLeftGiveaway = "Вы вышли из розыгрыша"
 
     override val selectGiveawayToView = "Выбери розыгрыш, чтобы посмотреть подробнее"
 

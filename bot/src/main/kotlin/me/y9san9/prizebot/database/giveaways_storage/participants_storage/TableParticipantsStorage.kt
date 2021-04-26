@@ -2,6 +2,7 @@ package me.y9san9.prizebot.database.giveaways_storage.participants_storage
 
 import me.y9san9.prizebot.database.giveaways_storage.participants_storage.TableParticipantsStorage.Participants.PARTICIPANTS_GIVEAWAY_ID
 import me.y9san9.prizebot.database.giveaways_storage.participants_storage.TableParticipantsStorage.Participants.PARTICIPANTS_USER_ID
+import me.y9san9.prizebot.extensions.any.unit
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -23,7 +24,13 @@ internal class TableParticipantsStorage(private val database: Database) : Partic
             it[PARTICIPANTS_GIVEAWAY_ID] = giveawayId
             it[PARTICIPANTS_USER_ID] = userId
         }
-    }.let { }
+    }.unit
+
+    override fun removeParticipant(giveawayId: Long, userId: Long) = transaction(database) {
+        Participants.deleteWhere {
+            (PARTICIPANTS_USER_ID eq userId) and (PARTICIPANTS_GIVEAWAY_ID eq giveawayId)
+        }
+    }.unit
 
     override fun getParticipantsIds(giveawayId: Long): List<Long> = transaction(database) {
         Participants.select { PARTICIPANTS_GIVEAWAY_ID eq giveawayId }

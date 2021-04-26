@@ -8,8 +8,9 @@ sealed interface CheckedPositiveInt
 
 object PositiveIntRequired : CheckedPositiveInt
 
+@JvmInline
 @Serializable
-inline class PositiveInt private constructor(val int: Int) : CheckedPositiveInt {
+value class PositiveInt private constructor(val int: Int) : CheckedPositiveInt {
     companion object {
         fun create(int: Int): PositiveInt {
             val createTry = createChecked(int)

@@ -13,8 +13,9 @@ sealed interface CheckedWinnersCount {
     object OutOfRange : CheckedWinnersCount
 }
 
+@JvmInline
 @Serializable
-inline class WinnersCount private constructor(val value: Int) : CheckedWinnersCount  {
+value class WinnersCount private constructor(val value: Int) : CheckedWinnersCount  {
     companion object {
         fun create(value: Int): WinnersCount {
             val createTry = createChecked(value)
@@ -49,6 +50,7 @@ sealed class Giveaway {
 
     fun isParticipant(userId: Long) = participantsStorage.isParticipant(id, userId)
     fun saveParticipant(userId: Long) = participantsStorage.saveParticipant(id, userId)
+    fun removeParticipant(userId: Long) = participantsStorage.removeParticipant(id, userId)
 
     /* Patch composition */
 

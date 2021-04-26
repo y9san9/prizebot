@@ -8,6 +8,7 @@ internal fun ParticipantsStorage(database: Database): ParticipantsStorage =
 
 internal interface ParticipantsStorage {
     fun saveParticipant(giveawayId: Long, userId: Long)
+    fun removeParticipant(giveawayId: Long, userId: Long)
     fun getParticipantsIds(giveawayId: Long): List<Long>
     fun getParticipantsCount(giveawayId: Long): Int
     fun isParticipant(giveawayId: Long, userId: Long): Boolean

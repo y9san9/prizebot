@@ -64,7 +64,7 @@ open class Locale {
 
     open val nowParticipating = "You are now participating in this giveaway!"
 
-    open val alreadyParticipating = "You are already participating in this giveaway!"
+    open val youHaveLeftGiveaway = "Now you are not participating"
 
     open val selectGiveawayToView = "Select giveaway from list below"
 

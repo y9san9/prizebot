@@ -22,7 +22,10 @@ object ParticipateCommand {
         val answer = when {
             giveaway is FinishedGiveaway -> locale.giveawayFinished
             giveaway.ownerId == participantId -> locale.cannotParticipateInSelfGiveaway
-            giveaway.isParticipant(participantId) -> locale.alreadyParticipating
+            giveaway.isParticipant(participantId) -> {
+                giveaway.removeParticipant(participantId)
+                locale.youHaveLeftGiveaway
+            }
             else -> when(val result = ConditionsChecker.check(update.bot, participantId, giveaway as ActiveGiveaway)) {
                 is CheckConditionsResult.GiveawayInvalid -> locale.giveawayTitleInput
                 is CheckConditionsResult.NotSubscribedToConditions -> locale.notSubscribedToConditions
