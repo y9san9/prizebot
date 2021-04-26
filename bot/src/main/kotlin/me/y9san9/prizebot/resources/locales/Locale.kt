@@ -193,6 +193,8 @@ open class Locale {
 
     open fun friendsAreNotInvited(invitedCount: Int, requiredCount: Int) = "You have invited $invitedCount / $requiredCount friends"
 
+    open val raffleProcessing = "Please wait, raffle is being processed"
+    
     companion object {
         fun with(language: String?) = locales
             .firstOrNull { it.code == language }

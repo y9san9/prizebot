@@ -17,14 +17,6 @@ allprojects {
     repositories {
         mavenCentral()
     }
-
-    tasks.withType<KotlinCompile>() {
-        kotlinOptions {
-            languageVersion = "1.5"
-            apiVersion = "1.5"
-            freeCompilerArgs = listOf("-Xinline-classes")
-        }
-    }
 }
 
 dependencies {

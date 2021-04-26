@@ -8,6 +8,9 @@ import me.y9san9.telegram.updates.extensions.command.commandOrAnswer
 
 object CallbackQueryHandler {
     suspend fun handle(update: PrizebotCallbackQueryUpdate) = update.commandOrAnswer(splitter = "_") {
+        case("$CALLBACK_NO_ACTION") {
+            update.answer()
+        }
         case("$CALLBACK_ACTION_PARTICIPATE", argsCount = 1) {
             ParticipateCommand.handle(update)
         }
