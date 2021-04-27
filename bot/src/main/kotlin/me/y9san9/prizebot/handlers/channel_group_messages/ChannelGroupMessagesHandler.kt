@@ -28,7 +28,7 @@ object ChannelGroupMessagesHandler {
                 return@command
 
             if(bot !is AdministratorChatMember)
-                return@command update.sendMessage(update.locale.enterText).unit
+                return@command update.sendMessage(update.locale.promoteBot).unit
             else safelyWithoutExceptions {
                 update.delete()
             }
