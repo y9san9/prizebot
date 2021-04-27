@@ -10,5 +10,5 @@ object Version {
     const val EXPOSED = "0.30.2"
     const val POSTGRESQL = "42.2.18"
     const val TG_BOT_API = "0.33.4"
-    const val KTOR = "1.5.1"
+    const val KTOR = "1.5.3"
 }
