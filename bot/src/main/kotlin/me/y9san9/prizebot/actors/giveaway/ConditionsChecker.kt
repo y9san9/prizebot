@@ -11,7 +11,7 @@ import dev.inmo.tgbotapi.types.UserId
 import dev.inmo.tgbotapi.types.chat.abstracts.UsernameChat
 import me.y9san9.prizebot.database.giveaways_storage.ActiveGiveaway
 import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.Condition
-import me.y9san9.prizebot.extensions.list.on
+import me.y9san9.extensions.list.on
 
 
 sealed class CheckConditionsResult {

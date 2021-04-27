@@ -2,7 +2,7 @@ package me.y9san9.prizebot.database.giveaways_storage.giveaways_patch_storage
 
 import me.y9san9.prizebot.database.giveaways_storage.Giveaways
 import me.y9san9.prizebot.database.giveaways_storage.winners_storage.WinnersStorage
-import me.y9san9.prizebot.extensions.any.unit
+import me.y9san9.extensions.any.unit
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.deleteWhere

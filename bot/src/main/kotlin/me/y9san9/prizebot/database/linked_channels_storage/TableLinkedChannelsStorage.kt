@@ -2,7 +2,7 @@ package me.y9san9.prizebot.database.linked_channels_storage
 
 import me.y9san9.prizebot.database.linked_channels_storage.TableLinkedChannelsStorage.LinkedChannels.CHANNEL_ID
 import me.y9san9.prizebot.database.linked_channels_storage.TableLinkedChannelsStorage.LinkedChannels.USER_ID
-import me.y9san9.prizebot.extensions.any.unit
+import me.y9san9.extensions.any.unit
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 

@@ -28,10 +28,10 @@ object MainState : PrizebotFSMState<Unit> {
                 StartSender.send(event)
 
                 // fixme: business logic in declarative code
-                if (event.di.getLanguageCode(event.chatId) == null) {
+                if (event.di.getLanguageCode(event.userId) == null) {
                     SelectLocaleSender.send(event)
                     event.di.setLanguageCode (
-                        event.chatId,
+                        event.userId,
                         languageCode = event.languageCode ?: "en"
                     )
                 }

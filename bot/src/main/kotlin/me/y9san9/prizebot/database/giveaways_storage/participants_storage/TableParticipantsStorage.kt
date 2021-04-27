@@ -2,7 +2,7 @@ package me.y9san9.prizebot.database.giveaways_storage.participants_storage
 
 import me.y9san9.prizebot.database.giveaways_storage.participants_storage.TableParticipantsStorage.Participants.PARTICIPANTS_GIVEAWAY_ID
 import me.y9san9.prizebot.database.giveaways_storage.participants_storage.TableParticipantsStorage.Participants.PARTICIPANTS_USER_ID
-import me.y9san9.prizebot.extensions.any.unit
+import me.y9san9.extensions.any.unit
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 

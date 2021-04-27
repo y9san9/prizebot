@@ -1,13 +1,20 @@
 package me.y9san9.prizebot.handlers.callback_queries
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import me.y9san9.prizebot.handlers.callback_queries.command.*
 import me.y9san9.prizebot.extensions.telegram.PrizebotCallbackQueryUpdate
 import me.y9san9.prizebot.resources.*
 import me.y9san9.telegram.updates.extensions.command.commandOrAnswer
 
 
-object CallbackQueryHandler {
-    suspend fun handle(update: PrizebotCallbackQueryUpdate) = update.commandOrAnswer(splitter = "_") {
+class CallbackQueryHandler(private val scope: CoroutineScope) {
+
+    fun launchHandle(update: PrizebotCallbackQueryUpdate) = scope.launch {
+        handle(update)
+    }
+
+    private suspend fun handle(update: PrizebotCallbackQueryUpdate) = update.commandOrAnswer(splitter = "_") {
         case("$CALLBACK_NO_ACTION") {
             update.answer()
         }

@@ -6,7 +6,7 @@ import dev.inmo.tgbotapi.CommonAbstracts.plus
 import dev.inmo.tgbotapi.types.MessageEntity.textsources.*
 import me.y9san9.prizebot.resources.Emoji
 import me.y9san9.prizebot.resources.MAX_TITLE_LEN
-import me.y9san9.prizebot.extensions.string.awesomeCut
+import me.y9san9.extensions.string.awesomeCut
 
 
 object DefaultLocale : Locale()

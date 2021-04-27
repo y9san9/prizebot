@@ -13,7 +13,7 @@ import me.y9san9.prizebot.resources.locales.locales
 fun selectLocaleMarkup (
     update: PrizebotLocalizedUpdate
 ): InlineKeyboardMarkup {
-    val currentLocale = update.di.getLanguageCode(update.chatId) ?: update.languageCode
+    val currentLocale = update.di.getLanguageCode(update.userId) ?: update.languageCode
 
     fun addCheckmarkIfSelected(locale: LocaleModel) =
         if (locale.code == currentLocale)

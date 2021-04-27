@@ -6,7 +6,7 @@ import dev.inmo.tgbotapi.types.buttons.InlineKeyboardMarkup
 import me.y9san9.prizebot.database.giveaways_storage.FinishedGiveaway
 import me.y9san9.prizebot.database.giveaways_storage.Giveaway
 import me.y9san9.prizebot.database.giveaways_storage.locale
-import me.y9san9.prizebot.extensions.list.plusIf
+import me.y9san9.extensions.list.plusIf
 import me.y9san9.prizebot.resources.*
 
 

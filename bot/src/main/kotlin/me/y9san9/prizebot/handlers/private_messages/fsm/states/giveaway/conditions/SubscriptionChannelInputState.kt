@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 import me.y9san9.fsm.FSMStateResult
 import me.y9san9.fsm.stateResult
 import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.Condition
-import me.y9san9.prizebot.extensions.any.unit
+import me.y9san9.extensions.any.unit
 import me.y9san9.prizebot.extensions.telegram.PrizebotFSMState
 import me.y9san9.prizebot.extensions.telegram.PrizebotMessageUpdate
 import me.y9san9.prizebot.extensions.telegram.locale
@@ -95,12 +95,12 @@ suspend fun SubscriptionChannelInputState (
 }
 
 private suspend fun getUserChannels(update: PrizebotMessageUpdate) =
-    update.di.getChannels(update.chatId)
+    update.di.getChannels(update.userId)
         .mapNotNull { channelId ->
             val username = try {
                 (update.bot.getChat(ChatId(channelId)) as? UsernameChat)?.username?.username
             } catch (_: Exception) { null }
-                ?: return@mapNotNull update.di.unlinkChannel(update.chatId, channelId).run { null }
+                ?: return@mapNotNull update.di.unlinkChannel(update.userId, channelId).run { null }
 
             channelId to username
         }.map { (id, username) -> Channel(id, username) }

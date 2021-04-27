@@ -6,7 +6,7 @@ import me.y9san9.fsm.stateResult
 import me.y9san9.prizebot.actors.giveaway.CreateGiveawayActor
 import me.y9san9.prizebot.database.giveaways_storage.WinnersCount
 import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.*
-import me.y9san9.prizebot.extensions.offset_date_time.OffsetDateTimeSerializer
+import me.y9san9.extensions.offset_date_time.OffsetDateTimeSerializer
 import me.y9san9.prizebot.extensions.telegram.*
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.MainState
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.conditions.InvitationsCountInputState

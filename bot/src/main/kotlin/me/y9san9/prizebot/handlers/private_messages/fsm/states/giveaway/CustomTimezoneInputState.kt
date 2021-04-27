@@ -2,7 +2,7 @@ package me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway
 
 import me.y9san9.fsm.FSMStateResult
 import me.y9san9.fsm.stateResult
-import me.y9san9.prizebot.extensions.any.unit
+import me.y9san9.extensions.any.unit
 import me.y9san9.prizebot.extensions.telegram.PrizebotFSMState
 import me.y9san9.prizebot.extensions.telegram.PrizebotMessageUpdate
 import me.y9san9.prizebot.extensions.telegram.locale

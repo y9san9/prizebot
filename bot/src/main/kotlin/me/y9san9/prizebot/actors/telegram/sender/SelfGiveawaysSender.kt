@@ -5,11 +5,11 @@ import me.y9san9.prizebot.database.language_codes_storage.LanguageCodesStorage
 import me.y9san9.prizebot.resources.content.noGiveawaysYetContent
 import me.y9san9.prizebot.resources.content.selfGiveawaysContent
 import me.y9san9.telegram.updates.extensions.send_message.sendMessage
-import me.y9san9.telegram.updates.hierarchies.FromChatLocalizedDIBotUpdate
+import me.y9san9.telegram.updates.hierarchies.FromUserLocalizedDIBotUpdate
 
 
 object SelfGiveawaysSender {
-    suspend fun <T> send(event: FromChatLocalizedDIBotUpdate<T>) where
+    suspend fun <T> send(event: FromUserLocalizedDIBotUpdate<T>) where
             T :  LanguageCodesStorage, T : GiveawaysStorage {
         val (entities, markup) = selfGiveawaysContent(event)
             ?: noGiveawaysYetContent(event)

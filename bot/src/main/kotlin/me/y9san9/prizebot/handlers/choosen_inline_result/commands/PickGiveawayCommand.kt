@@ -5,7 +5,7 @@ import me.y9san9.prizebot.extensions.telegram.PrizebotChosenInlineResultUpdate
 object PickGiveawayCommand {
     fun handle(update: PrizebotChosenInlineResultUpdate) {
         val giveaway = update.di.getUserGiveaways (
-            update.chatId,
+            update.userId,
             count = 1,
             offset = update.resultId.toLongOrNull() ?: return
         ).getOrNull(0) ?: return

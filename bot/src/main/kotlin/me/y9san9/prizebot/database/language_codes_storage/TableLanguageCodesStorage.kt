@@ -2,7 +2,7 @@ package me.y9san9.prizebot.database.language_codes_storage
 
 import me.y9san9.prizebot.database.language_codes_storage.TableLanguageCodesStorage.Storage.LANGUAGE_CODE
 import me.y9san9.prizebot.database.language_codes_storage.TableLanguageCodesStorage.Storage.USER_ID
-import me.y9san9.prizebot.extensions.any.unit
+import me.y9san9.extensions.any.unit
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 

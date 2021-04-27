@@ -9,7 +9,7 @@ import me.y9san9.prizebot.extensions.telegram.PrizebotInlineQueryUpdate
 object SendGiveawayCommand {
     suspend fun handle(update: PrizebotInlineQueryUpdate) {
         val giveaway = GiveawayFromCommandExtractor.extract(update, splitter = "_")
-            ?.takeIf { it.ownerId == update.chatId } ?: return handleNullGiveaway(update)
+            ?.takeIf { it.ownerId == update.userId } ?: return handleNullGiveaway(update)
 
         update.answer (
             GiveawayToResultArticleMapper.map(resultId = "${giveaway.id}", update, giveaway),

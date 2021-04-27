@@ -16,7 +16,6 @@ import me.y9san9.telegram.extensions.asTextContentMessage
 
 object RaffleCommand : CoroutineScope {
 
-    @Suppress("EXPERIMENTAL_API_USAGE")
     suspend fun handle(update: PrizebotCallbackQueryUpdate) {
         val giveaway = GiveawayFromCommandExtractor.extract(update, splitter = "_") ?: return
         
@@ -27,12 +26,12 @@ object RaffleCommand : CoroutineScope {
                 .raffle(update.bot, giveaway)
 
             job.join()
-            launchUpdateMessage(update, update.di.getGiveawayById(giveaway.id)!!)
+            updateMessage(update, update.di.getGiveawayById(giveaway.id)!!)
 
             if (!success)
                 return update.answer(text = update.locale.participantsCountIsNotEnough)
 
-        } else launchUpdateMessage(update, giveaway)
+        } else updateMessage(update, giveaway)
 
         GiveawayActiveMessagesUpdater.update(update, giveaway.id)
 
@@ -47,10 +46,8 @@ object RaffleCommand : CoroutineScope {
         )
     }
 
-    private fun launchUpdateMessage(update: PrizebotCallbackQueryUpdate, giveaway: Giveaway) =
-        launch {
-            GiveawayCallbackQueryMessageUpdater.update(update, giveaway, demo = true)
-        }
+    private suspend fun updateMessage(update: PrizebotCallbackQueryUpdate, giveaway: Giveaway) =
+        GiveawayCallbackQueryMessageUpdater.update(update, giveaway, demo = true)
 
     override val coroutineContext = GlobalScope.coroutineContext + Job()
 }

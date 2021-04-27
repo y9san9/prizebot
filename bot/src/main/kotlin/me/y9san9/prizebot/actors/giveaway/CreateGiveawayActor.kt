@@ -21,8 +21,8 @@ object CreateGiveawayActor {
     ): FSMStateResult<*> {
 
         val giveaway = update.di.saveGiveaway (
-            update.chatId, title, participateText,
-            languageCode = update.di.getLanguageCode(update.chatId) ?: update.languageCode,
+            update.userId, title, participateText,
+            languageCode = update.di.getLanguageCode(update.userId) ?: update.languageCode,
             raffleDate, winnersCount, conditions
         )
 

@@ -13,4 +13,4 @@ fun FSM.Companion.prizebotPrivateMessages (
     storage: PrizebotFSMStorage,
     scope: CoroutineScope,
     throwableHandler: suspend (Throwable) -> Unit
-) = FSM(events, states, storage, scope, throwableHandler) { it.chatId }
+) = FSM(events, states, storage, scope, throwableHandler) { it.userId }

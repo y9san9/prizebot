@@ -6,13 +6,13 @@ import dev.inmo.tgbotapi.types.buttons.SimpleKeyboardButton
 import me.y9san9.prizebot.database.giveaways_storage.GiveawaysStorage
 import me.y9san9.prizebot.database.language_codes_storage.LanguageCodesStorage
 import me.y9san9.prizebot.extensions.telegram.locale
-import me.y9san9.telegram.updates.hierarchies.FromChatLocalizedDIBotUpdate
+import me.y9san9.telegram.updates.hierarchies.FromUserLocalizedDIBotUpdate
 
 
-fun <T> mainMarkup(update: FromChatLocalizedDIBotUpdate<T>): KeyboardMarkup where
+fun <T> mainMarkup(update: FromUserLocalizedDIBotUpdate<T>): KeyboardMarkup where
         T : GiveawaysStorage, T : LanguageCodesStorage {
     val storage = update.di
-    val userId = update.chatId
+    val userId = update.userId
     val locale = update.locale
 
     val buttons = listOf (

@@ -6,7 +6,7 @@ import me.y9san9.fsm.stateResult
 import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.Condition
 import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.PositiveInt
 import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.PositiveIntRequired
-import me.y9san9.prizebot.extensions.any.unit
+import me.y9san9.extensions.any.unit
 import me.y9san9.prizebot.extensions.telegram.PrizebotFSMState
 import me.y9san9.prizebot.extensions.telegram.PrizebotMessageUpdate
 import me.y9san9.prizebot.extensions.telegram.locale

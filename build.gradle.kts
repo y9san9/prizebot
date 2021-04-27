@@ -20,6 +20,7 @@ allprojects {
 }
 
 dependencies {
+    implementation(utils)
     implementation(bot)
     implementation(coroutines)
 }

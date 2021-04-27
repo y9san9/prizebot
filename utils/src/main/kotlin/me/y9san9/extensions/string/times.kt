@@ -1,4 +1,4 @@
-package me.y9san9.prizebot.extensions.string
+package me.y9san9.extensions.string
 
 
 operator fun String.times(count: Int) = buildString {

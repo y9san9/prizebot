@@ -1,6 +1,5 @@
 package me.y9san9.prizebot
 
-import dev.inmo.micro_utils.coroutines.subscribeSafely
 import dev.inmo.tgbotapi.bot.Ktor.telegramBot
 import dev.inmo.tgbotapi.bot.TelegramBot
 import dev.inmo.tgbotapi.extensions.api.send.sendMessage
@@ -12,14 +11,13 @@ import dev.inmo.tgbotapi.types.message.abstracts.PublicContentMessage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import me.y9san9.extensions.flow.createParallelLauncher
+import me.y9san9.extensions.flow.launchEachSafely
 import me.y9san9.fsm.FSM
 import me.y9san9.fsm.statesOf
 import me.y9san9.prizebot.actors.giveaway.AutoRaffleActor
 import me.y9san9.prizebot.database.giveaways_active_messages_storage.GiveawaysActiveMessagesStorage
 import me.y9san9.prizebot.database.giveaways_storage.GiveawaysStorage
-import me.y9san9.prizebot.database.giveaways_storage.WinnersCount
-import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.Condition
-import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.GiveawayConditions
 import me.y9san9.prizebot.database.language_codes_storage.LanguageCodesStorage
 import me.y9san9.prizebot.database.linked_channels_storage.LinkedChannelsStorage
 import me.y9san9.prizebot.database.states_storage.PrizebotFSMStorage
@@ -30,6 +28,7 @@ import me.y9san9.prizebot.handlers.private_messages.fsm.prizebotPrivateMessages
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.MainState
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.statesSerializers
 import me.y9san9.prizebot.di.PrizebotDI
+import me.y9san9.extensions.flow.launchEachSafelyByChatId
 import me.y9san9.prizebot.extensions.telegram.PrizebotMessageUpdate
 import me.y9san9.prizebot.handlers.channel_group_messages.ChannelGroupMessagesHandler
 import me.y9san9.prizebot.handlers.my_chat_member_updated.MyChatMemberUpdateHandler
@@ -73,24 +72,29 @@ class Prizebot (
 
         messageFlow
             .mapNotNull { it.data as? PublicContentMessage<*> ?: it.data as? ChannelContentMessage<*> }
-            .map { MessageUpdate(bot, di, message = it) }
-            .subscribeSafely(scope, ::logException, ChannelGroupMessagesHandler::handle)
+            .map { GroupMessageUpdate(bot, di, message = it) }
+            .createParallelLauncher()
+            .launchEachSafely(scope, ::logException, { it.chatId },  ChannelGroupMessagesHandler(scope)::launchHandle)
 
         myChatMemberUpdatedFlow
             .map { MyChatMemberUpdate(bot, di, update = it) }
-            .subscribeSafely(scope, ::logException, MyChatMemberUpdateHandler::handle)
+            .createParallelLauncher()
+            .launchEachSafelyByChatId(scope, ::logException, MyChatMemberUpdateHandler(scope)::launchHandle)
 
         inlineQueryFlow
             .map { InlineQueryUpdate(bot, di, query = it) }
-            .subscribeSafely(scope, ::logException, InlineQueryHandler::handle)
+            .createParallelLauncher()
+            .launchEachSafelyByChatId(scope, ::logException, InlineQueryHandler(scope)::launchHandle)
 
         callbackQueryFlow
             .map { CallbackQueryUpdate(bot, di, query = it) }
-            .subscribeSafely(scope, ::logException, CallbackQueryHandler::handle)
+            .createParallelLauncher()
+            .launchEachSafelyByChatId(scope, ::logException, CallbackQueryHandler(scope)::launchHandle)
 
         chosenInlineResultFlow
             .map { ChosenInlineResultUpdate(bot, di, update = it) }
-            .subscribeSafely(scope, ::logException, ChosenInlineResultHandler::handle)
+            .createParallelLauncher()
+            .launchEachSafelyByChatId(scope, ::logException, ChosenInlineResultHandler(scope)::launchHandle)
     }
 
     private fun scheduleRaffles(bot: TelegramBot, di: PrizebotDI) = scope.launch {

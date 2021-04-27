@@ -13,7 +13,7 @@ import me.y9san9.prizebot.extensions.telegram.PrizebotCallbackQueryUpdate
 
 object ParticipateCommand {
     suspend fun handle(update: PrizebotCallbackQueryUpdate) {
-        val participantId = update.chatId
+        val participantId = update.userId
         val locale = update.locale
 
         val giveaway = GiveawayFromCommandExtractor.extract(update, splitter = "_")

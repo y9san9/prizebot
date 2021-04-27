@@ -3,7 +3,7 @@ package me.y9san9.prizebot.resources.locales
 import dev.inmo.tgbotapi.CommonAbstracts.TextSource
 import dev.inmo.tgbotapi.CommonAbstracts.plus
 import dev.inmo.tgbotapi.types.MessageEntity.textsources.*
-import me.y9san9.prizebot.extensions.string.awesomeCut
+import me.y9san9.extensions.string.awesomeCut
 import me.y9san9.prizebot.resources.Emoji
 import me.y9san9.prizebot.resources.MAX_TITLE_LEN
 

@@ -4,6 +4,7 @@ plugins {
 }
 
 dependencies {
+    implementation(utils)
     implementation(coroutines)
     implementation(serialization)
 }

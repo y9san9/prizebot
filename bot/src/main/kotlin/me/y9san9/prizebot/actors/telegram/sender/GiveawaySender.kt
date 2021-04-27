@@ -7,13 +7,13 @@ import me.y9san9.prizebot.extensions.telegram.PrizebotLocalizedBotUpdate
 import me.y9san9.prizebot.resources.content.giveawayContent
 import me.y9san9.prizebot.resources.content.extractGiveawayContent
 import me.y9san9.telegram.updates.extensions.send_message.sendMessage
-import me.y9san9.telegram.updates.hierarchies.FromChatLocalizedDIBotUpdate
+import me.y9san9.telegram.updates.hierarchies.FromUserLocalizedDIBotUpdate
 import me.y9san9.telegram.updates.primitives.HasTextUpdate
 
 
 object GiveawaySender {
     suspend fun <TUpdate, TDI> send(update: TUpdate) where
-            TUpdate : HasTextUpdate, TUpdate : FromChatLocalizedDIBotUpdate<TDI>,
+            TUpdate : HasTextUpdate, TUpdate : FromUserLocalizedDIBotUpdate<TDI>,
             TDI: GiveawaysStorage, TDI : LanguageCodesStorage {
 
         val (entities, markup) = extractGiveawayContent(update) ?: return

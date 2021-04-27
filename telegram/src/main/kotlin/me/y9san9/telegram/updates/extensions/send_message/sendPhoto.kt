@@ -8,7 +8,7 @@ import dev.inmo.tgbotapi.requests.abstracts.MultipartFile
 import dev.inmo.tgbotapi.types.ChatId
 import dev.inmo.tgbotapi.types.MessageIdentifier
 import dev.inmo.tgbotapi.types.buttons.KeyboardMarkup
-import me.y9san9.telegram.updates.hierarchies.FromChatBotUpdate
+import me.y9san9.telegram.updates.hierarchies.FromUserBotUpdate
 
 
 /**
@@ -18,7 +18,7 @@ private val cache = mutableMapOf<String, FileId>()
 /**
  * Photo cached by name
  */
-suspend fun FromChatBotUpdate.sendPhotoCached (
+suspend fun FromUserBotUpdate.sendPhotoCached (
     file: MultipartFile,
     entities: List<TextSource>,
     disableNotification: Boolean = false,
@@ -38,7 +38,7 @@ else
     ).apply { cache[file.filename] = content.media.fileId }
 
 
-suspend fun FromChatBotUpdate.sendPhoto (
+suspend fun FromUserBotUpdate.sendPhoto (
     file: InputFile,
     entities: List<TextSource>,
     disableNotification: Boolean = false,
@@ -46,7 +46,7 @@ suspend fun FromChatBotUpdate.sendPhoto (
     allowSendingWithoutReply: Boolean? = null,
     replyMarkup: KeyboardMarkup? = null
 ) = bot.sendPhoto (
-    ChatId(chatId), file,
+    ChatId(userId), file,
     entities, disableNotification,
     replyToMessageId, allowSendingWithoutReply,
     replyMarkup

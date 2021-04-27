@@ -17,4 +17,5 @@ dependencies {
     implementation(fsm)
     implementation(telegram)
     implementation(random)
+    implementation(utils)
 }
