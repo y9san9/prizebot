@@ -196,7 +196,9 @@ open class Locale {
     open val raffleProcessing = "Please wait, raffle is being processed"
 
     open val promoteBot = "Promote bot to admin first"
-    
+
+    open val thisChatIsNotPublic = "This chat is not public, please add a username"
+
     companion object {
         fun with(language: String?) = locales
             .firstOrNull { it.code == language }

@@ -2,10 +2,13 @@ package me.y9san9.prizebot.handlers.channel_group_messages
 
 import dev.inmo.micro_utils.coroutines.safelyWithoutExceptions
 import dev.inmo.tgbotapi.extensions.api.bot.getMe
+import dev.inmo.tgbotapi.extensions.api.chat.get.getChat
 import dev.inmo.tgbotapi.extensions.api.chat.members.getChatMember
+import dev.inmo.tgbotapi.extensions.api.send.sendMessage
 import dev.inmo.tgbotapi.types.ChatId
 import dev.inmo.tgbotapi.types.ChatMember.abstracts.AdministratorChatMember
 import dev.inmo.tgbotapi.types.UserId
+import dev.inmo.tgbotapi.types.chat.abstracts.UsernameChat
 import me.y9san9.extensions.any.unit
 import me.y9san9.prizebot.actors.telegram.ChatLinkerActor
 import me.y9san9.prizebot.extensions.telegram.PrizebotGroupMessageUpdate
@@ -26,6 +29,9 @@ object ChannelGroupMessagesHandler {
 
             if(sender !is AdministratorChatMember)
                 return@command
+
+            if((update.bot.getChat(ChatId(update.chatId)) as? UsernameChat)?.username?.username == null)
+                return update.sendMessage(update.locale.thisChatIsNotPublic).unit
 
             if(bot !is AdministratorChatMember)
                 return@command update.sendMessage(update.locale.promoteBot).unit

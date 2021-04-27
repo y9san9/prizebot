@@ -189,4 +189,6 @@ object RuLocale : Locale() {
     override val raffleProcessing = "Подождите, идёт обработка розыгрыша"
 
     override val promoteBot = "Пожалуйста повысьте бота до администратора"
+
+    override val thisChatIsNotPublic = "Сделайте чат публичным, чтобы подключить его"
 }
