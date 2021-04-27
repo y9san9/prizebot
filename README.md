@@ -1,7 +1,7 @@
 <h1 align="center">Welcome to prizebot 👋</h1>
 <p align="center">
     <a href="https://www.codacy.com/gh/y9san9/prizebot/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=y9san9/prizebot&amp;utm_campaign=Badge_Grade"><img alt="Codacy" src="https://app.codacy.com/project/badge/Grade/ef298b554e2340508e1f8b1635dcc6b9"/></a>
-    <a href="https://hitsofcode.com/github/y9san9/prizebot/view?branch=master"><img alt="HoC" src="https://hitsofcode.com/github/y9san9/prizebot?branch=master"/></a>
+    <a href="https://hitsofcode.com/github/y9san9/prizebot/view?branch=dev"><img alt="HoC" src="https://hitsofcode.com/github/y9san9/prizebot?branch=dev"/></a>
     <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/y9san9/prizebot&title=views%20daily/total" alt="Views" />
     <a href="https://wakatime.com/badge/github/y9san9/prizebot"><img src="https://wakatime.com/badge/github/y9san9/prizebot.svg"/></a>
     <br><br>
