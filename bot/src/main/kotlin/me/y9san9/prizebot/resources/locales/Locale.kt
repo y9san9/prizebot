@@ -133,8 +133,8 @@ open class Locale {
 
     open val raffleDate = "Raffle date"
 
-    open fun cannotRaffleGiveaway(title: String) =
-        "Cannot automatically raffle giveaway '$title', so you can raffle it manually later"
+    open fun lackOfParticipants(giveawayTitle: String) =
+        "Cannot automatically raffle giveaway '$giveawayTitle' because lack of participants, so you can raffle it manually later"
 
     open val winnersCountIsOutOfRange = "Winners count may be from 1 up to 50 000"
 

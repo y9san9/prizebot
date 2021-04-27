@@ -1,6 +1,5 @@
 package me.y9san9.prizebot.resources.locales
 
-import dev.inmo.tgbotapi.CommonAbstracts.TextSource
 import dev.inmo.tgbotapi.CommonAbstracts.plus
 import dev.inmo.tgbotapi.types.MessageEntity.textsources.*
 import me.y9san9.extensions.string.awesomeCut
@@ -124,8 +123,8 @@ object RuLocale : Locale() {
 
     override val raffleDate = "Дата розыгрыша"
 
-    override fun cannotRaffleGiveaway(title: String) =
-        "Не получилось автоматически разыграть '$title', вы можете сделать это вручную позже"
+    override fun lackOfParticipants(giveawayTitle: String) =
+        "Недостаточно участников, чтобы автоматически разыграть '$giveawayTitle', вы можете сделать это вручную позже"
 
     override val winnersCountIsOutOfRange =
         "Количество победителей должно быть от 1 до 50 000"

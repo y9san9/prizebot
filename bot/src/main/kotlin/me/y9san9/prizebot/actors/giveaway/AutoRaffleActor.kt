@@ -67,7 +67,7 @@ object AutoRaffleActor : CoroutineScope {
         } else {
             giveaway.removeRaffleDate()
             val locale = Locale.with(di.getLanguageCode(giveaway.ownerId))
-            bot.sendMessage(ChatId(giveaway.ownerId), locale.cannotRaffleGiveaway(giveaway.title))
+            bot.sendMessage(ChatId(giveaway.ownerId), locale.lackOfParticipants(giveaway.title))
         }
     }
 
