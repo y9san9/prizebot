@@ -3,16 +3,19 @@ package me.y9san9.prizebot.actors.giveaway
 import me.y9san9.fsm.FSMStateResult
 import me.y9san9.fsm.stateResult
 import me.y9san9.prizebot.database.giveaways_storage.WinnersCount
-import me.y9san9.prizebot.actors.telegram.sender.GiveawayCreatedSender
+import me.y9san9.prizebot.actors.telegram.sender.GiveawaySender
 import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.GiveawayConditions
-import me.y9san9.prizebot.extensions.telegram.PrizebotMessageUpdate
+import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
+import me.y9san9.prizebot.extensions.telegram.locale
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.MainState
+import me.y9san9.prizebot.resources.markups.mainMarkup
+import me.y9san9.telegram.updates.extensions.send_message.sendMessage
 import java.time.OffsetDateTime
 
 
 object CreateGiveawayActor {
     suspend fun create (
-        update: PrizebotMessageUpdate,
+        update: PrizebotPrivateMessageUpdate,
         title: String,
         participateText: String,
         raffleDate: OffsetDateTime?,
@@ -26,7 +29,8 @@ object CreateGiveawayActor {
             raffleDate, winnersCount, conditions
         )
 
-        GiveawayCreatedSender.send(update, giveaway)
+        update.sendMessage(update.locale.giveawayCreated, replyMarkup = mainMarkup(update))
+        GiveawaySender.send(update, giveaway, demo = true)
 
         AutoRaffleActor.schedule(update.bot, giveaway, update.di)
 

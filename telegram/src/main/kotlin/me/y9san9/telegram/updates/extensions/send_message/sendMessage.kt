@@ -6,10 +6,11 @@ import dev.inmo.tgbotapi.types.ChatId
 import dev.inmo.tgbotapi.types.MessageIdentifier
 import dev.inmo.tgbotapi.types.ParseMode.ParseMode
 import dev.inmo.tgbotapi.types.buttons.KeyboardMarkup
-import me.y9san9.telegram.updates.hierarchies.FromUserBotUpdate
+import me.y9san9.telegram.updates.primitives.BotUpdate
+import me.y9san9.telegram.updates.primitives.FromChatUpdate
 
 
-suspend fun FromUserBotUpdate.sendMessage (
+suspend fun <T> T.sendMessage (
     text: String,
     parseMode: ParseMode? = null,
     disableWebPagePreview: Boolean? = null,
@@ -17,22 +18,22 @@ suspend fun FromUserBotUpdate.sendMessage (
     replyToMessageId: MessageIdentifier? = null,
     allowSendingWithoutReply: Boolean? = null,
     replyMarkup: KeyboardMarkup? = null
-) = bot.sendMessage (
-    ChatId(userId), text, parseMode,
+) where T : BotUpdate, T : FromChatUpdate = bot.sendMessage (
+    ChatId(chatId), text, parseMode,
     disableWebPagePreview, disableNotification, replyToMessageId,
     allowSendingWithoutReply, replyMarkup
 )
 
 
-suspend fun FromUserBotUpdate.sendMessage (
+suspend fun <T> T.sendMessage (
     entities: List<TextSource>,
     disableWebPagePreview: Boolean? = null,
     disableNotification: Boolean = false,
     replyToMessageId: MessageIdentifier? = null,
     allowSendingWithoutReply: Boolean? = null,
     replyMarkup: KeyboardMarkup? = null
-) = bot.sendMessage (
-    ChatId(userId), entities, disableWebPagePreview,
+) where T : BotUpdate, T : FromChatUpdate = bot.sendMessage (
+    ChatId(chatId), entities, disableWebPagePreview,
     disableNotification, replyToMessageId,
     allowSendingWithoutReply, replyMarkup
 )

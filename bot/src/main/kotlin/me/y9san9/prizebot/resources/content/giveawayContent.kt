@@ -7,7 +7,7 @@ import me.y9san9.prizebot.database.giveaways_storage.GiveawaysStorage
 import me.y9san9.prizebot.actors.telegram.extractor.GiveawayFromCommandExtractor
 import me.y9san9.prizebot.resources.entities.giveawayEntities
 import me.y9san9.prizebot.resources.markups.giveawayMarkup
-import me.y9san9.telegram.updates.hierarchies.FromUserLocalizedDIBotUpdate
+import me.y9san9.telegram.updates.hierarchies.PossiblyFromUserLocalizedDIBotUpdate
 import me.y9san9.telegram.updates.primitives.BotUpdate
 import me.y9san9.telegram.updates.primitives.HasTextUpdate
 
@@ -17,7 +17,7 @@ suspend fun <TUpdate, TDI> extractGiveawayContent (
     splitter: String = "\\s+",
     demo: Boolean = false
 ): Pair<TextSourcesList, InlineKeyboardMarkup?>? where
-        TUpdate : HasTextUpdate, TUpdate : FromUserLocalizedDIBotUpdate<TDI>,
+        TUpdate : HasTextUpdate, TUpdate : PossiblyFromUserLocalizedDIBotUpdate<TDI>,
         TDI : GiveawaysStorage {
     val giveaway = GiveawayFromCommandExtractor.extract(update, splitter) ?: return null
 

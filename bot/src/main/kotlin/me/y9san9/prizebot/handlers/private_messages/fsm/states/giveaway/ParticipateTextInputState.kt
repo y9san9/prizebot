@@ -6,7 +6,7 @@ import me.y9san9.fsm.FSMStateResult
 import me.y9san9.fsm.stateResult
 import me.y9san9.prizebot.extensions.telegram.textOrDefault
 import me.y9san9.prizebot.extensions.telegram.PrizebotFSMState
-import me.y9san9.prizebot.extensions.telegram.PrizebotMessageUpdate
+import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
 import me.y9san9.prizebot.extensions.telegram.locale
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.MainState
 import me.y9san9.prizebot.resources.Emoji
@@ -20,7 +20,7 @@ data class GiveawayTitle (
 )
 
 object ParticipateTextInputState : PrizebotFSMState<GiveawayTitle> {
-    override suspend fun process (data: GiveawayTitle, event: PrizebotMessageUpdate): FSMStateResult<*> {
+    override suspend fun process (data: GiveawayTitle, event: PrizebotPrivateMessageUpdate): FSMStateResult<*> {
         event.textOrDefault { text ->
             return when (text) {
                 "/cancel" -> MainState.cancellation(event)
@@ -33,7 +33,7 @@ object ParticipateTextInputState : PrizebotFSMState<GiveawayTitle> {
     }
 
     private suspend fun raffleDateInput (
-        update: PrizebotMessageUpdate,
+        update: PrizebotPrivateMessageUpdate,
         title: String,
         participateText: String
     ): FSMStateResult<*> {

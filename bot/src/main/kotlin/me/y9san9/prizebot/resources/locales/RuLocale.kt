@@ -185,4 +185,8 @@ object RuLocale : Locale() {
     override val notSubscribedToConditions = "Вы не подписались на все каналы/чаты"
 
     override fun friendsAreNotInvited(invitedCount: Int, requiredCount: Int) = "Вы пригласили $invitedCount / $requiredCount друзей"
+
+    override val raffleProcessing = "Подождите, идёт обработка розыгрыша"
+
+    override val promoteBot = "Пожалуйста повысьте бота до администратора"
 }

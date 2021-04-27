@@ -8,13 +8,8 @@ import me.y9san9.prizebot.resources.*
 import me.y9san9.telegram.updates.extensions.command.commandOrAnswer
 
 
-class CallbackQueryHandler(private val scope: CoroutineScope) {
-
-    fun launchHandle(update: PrizebotCallbackQueryUpdate) = scope.launch {
-        handle(update)
-    }
-
-    private suspend fun handle(update: PrizebotCallbackQueryUpdate) = update.commandOrAnswer(splitter = "_") {
+object CallbackQueryHandler {
+    suspend fun handle(update: PrizebotCallbackQueryUpdate) = update.commandOrAnswer(splitter = "_") {
         case("$CALLBACK_NO_ACTION") {
             update.answer()
         }

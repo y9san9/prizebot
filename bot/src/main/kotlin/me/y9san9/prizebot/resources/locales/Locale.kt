@@ -194,6 +194,8 @@ open class Locale {
     open fun friendsAreNotInvited(invitedCount: Int, requiredCount: Int) = "You have invited $invitedCount / $requiredCount friends"
 
     open val raffleProcessing = "Please wait, raffle is being processed"
+
+    open val promoteBot = "Promote bot to admin first"
     
     companion object {
         fun with(language: String?) = locales

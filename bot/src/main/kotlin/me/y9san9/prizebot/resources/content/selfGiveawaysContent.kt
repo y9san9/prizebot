@@ -7,15 +7,18 @@ import me.y9san9.prizebot.database.giveaways_storage.GiveawaysStorage
 import me.y9san9.prizebot.database.language_codes_storage.LanguageCodesStorage
 import me.y9san9.prizebot.resources.entities.selfGiveawaysEntities
 import me.y9san9.prizebot.resources.markups.selfGiveawaysMarkup
-import me.y9san9.telegram.updates.hierarchies.FromUserLocalizedDIBotUpdate
+import me.y9san9.telegram.updates.hierarchies.PossiblyFromUserLocalizedDIBotUpdate
+import me.y9san9.telegram.updates.primitives.FromUserUpdate
 
 
-fun <T> selfGiveawaysContent (
-    update: FromUserLocalizedDIBotUpdate<T>,
+fun <TUpdate, TDI> selfGiveawaysContent (
+    update: TUpdate,
     offset: Long = 0,
     count: Int = 5
 ): Pair<TextSourcesList, InlineKeyboardMarkup>? where
-        T : GiveawaysStorage, T : LanguageCodesStorage {
+        TUpdate : PossiblyFromUserLocalizedDIBotUpdate<TDI>,
+        TUpdate : FromUserUpdate,
+        TDI : GiveawaysStorage, TDI : LanguageCodesStorage {
     val storage = update.di
     val userId = update.userId
     val languageCode = update.languageCode

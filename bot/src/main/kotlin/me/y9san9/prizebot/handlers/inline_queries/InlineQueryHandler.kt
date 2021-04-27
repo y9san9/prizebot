@@ -9,13 +9,8 @@ import me.y9san9.prizebot.resources.INLINE_ACTION_SEND_GIVEAWAY
 import me.y9san9.telegram.updates.extensions.command.commandOrAnswer
 
 
-class InlineQueryHandler(private val scope: CoroutineScope) {
-
-    fun launchHandle(update: PrizebotInlineQueryUpdate) = scope.launch {
-        handle(update)
-    }
-
-    private suspend fun handle(update: PrizebotInlineQueryUpdate) {
+object InlineQueryHandler {
+    suspend fun handle(update: PrizebotInlineQueryUpdate) {
         update.commandOrAnswer(splitter = "_") {
             case("$INLINE_ACTION_SEND_GIVEAWAY", argsCount = 1) {
                 SendGiveawayCommand.handle(update)

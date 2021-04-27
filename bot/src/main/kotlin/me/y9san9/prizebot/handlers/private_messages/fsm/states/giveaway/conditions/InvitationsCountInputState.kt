@@ -8,7 +8,7 @@ import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.Positive
 import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.PositiveIntRequired
 import me.y9san9.extensions.any.unit
 import me.y9san9.prizebot.extensions.telegram.PrizebotFSMState
-import me.y9san9.prizebot.extensions.telegram.PrizebotMessageUpdate
+import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
 import me.y9san9.prizebot.extensions.telegram.locale
 import me.y9san9.prizebot.extensions.telegram.textOrDefault
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.ConditionInputData
@@ -19,7 +19,7 @@ import me.y9san9.telegram.updates.extensions.send_message.sendMessage
 object InvitationsCountInputState : PrizebotFSMState<ConditionInputData> {
     override suspend fun process (
         data: ConditionInputData,
-        event: PrizebotMessageUpdate
+        event: PrizebotPrivateMessageUpdate
     ): FSMStateResult<*> {
         event.textOrDefault { text ->
             val number = text.toIntOrNull()
@@ -45,7 +45,7 @@ object InvitationsCountInputState : PrizebotFSMState<ConditionInputData> {
 
 @Suppress("FunctionName")
 suspend fun InvitationsCountInputState (
-    update: PrizebotMessageUpdate, data: ConditionInputData
+    update: PrizebotPrivateMessageUpdate, data: ConditionInputData
 ) = stateResult(InvitationsCountInputState, data) {
     update.sendMessage(update.locale.enterInvitationsCount, replyMarkup = ReplyKeyboardRemove())
 }

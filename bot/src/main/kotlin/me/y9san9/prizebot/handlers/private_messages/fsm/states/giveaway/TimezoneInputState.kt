@@ -25,7 +25,7 @@ data class TimezoneInputData (
 object TimezoneInputState : PrizebotFSMState<TimezoneInputData> {
     override suspend fun process (
         data: TimezoneInputData,
-        event: PrizebotMessageUpdate
+        event: PrizebotPrivateMessageUpdate
     ): FSMStateResult<*> {
         event.commandOrDefault {
             raw("/cancel") {
@@ -66,7 +66,7 @@ object TimezoneInputState : PrizebotFSMState<TimezoneInputData> {
     }
 
     private suspend fun nextState (
-        update: PrizebotMessageUpdate,
+        update: PrizebotPrivateMessageUpdate,
         data: TimezoneInputData,
         offset: ZoneOffset
     ): FSMStateResult<*> {
@@ -80,7 +80,7 @@ object TimezoneInputState : PrizebotFSMState<TimezoneInputData> {
 
 
 @Suppress("FunctionName")
-suspend fun TimezoneInputState(update: PrizebotMessageUpdate, data: TimezoneInputData) =
+suspend fun TimezoneInputState(update: PrizebotPrivateMessageUpdate, data: TimezoneInputData) =
     stateResult(TimezoneInputState, data) {
         update.sendMessage(update.locale.selectOffset, replyMarkup = timezoneKeyboard(update))
     }

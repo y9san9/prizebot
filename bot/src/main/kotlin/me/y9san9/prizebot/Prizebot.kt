@@ -28,8 +28,8 @@ import me.y9san9.prizebot.handlers.private_messages.fsm.prizebotPrivateMessages
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.MainState
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.statesSerializers
 import me.y9san9.prizebot.di.PrizebotDI
-import me.y9san9.extensions.flow.launchEachSafelyByChatId
-import me.y9san9.prizebot.extensions.telegram.PrizebotMessageUpdate
+import me.y9san9.prizebot.extensions.flow.launchEachSafelyByChatId
+import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
 import me.y9san9.prizebot.handlers.channel_group_messages.ChannelGroupMessagesHandler
 import me.y9san9.prizebot.handlers.my_chat_member_updated.MyChatMemberUpdateHandler
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.*
@@ -66,7 +66,7 @@ class Prizebot (
 
         val privateMessages = messageFlow
             .mapNotNull { it.data as? PrivateContentMessage<*> }
-            .map { MessageUpdate(bot, di, message = it) }
+            .map { PrivateMessageUpdate(bot, di, message = it) }
 
         createFSM(events = privateMessages)
 
@@ -74,34 +74,34 @@ class Prizebot (
             .mapNotNull { it.data as? PublicContentMessage<*> ?: it.data as? ChannelContentMessage<*> }
             .map { GroupMessageUpdate(bot, di, message = it) }
             .createParallelLauncher()
-            .launchEachSafely(scope, ::logException, { it.chatId },  ChannelGroupMessagesHandler(scope)::launchHandle)
+            .launchEachSafely(scope, ::logException, { it.chatId },  ChannelGroupMessagesHandler::handle)
 
         myChatMemberUpdatedFlow
             .map { MyChatMemberUpdate(bot, di, update = it) }
             .createParallelLauncher()
-            .launchEachSafelyByChatId(scope, ::logException, MyChatMemberUpdateHandler(scope)::launchHandle)
+            .launchEachSafelyByChatId(scope, ::logException, MyChatMemberUpdateHandler::handle)
 
         inlineQueryFlow
             .map { InlineQueryUpdate(bot, di, query = it) }
             .createParallelLauncher()
-            .launchEachSafelyByChatId(scope, ::logException, InlineQueryHandler(scope)::launchHandle)
+            .launchEachSafelyByChatId(scope, ::logException, InlineQueryHandler::handle)
 
         callbackQueryFlow
             .map { CallbackQueryUpdate(bot, di, query = it) }
             .createParallelLauncher()
-            .launchEachSafelyByChatId(scope, ::logException, CallbackQueryHandler(scope)::launchHandle)
+            .launchEachSafelyByChatId(scope, ::logException, CallbackQueryHandler::handle)
 
         chosenInlineResultFlow
             .map { ChosenInlineResultUpdate(bot, di, update = it) }
             .createParallelLauncher()
-            .launchEachSafelyByChatId(scope, ::logException, ChosenInlineResultHandler(scope)::launchHandle)
+            .launchEachSafelyByChatId(scope, ::logException, ChosenInlineResultHandler::handle)
     }
 
     private fun scheduleRaffles(bot: TelegramBot, di: PrizebotDI) = scope.launch {
         AutoRaffleActor.scheduleAll(bot, di)
     }
 
-    private fun createFSM(events: Flow<PrizebotMessageUpdate>) = FSM.prizebotPrivateMessages (
+    private fun createFSM(events: Flow<PrizebotPrivateMessageUpdate>) = FSM.prizebotPrivateMessages (
         events,
         states = statesOf (
             initial = MainState,

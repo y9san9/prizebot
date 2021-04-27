@@ -1,4 +1,4 @@
-package me.y9san9.extensions.flow
+package me.y9san9.prizebot.extensions.flow
 
 import kotlinx.coroutines.CoroutineScope
 import me.y9san9.extensions.flow.FlowParallelLauncher
