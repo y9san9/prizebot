@@ -147,7 +147,7 @@ object RuLocale : Locale() {
 
     override val enterInvitationsCount = "Введите количество приглашений для участия"
 
-    override val selectLinkedChat = "Выберите подключённый канал (используйте /help, чтобы узнать как привязать канал, или /cancel, чтобы отменить создание розыгрыша)"
+    override val selectLinkedChat = "Выберите подключённый канал (используйте /help, чтобы узнать как привязать канал, или /cancel, чтобы отменить текущий шаг)"
 
     override val updateChannels = "Обновить привязанные каналы"
 

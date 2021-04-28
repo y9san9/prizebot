@@ -33,13 +33,14 @@ data class SubscriptionChannelInputData (
 )
 
 object SubscriptionChannelInputState : PrizebotFSMState<SubscriptionChannelInputData> {
+
     override suspend fun process (
         data: SubscriptionChannelInputData,
         event: PrizebotPrivateMessageUpdate
     ): FSMStateResult<*> {
         event.textOrDefault { username ->
             when(username) {
-                "/cancel" -> return MainState.cancellation(event)
+                "/cancel" -> return ConditionInputState(event, data.conditionInputData)
                 "/help" -> event.sendMessage (
                     event.locale.channelLinkingHelp
                 )

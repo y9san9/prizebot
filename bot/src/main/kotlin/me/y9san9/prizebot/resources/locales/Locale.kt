@@ -156,7 +156,7 @@ open class Locale {
 
     open val enterInvitationsCount = "Enter invitations count for participation"
 
-    open val selectLinkedChat = "Select linked chat with buttons below (use /help for channel linking help, or use /cancel to cancel giveaway creation)"
+    open val selectLinkedChat = "Select linked chat with buttons below (use /help for channel linking help, or use /cancel to cancel current step)"
 
     open val updateChannels = "Update linked channels"
 
