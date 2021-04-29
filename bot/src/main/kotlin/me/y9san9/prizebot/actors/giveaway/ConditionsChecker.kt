@@ -26,8 +26,10 @@ object ConditionsChecker {
         giveaway.conditions.list
             .filterIsInstance<Condition.Subscription>()
             .mapNotNull { condition ->
-                val username = (bot.getChat(ChatId(condition.channelId)) as? UsernameChat)
-                    ?.username?.username ?: return@mapNotNull null
+                val username = try {
+                        (bot.getChat(ChatId(condition.channelId)) as? UsernameChat)?.username?.username
+                } catch (_: Throwable) { null }
+                    ?: return@mapNotNull null
 
                 condition.channelId to username
             }.associate { it }

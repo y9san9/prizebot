@@ -1,12 +1,24 @@
 package me.y9san9.extensions.flow
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import me.y9san9.extensions.any.unit
 
+
+suspend fun main() = coroutineScope {
+    MutableSharedFlow<Int>(replay = 1)
+        .also {
+            launch {
+                delay(1000)
+                for (i in 1..1000)
+                    it.emit(i)
+            }
+        }
+        .createParallelLauncher()
+        .launchEach(coroutineScope = this) {}
+}.unit
 
 /**
  * Main use-case of this class is paralleling user events:
@@ -14,50 +26,45 @@ import kotlinx.coroutines.sync.Mutex
  *  events from one user should come consistently
  */
 class FlowParallelLauncher<T> (
-    private val flow: Flow<T>
+    private val flow: Flow<T>,
 ) {
-    private val mutexMap = mutableMapOf<Any, Mutex>()
-    private val lockedMutexCount = mutableMapOf<Mutex, Int>()
+    private val mapMutex = Mutex()
+    private val consumersCount = mutableMapOf<Any, Int>()
+    private val sharedFlows = mutableMapOf<Any, MutableSharedFlow<T>>()
 
     fun launchEach (
         coroutineScope: CoroutineScope,
         /**
-         * @return null if there is no need in synchronization
+         * @return null if there is no need in consistence
          */
-        mutexKey: suspend (T) -> Any? = { null },
+        consistentKey: suspend (T) -> Any? = { null },
         consumer: suspend (T) -> Unit
     ) = flow.onEach { item ->
+        val key = consistentKey(item)
+            ?: return@onEach coroutineScope.launch { consumer(item) }.unit
+
+        val flow = mapMutex.withLock {
+            consumersCount.compute(key) { _, count -> count?.inc() ?: 0 }
+            sharedFlows.getOrPut(key) {
+                val flow = MutableSharedFlow<T>(replay = 1)
+
+                flow.onEach { item ->
+                    consumer(item)
+                    mapMutex.withLock {
+                        consumersCount.compute(key) { _, count -> count?.dec() ?: 0 }
+                        if(consumersCount[key] == 0) {
+                            sharedFlows.remove(key)
+                            consumersCount.remove(key)
+                        }
+                    }
+                }.launchIn(coroutineScope)
+                return@getOrPut flow
+            }
+        }
         coroutineScope.launch {
-            val key = mutexKey(item)
-
-            val mutex = if(key == null)
-                null
-            else synchronized(lock = this@FlowParallelLauncher) {
-                mutexMap.getOrPut(key) { Mutex() }.also { mutex ->
-                    lockedMutexCount.compute(mutex) { _, count -> count?.inc() ?: 0 }
-                }
-            }
-
-            mutex?.lock()
-            try {
-                consumer(item)
-            } finally {
-                mutex?.unlock()
-            }
-
-            if(mutex != null) synchronized(lock = this@FlowParallelLauncher) {
-                lockedMutexCount.compute(mutex) { _, count -> count?.dec() ?: 0 }
-            }
-
-            key?.let(::cleanMap)
+            flow.emit(item)
         }
     }.launchIn(coroutineScope)
-
-    private fun cleanMap(key: Any) = synchronized(lock = this) {
-        val mutex = mutexMap[key] ?: return@synchronized
-        if(lockedMutexCount[mutex] == 0)
-            mutexMap.remove(key)
-    }
 }
 
 fun <T> FlowParallelLauncher<T>.launchEachSafely (

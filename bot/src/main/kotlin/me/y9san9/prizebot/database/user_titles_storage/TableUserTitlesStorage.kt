@@ -10,7 +10,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 internal class TableUserTitlesStorage (
     private val database: Database
 ) : UserTitlesStorage {
-    private object UserTitles : Table(name = "user_title") {
+    private object UserTitles : Table(name = "user_titles") {
         val USER_ID = long("userId")
         val USER_TITLE = text("userTitle")
     }

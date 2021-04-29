@@ -1,12 +1,9 @@
 package me.y9san9.prizebot.actors.giveaway
 
 import dev.inmo.tgbotapi.bot.TelegramBot
-import dev.inmo.tgbotapi.extensions.api.chat.get.getChat
+import dev.inmo.tgbotapi.extensions.api.send.sendMessage
 import dev.inmo.tgbotapi.types.ChatId
-import dev.inmo.tgbotapi.types.chat.abstracts.PrivateChat
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import me.y9san9.extensions.flow.createParallelLauncher
 import me.y9san9.prizebot.database.giveaways_storage.ActiveGiveaway
@@ -19,7 +16,7 @@ import me.y9san9.telegram.extensions.telegram_bot.getUserTitle
 object RaffleActor {
     private val scope = CoroutineScope(context = GlobalScope.coroutineContext + Job())
 
-    private val requests = MutableSharedFlow<Triple<TelegramBot, PrizebotDI, ActiveGiveaway>>()
+    private val requests = MutableSharedFlow<Triple<TelegramBot, PrizebotDI, ActiveGiveaway>>(replay = 1)
     private val responses = MutableSharedFlow<Pair<ActiveGiveaway, Boolean>>()
 
     init {
@@ -27,8 +24,10 @@ object RaffleActor {
             .createParallelLauncher()
             .launchEach (
                 scope,
-                mutexKey = { (_, _, giveaway) -> giveaway.id },
-                consumer = { (bot, di, giveaway) -> responses.emit(giveaway to raffleAction(bot, di, giveaway)) }
+                consistentKey = { (_, _, giveaway) -> giveaway.id },
+                consumer = { (bot, di, giveaway) ->
+                    responses.emit(giveaway to raffleAction(bot, di, giveaway))
+                }
             )
     }
 
@@ -37,6 +36,7 @@ object RaffleActor {
         titlesStorage: UserTitlesStorage,
         giveaway: ActiveGiveaway
     ): Boolean {
+
         val winnerIds = chooseWinners (
             bot,
             giveaway,
@@ -60,10 +60,9 @@ object RaffleActor {
         giveaway: ActiveGiveaway,
         di: PrizebotDI
     ): Boolean {
-        requests.emit(Triple(bot, di, giveaway))
+        scope.launch { requests.emit(Triple(bot, di, giveaway)) }
 
-        return responses.first { (g) -> g.id == giveaway.id }
-            .second
+        return responses.first { (g) -> g.id == giveaway.id }.second
     }
 
     private suspend fun chooseWinners (
