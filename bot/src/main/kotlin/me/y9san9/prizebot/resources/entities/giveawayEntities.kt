@@ -8,14 +8,14 @@ import me.y9san9.prizebot.database.giveaways_storage.FinishedGiveaway
 import me.y9san9.prizebot.database.giveaways_storage.Giveaway
 import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.Condition
 import me.y9san9.prizebot.database.giveaways_storage.locale
+import me.y9san9.prizebot.database.user_titles_storage.UserTitlesStorage
 import me.y9san9.telegram.updates.primitives.BotUpdate
-import me.y9san9.telegram.extensions.telegram_bot.getUserLink
 import java.time.format.DateTimeFormatter
 import java.util.*
 
 
-suspend fun giveawayEntities (
-    update: BotUpdate,
+fun giveawayEntities (
+    titlesStorage: UserTitlesStorage,
     giveaway: Giveaway
 ): TextSourcesList {
     val locale = giveaway.locale
@@ -51,7 +51,7 @@ suspend fun giveawayEntities (
 
     val winner = if(giveaway is FinishedGiveaway) {
         val links = giveaway.winnerIds
-            .map { id -> update.bot.getUserLink(id, locale.deletedUser) }
+            .map { id -> id.mention(text = titlesStorage.getUserTitle(id) ?: locale.deletedUser) }
             .flatMap { it + ", " }
             .dropLast(n = 1)
 

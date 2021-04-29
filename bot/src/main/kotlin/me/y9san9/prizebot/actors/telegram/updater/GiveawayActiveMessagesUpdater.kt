@@ -7,6 +7,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import me.y9san9.prizebot.database.giveaways_active_messages_storage.GiveawaysActiveMessagesStorage
 import me.y9san9.prizebot.database.giveaways_storage.GiveawaysStorage
+import me.y9san9.prizebot.database.user_titles_storage.UserTitlesStorage
 import me.y9san9.prizebot.resources.content.giveawayContent
 import me.y9san9.telegram.updates.hierarchies.DIBotUpdate
 
@@ -15,15 +16,16 @@ object GiveawayActiveMessagesUpdater {
     private val scope = CoroutineScope(context = SupervisorJob())
 
     fun <TDI> update (
-        update: DIBotUpdate<TDI>, giveawayId: Long
+        update: DIBotUpdate<TDI>,
+        giveawayId: Long
     ) where TDI : GiveawaysActiveMessagesStorage,
-            TDI : GiveawaysStorage = scope.launch {
+            TDI : GiveawaysStorage, TDI : UserTitlesStorage = scope.launch {
 
         val giveaway = update.di.getGiveawayById(giveawayId) ?: return@launch
 
         for(activeMessage in update.di.getActiveMessage(giveawayId)) launch {
             safelyWithoutExceptions {
-                val (entities, markup) = giveawayContent(update, giveaway)
+                val (entities, markup) = giveawayContent(update.di, giveaway)
                 update.bot.editMessageText(activeMessage, entities, replyMarkup = markup)
             }
         }

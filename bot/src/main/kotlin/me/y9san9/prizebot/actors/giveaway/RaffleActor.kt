@@ -1,19 +1,25 @@
 package me.y9san9.prizebot.actors.giveaway
 
 import dev.inmo.tgbotapi.bot.TelegramBot
+import dev.inmo.tgbotapi.extensions.api.chat.get.getChat
+import dev.inmo.tgbotapi.types.ChatId
+import dev.inmo.tgbotapi.types.chat.abstracts.PrivateChat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import me.y9san9.extensions.flow.createParallelLauncher
 import me.y9san9.prizebot.database.giveaways_storage.ActiveGiveaway
+import me.y9san9.prizebot.database.user_titles_storage.UserTitlesStorage
+import me.y9san9.prizebot.di.PrizebotDI
 import me.y9san9.random.extensions.shuffledRandomOrg
+import me.y9san9.telegram.extensions.telegram_bot.getUserTitle
 
 
 object RaffleActor {
     private val scope = CoroutineScope(context = GlobalScope.coroutineContext + Job())
 
-    private val requests = MutableSharedFlow<Pair<TelegramBot, ActiveGiveaway>>()
+    private val requests = MutableSharedFlow<Triple<TelegramBot, PrizebotDI, ActiveGiveaway>>()
     private val responses = MutableSharedFlow<Pair<ActiveGiveaway, Boolean>>()
 
     init {
@@ -21,12 +27,16 @@ object RaffleActor {
             .createParallelLauncher()
             .launchEach (
                 scope,
-                mutexKey = { (_, giveaway) -> giveaway.id },
-                consumer = { (bot, giveaway) -> responses.emit(giveaway to raffleAction(bot, giveaway)) }
+                mutexKey = { (_, _, giveaway) -> giveaway.id },
+                consumer = { (bot, di, giveaway) -> responses.emit(giveaway to raffleAction(bot, di, giveaway)) }
             )
     }
 
-    private suspend fun raffleAction(bot: TelegramBot, giveaway: ActiveGiveaway): Boolean {
+    private suspend fun raffleAction (
+        bot: TelegramBot,
+        titlesStorage: UserTitlesStorage,
+        giveaway: ActiveGiveaway
+    ): Boolean {
         val winnerIds = chooseWinners (
             bot,
             giveaway,
@@ -34,6 +44,9 @@ object RaffleActor {
         ) ?: return false
 
         giveaway.finish(winnerIds)
+        winnerIds.forEach { id ->
+            bot.getUserTitle(id)?.let { titlesStorage.saveUserTitle(id, it) }
+        }
 
         return true
     }
@@ -44,9 +57,10 @@ object RaffleActor {
      */
     suspend fun raffle (
         bot: TelegramBot,
-        giveaway: ActiveGiveaway
+        giveaway: ActiveGiveaway,
+        di: PrizebotDI
     ): Boolean {
-        requests.emit(bot to giveaway)
+        requests.emit(Triple(bot, di, giveaway))
 
         return responses.first { (g) -> g.id == giveaway.id }
             .second

@@ -31,7 +31,7 @@ object GiveawayCallbackQueryMessageUpdater {
         if(inlineMessageId == null && message == null)
             return
 
-        val (entities, markup) = giveawayContent(update, giveaway, demo)
+        val (entities, markup) = giveawayContent(update.di, giveaway, demo)
 
         if(inlineMessageId != null) safelyWithoutExceptions {
             update.bot.editMessageText (

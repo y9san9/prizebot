@@ -23,7 +23,7 @@ object RaffleCommand : CoroutineScope {
             val job = launchRaffleProcessingEdit(update)
 
             val success = RaffleActor
-                .raffle(update.bot, giveaway)
+                .raffle(update.bot, giveaway, update.di)
 
             job.join()
             updateMessage(update, update.di.getGiveawayById(giveaway.id)!!)

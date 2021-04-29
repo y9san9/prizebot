@@ -21,6 +21,7 @@ import me.y9san9.prizebot.database.giveaways_storage.GiveawaysStorage
 import me.y9san9.prizebot.database.language_codes_storage.LanguageCodesStorage
 import me.y9san9.prizebot.database.linked_channels_storage.LinkedChannelsStorage
 import me.y9san9.prizebot.database.states_storage.PrizebotFSMStorage
+import me.y9san9.prizebot.database.user_titles_storage.UserTitlesStorage
 import me.y9san9.prizebot.handlers.callback_queries.CallbackQueryHandler
 import me.y9san9.prizebot.handlers.choosen_inline_result.ChosenInlineResultHandler
 import me.y9san9.prizebot.handlers.inline_queries.InlineQueryHandler
@@ -60,7 +61,8 @@ class Prizebot (
             giveawaysStorage = GiveawaysStorage(database),
             giveawaysActiveMessagesStorage = GiveawaysActiveMessagesStorage(database),
             languageCodesStorage = LanguageCodesStorage(database),
-            linkedChannelsStorage = LinkedChannelsStorage(database)
+            linkedChannelsStorage = LinkedChannelsStorage(database),
+            userTitlesStorage = UserTitlesStorage(database)
         )
         scheduleRaffles(bot, di)
 

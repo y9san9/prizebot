@@ -10,13 +10,13 @@ import me.y9san9.prizebot.resources.markups.giveawayMarkup
 
 
 object GiveawayToResultArticleMapper {
-    suspend fun map (
+    fun map (
         resultId: String, update: PrizebotInlineQueryUpdate, giveaway: Giveaway
     ) = InlineQueryResultArticle (
         id = resultId,
         title = giveaway.title,
         description = update.locale.participateText(giveaway.participateText),
-        inputMessageContent = InputTextMessageContent(giveawayEntities(update, giveaway)),
+        inputMessageContent = InputTextMessageContent(giveawayEntities(update.di, giveaway)),
         replyMarkup = giveawayMarkup(giveaway)
     )
 }
