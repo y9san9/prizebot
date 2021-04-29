@@ -8,6 +8,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 
 
+/**
+ * Main use-case of this class is paralleling user events:
+ *  events from different users should be parallel while
+ *  events from one user should come consistently
+ */
 class FlowParallelLauncher<T> (
     private val flow: Flow<T>
 ) {
