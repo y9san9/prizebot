@@ -27,7 +27,7 @@ object ParticipateCommand {
                 locale.youHaveLeftGiveaway
             }
             else -> when(val result = ConditionsChecker.check(update.bot, participantId, giveaway as ActiveGiveaway)) {
-                is CheckConditionsResult.GiveawayInvalid -> locale.giveawayTitleInput
+                is CheckConditionsResult.GiveawayInvalid -> locale.giveawayInvalid
                 is CheckConditionsResult.NotSubscribedToConditions -> locale.notSubscribedToConditions
                 is CheckConditionsResult.FriendsAreNotInvited -> locale.friendsAreNotInvited (
                     result.invitedCount, result.requiredCount
