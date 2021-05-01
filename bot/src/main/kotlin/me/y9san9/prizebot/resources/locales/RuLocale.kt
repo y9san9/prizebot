@@ -196,7 +196,7 @@ object RuLocale : Locale() {
             "${Emoji.FIRST_PLACE} Foo Bar\n" +
             "${Emoji.SECOND_PLACE} Bar Foo\n" +
             "${Emoji.THIRD_PLACE} Baz Baz\n\n" +
-            "Это доступно только для розыгрышей с количеством участников от 2 до 10 включительно"
+            "Это доступно только для розыгрышей с количеством победителей от 2 до 10 включительно"
 
     override val yes = "Да"
 

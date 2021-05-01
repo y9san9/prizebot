@@ -9,6 +9,7 @@ import me.y9san9.prizebot.database.giveaways_storage.Giveaway
 import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.Condition
 import me.y9san9.prizebot.database.giveaways_storage.locale
 import me.y9san9.prizebot.database.user_titles_storage.UserTitlesStorage
+import me.y9san9.prizebot.extensions.emoji.getPlaceEmoji
 import me.y9san9.prizebot.resources.Emoji
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -54,7 +55,7 @@ fun giveawayEntities (
             .map { id -> id.mention(text = titlesStorage.getUserTitle(id) ?: locale.deletedUser) }
             .flatMapIndexed { i, mention ->
                 if(giveaway.displayWinnersWithEmojis)
-                    regular(Emoji.getPlaceEmoji(place = i + 1)) + mention + regular("\n")
+                    regular(Emoji.getPlaceEmoji(place = i + 1)) + " " + mention + regular("\n")
                 else
                     mention + regular(", ")
             }
