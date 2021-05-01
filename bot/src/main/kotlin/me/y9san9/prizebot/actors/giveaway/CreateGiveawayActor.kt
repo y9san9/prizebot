@@ -32,7 +32,7 @@ object CreateGiveawayActor {
         update.sendMessage(update.locale.giveawayCreated, replyMarkup = mainMarkup(update))
         GiveawaySender.send(update, update.di, giveaway, demo = true)
 
-        AutoRaffleActor.schedule(update.bot, giveaway, update.di)
+        AutoRaffleActor(update.di.raffleActor).schedule(update.bot, giveaway, update.di)
 
         return stateResult(MainState)
     }

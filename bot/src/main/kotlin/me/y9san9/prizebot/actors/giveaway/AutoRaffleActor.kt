@@ -18,7 +18,7 @@ import me.y9san9.telegram.updates.hierarchies.DIBotUpdate
 import java.time.Instant
 
 
-object AutoRaffleActor : CoroutineScope {
+class AutoRaffleActor(private val raffleActor: RaffleActor) : CoroutineScope {
 
     /**
      * Map of giveaway id to schedule job
@@ -49,7 +49,7 @@ object AutoRaffleActor : CoroutineScope {
                 scheduledMutex.withLock {
                     if (giveaway.id in scheduled && di.getGiveawayById(giveaway.id) != null) {
                         scheduled.remove(giveaway.id)
-                        handleRaffleResult(bot, di, giveaway, RaffleActor.raffle(bot, giveaway, di))
+                        handleRaffleResult(bot, di, giveaway, raffleActor.raffle(bot, giveaway, di))
                     }
                 }
             }

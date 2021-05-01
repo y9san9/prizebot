@@ -1,5 +1,6 @@
 package me.y9san9.prizebot.di
 
+import me.y9san9.prizebot.actors.giveaway.RaffleActor
 import me.y9san9.prizebot.database.giveaways_active_messages_storage.GiveawaysActiveMessagesStorage
 import me.y9san9.prizebot.database.giveaways_storage.GiveawaysStorage
 import me.y9san9.prizebot.database.language_codes_storage.LanguageCodesStorage
@@ -12,7 +13,8 @@ class PrizebotDI (
     giveawaysActiveMessagesStorage: GiveawaysActiveMessagesStorage,
     languageCodesStorage: LanguageCodesStorage,
     linkedChannelsStorage: LinkedChannelsStorage,
-    userTitlesStorage: UserTitlesStorage
+    userTitlesStorage: UserTitlesStorage,
+    val raffleActor: RaffleActor
 ) : GiveawaysStorage by giveawaysStorage,
     GiveawaysActiveMessagesStorage by giveawaysActiveMessagesStorage,
     LanguageCodesStorage by languageCodesStorage,

@@ -6,9 +6,10 @@ import me.y9san9.extensions.any.unit
 
 suspend fun main() = coroutineScope {
     val token = System.getenv("BOT_TOKEN") ?: error("Provide BOT_TOKEN environment variable")
-    val logChatId = System.getenv("LOG_CHAT_ID")?.toLongOrNull()
+    val randomOrgApiKey = System.getenv("RANDOM_ORG_API_KEY")
+        ?: error("Please visit api.random.org and provide RANDOM_ORG_API_KEY environment variable")
 
-    System.getenv("RANDOM_ORG_API_KEY") ?: error("Please visit api.random.org and provide RANDOM_ORG_API_KEY environment variable")
+    val logChatId = System.getenv("LOG_CHAT_ID")?.toLongOrNull()
 
     val databaseConfig = DatabaseConfig (
         url = System.getenv("DATABASE_URL")
@@ -22,6 +23,7 @@ suspend fun main() = coroutineScope {
 
     Prizebot (
         botToken = token,
+        randomOrgApiKey = randomOrgApiKey,
         databaseConfig = databaseConfig,
         logChatId = logChatId,
         scope = this

@@ -16,6 +16,7 @@ import me.y9san9.extensions.flow.launchEachSafely
 import me.y9san9.fsm.FSM
 import me.y9san9.fsm.statesOf
 import me.y9san9.prizebot.actors.giveaway.AutoRaffleActor
+import me.y9san9.prizebot.actors.giveaway.RaffleActor
 import me.y9san9.prizebot.database.giveaways_active_messages_storage.GiveawaysActiveMessagesStorage
 import me.y9san9.prizebot.database.giveaways_storage.GiveawaysStorage
 import me.y9san9.prizebot.database.language_codes_storage.LanguageCodesStorage
@@ -49,6 +50,7 @@ data class DatabaseConfig (
 
 class Prizebot (
     botToken: String,
+    randomOrgApiKey: String,
     databaseConfig: DatabaseConfig,
     private val logChatId: Long?,
     private val scope: CoroutineScope
@@ -56,14 +58,16 @@ class Prizebot (
     private val bot = telegramBot(botToken)
     private val database = connectDatabase(databaseConfig)
 
+    private val di = PrizebotDI (
+        giveawaysStorage = GiveawaysStorage(database),
+        giveawaysActiveMessagesStorage = GiveawaysActiveMessagesStorage(database),
+        languageCodesStorage = LanguageCodesStorage(database),
+        linkedChannelsStorage = LinkedChannelsStorage(database),
+        userTitlesStorage = UserTitlesStorage(database),
+        raffleActor = RaffleActor(randomOrgApiKey)
+    )
+
     fun start() = bot.longPolling {
-        val di = PrizebotDI (
-            giveawaysStorage = GiveawaysStorage(database),
-            giveawaysActiveMessagesStorage = GiveawaysActiveMessagesStorage(database),
-            languageCodesStorage = LanguageCodesStorage(database),
-            linkedChannelsStorage = LinkedChannelsStorage(database),
-            userTitlesStorage = UserTitlesStorage(database)
-        )
         scheduleRaffles(bot, di)
 
         val privateMessages = messageFlow
@@ -100,7 +104,7 @@ class Prizebot (
     }
 
     private fun scheduleRaffles(bot: TelegramBot, di: PrizebotDI) = scope.launch {
-        AutoRaffleActor.scheduleAll(bot, di)
+        AutoRaffleActor(di.raffleActor).scheduleAll(bot, di)
     }
 
     private fun createFSM(events: Flow<PrizebotPrivateMessageUpdate>) = FSM.prizebotPrivateMessages (
