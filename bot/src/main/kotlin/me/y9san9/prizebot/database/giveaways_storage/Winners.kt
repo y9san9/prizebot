@@ -20,10 +20,10 @@ value class WinnersCount private constructor(val value: Int) : CheckedWinnersCou
         }
 
         /**
-         * @param value should be in range from 1 to 50_000
+         * @param value should be in range from 1 to 50
          */
         fun createChecked(value: Int) = when(value) {
-            !in 1..50_000 -> CheckedWinnersCount.OutOfRange
+            !in 1..50 -> CheckedWinnersCount.OutOfRange
             else -> WinnersCount(value)
         }
     }

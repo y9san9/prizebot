@@ -136,7 +136,7 @@ open class Locale {
     open fun lackOfParticipants(giveawayTitle: String) =
         "Cannot automatically raffle giveaway '$giveawayTitle' because lack of participants, so you can raffle it manually later"
 
-    open val winnersCountIsOutOfRange = "Winners count may be from 1 up to 50 000"
+    open val winnersCountIsOutOfRange = "Due to telegram message length, winners count may be from 1 to 50"
 
     open val enterNumber = "Please, enter number"
 
