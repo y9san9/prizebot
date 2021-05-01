@@ -8,6 +8,8 @@ suspend fun main() = coroutineScope {
     val token = System.getenv("BOT_TOKEN") ?: error("Provide BOT_TOKEN environment variable")
     val logChatId = System.getenv("LOG_CHAT_ID")?.toLongOrNull()
 
+    System.getenv("RANDOM_ORG_API_KEY") ?: error("Please visit api.random.org and provide RANDOM_ORG_API_KEY environment variable")
+
     val databaseConfig = DatabaseConfig (
         url = System.getenv("DATABASE_URL")
             ?: error("Provide DATABASE_URL environment variable"),

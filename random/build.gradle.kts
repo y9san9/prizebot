@@ -4,6 +4,8 @@ plugins {
 }
 
 dependencies {
+    implementation(jsonRPC)
+
     implementation(serialization)
 
     implementation(ktorCore)

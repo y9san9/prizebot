@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package me.y9san9.random.models
+package me.y9san9.random.rpc.draws
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
