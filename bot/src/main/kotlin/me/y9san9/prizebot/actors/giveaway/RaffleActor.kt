@@ -17,7 +17,7 @@ object RaffleActor {
     private val scope = CoroutineScope(context = GlobalScope.coroutineContext + Job())
 
     private val requests = MutableSharedFlow<Triple<TelegramBot, PrizebotDI, ActiveGiveaway>>(replay = 1)
-    private val responses = MutableSharedFlow<Pair<ActiveGiveaway, Boolean>>()
+    private val responses = MutableSharedFlow<Result<Pair<ActiveGiveaway, Boolean>>>()
 
     init {
         requests
@@ -26,7 +26,11 @@ object RaffleActor {
                 scope,
                 consistentKey = { (_, _, giveaway) -> giveaway.id },
                 consumer = { (bot, di, giveaway) ->
-                    responses.emit(giveaway to raffleAction(bot, di, giveaway))
+                    responses.emit (
+                        runCatching {
+                            giveaway to raffleAction(bot, di, giveaway)
+                        }
+                    )
                 }
             )
     }
@@ -61,7 +65,7 @@ object RaffleActor {
     ): Boolean {
         scope.launch { requests.emit(Triple(bot, di, giveaway)) }
 
-        return responses.first { (g) -> g.id == giveaway.id }.second
+        return responses.map { it.getOrThrow() }.first { (g) -> g.id == giveaway.id }.second
     }
 
     private suspend fun chooseWinners (
