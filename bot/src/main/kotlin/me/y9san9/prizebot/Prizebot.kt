@@ -111,7 +111,7 @@ class Prizebot (
             RaffleDateInputState, TimezoneInputState,
             CustomTimezoneInputState, WinnersCountInputState,
             ConditionInputState, InvitationsCountInputState,
-            SubscriptionChannelInputState
+            SubscriptionChannelInputState, DisplayWinnersWithEmojisInputState
         ),
         storage = PrizebotFSMStorage(database, statesSerializers),
         scope = scope,

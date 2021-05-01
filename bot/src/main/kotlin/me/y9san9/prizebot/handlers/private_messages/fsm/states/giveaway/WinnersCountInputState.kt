@@ -7,6 +7,7 @@ import me.y9san9.prizebot.database.giveaways_storage.CheckedWinnersCount
 import me.y9san9.prizebot.database.giveaways_storage.WinnersCount
 import me.y9san9.extensions.any.unit
 import me.y9san9.extensions.offset_date_time.OffsetDateTimeSerializer
+import me.y9san9.prizebot.database.giveaways_storage.WinnersSettings
 import me.y9san9.prizebot.extensions.telegram.PrizebotFSMState
 import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
 import me.y9san9.prizebot.extensions.telegram.locale
@@ -31,11 +32,21 @@ object WinnersCountInputState : PrizebotFSMState<WinnersCountInputData> {
     ): FSMStateResult<*> {
 
         suspend fun next(winnersCount: WinnersCount = WinnersCount.create(1)) =
-            ConditionInputState (
+            if(winnersCount.value in 2..10)
+                DisplayWinnersWithEmojisInputData(
+                    event,
+                    DisplayWinnersWithEmojisInputData (
+                        data.title,
+                        data.participateText,
+                        data.raffleDate,
+                        winnersCount
+                    )
+                )
+            else ConditionInputState (
                 event,
                 ConditionInputData (
-                    data.title, data.participateText,
-                    data.raffleDate, winnersCount
+                    data.title, data.participateText, data.raffleDate,
+                    WinnersSettings.create(winnersCount, displayWithEmojis = false)
                 )
             )
 

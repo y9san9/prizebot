@@ -15,7 +15,7 @@ interface GiveawaysStorage {
         participateButton: String,
         languageCode: String?,
         raffleDate: OffsetDateTime?,
-        winnersCount: WinnersCount,
+        winnersSettings: WinnersSettings,
         conditions: GiveawayConditions
     ): ActiveGiveaway
     fun getUserGiveaways(ownerId: Long, count: Int = 20, offset: Long = 0): List<Giveaway>

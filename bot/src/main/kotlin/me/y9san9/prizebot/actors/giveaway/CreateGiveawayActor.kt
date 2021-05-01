@@ -2,8 +2,8 @@ package me.y9san9.prizebot.actors.giveaway
 
 import me.y9san9.fsm.FSMStateResult
 import me.y9san9.fsm.stateResult
-import me.y9san9.prizebot.database.giveaways_storage.WinnersCount
 import me.y9san9.prizebot.actors.telegram.sender.GiveawaySender
+import me.y9san9.prizebot.database.giveaways_storage.WinnersSettings
 import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.GiveawayConditions
 import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
 import me.y9san9.prizebot.extensions.telegram.locale
@@ -19,14 +19,14 @@ object CreateGiveawayActor {
         title: String,
         participateText: String,
         raffleDate: OffsetDateTime?,
-        winnersCount: WinnersCount,
+        winnersSettings: WinnersSettings,
         conditions: GiveawayConditions
     ): FSMStateResult<*> {
 
         val giveaway = update.di.saveGiveaway (
             update.userId, title, participateText,
             languageCode = update.di.getLanguageCode(update.userId) ?: update.languageCode,
-            raffleDate, winnersCount, conditions
+            raffleDate, winnersSettings, conditions
         )
 
         update.sendMessage(update.locale.giveawayCreated, replyMarkup = mainMarkup(update))

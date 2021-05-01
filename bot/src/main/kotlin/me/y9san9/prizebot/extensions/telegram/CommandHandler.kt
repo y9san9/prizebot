@@ -8,18 +8,24 @@ import me.y9san9.telegram.updates.primitives.HasTextUpdate
 import org.intellij.lang.annotations.Language
 
 
-suspend inline fun <T> T.commandOrDefault(@Language("RegExp") splitter: String = "\\s+", builder: CommandDSL.() -> Unit) where
-        T : HasTextUpdate, T : PrizebotLocalizedBotUpdate, T : FromChatUpdate = command(splitter) {
+suspend inline fun <T> T.commandOrDefault (
+    @Language("RegExp") splitter: String = "\\s+",
+    noinline noTextMatchedMatched: suspend (Default.NoTextMatched) -> Unit =
+        { sendMessage(locale.unknownCommand(it.actualText)) },
+    noinline invalidArgsCount: suspend (Default.InvalidArgsCount) -> Unit =
+        { sendMessage(locale.invalidArgsCount(it.expectedCount, it.actualCount)) },
+    noinline invalidContent: suspend (Default.InvalidContent) -> Unit =
+        { sendMessage(locale.enterText) },
+    builder: CommandDSL.() -> Unit
+) where T : HasTextUpdate, T : PrizebotLocalizedBotUpdate,
+        T : FromChatUpdate = command(splitter) {
     builder()
 
     default { default ->
         when(default) {
-            is Default.NoTextMatched ->
-                sendMessage(locale.unknownCommand(default.actualText))
-            is Default.InvalidArgsCount ->
-                sendMessage(locale.invalidArgsCount(default.expectedCount, default.actualCount))
-            is Default.InvalidContent ->
-                sendMessage(locale.enterText)
+            is Default.NoTextMatched -> noTextMatchedMatched(default)
+            is Default.InvalidArgsCount -> invalidArgsCount(default)
+            is Default.InvalidContent -> invalidContent(default)
         }
     }
 }

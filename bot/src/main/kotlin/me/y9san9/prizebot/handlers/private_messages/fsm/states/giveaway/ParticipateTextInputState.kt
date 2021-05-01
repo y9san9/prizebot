@@ -15,12 +15,12 @@ import me.y9san9.telegram.updates.extensions.send_message.sendMessage
 
 @SerialName("giveaway_title")
 @Serializable
-data class GiveawayTitle (
+data class ParticipateTextInputData (
     val title: String
 )
 
-object ParticipateTextInputState : PrizebotFSMState<GiveawayTitle> {
-    override suspend fun process (data: GiveawayTitle, event: PrizebotPrivateMessageUpdate): FSMStateResult<*> {
+object ParticipateTextInputState : PrizebotFSMState<ParticipateTextInputData> {
+    override suspend fun process (data: ParticipateTextInputData, event: PrizebotPrivateMessageUpdate): FSMStateResult<*> {
         event.textOrDefault { text ->
             return when (text) {
                 "/cancel" -> MainState.cancellation(event)

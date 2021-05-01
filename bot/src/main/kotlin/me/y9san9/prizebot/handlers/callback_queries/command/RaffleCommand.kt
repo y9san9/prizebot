@@ -1,6 +1,8 @@
 package me.y9san9.prizebot.handlers.callback_queries.command
 
 import dev.inmo.tgbotapi.extensions.api.edit.text.editMessageText
+import dev.inmo.tgbotapi.extensions.api.send.sendMessage
+import dev.inmo.tgbotapi.types.ChatId
 import kotlinx.coroutines.*
 import me.y9san9.prizebot.actors.giveaway.RaffleActor
 import me.y9san9.prizebot.database.giveaways_storage.ActiveGiveaway

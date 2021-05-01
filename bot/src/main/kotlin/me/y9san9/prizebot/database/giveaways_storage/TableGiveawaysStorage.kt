@@ -1,5 +1,6 @@
 package me.y9san9.prizebot.database.giveaways_storage
 
+import me.y9san9.prizebot.database.giveaways_storage.Giveaways.GIVEAWAY_DISPLAY_WINNERS_WITH_EMOJIS
 import me.y9san9.prizebot.database.giveaways_storage.Giveaways.GIVEAWAY_ID
 import me.y9san9.prizebot.database.giveaways_storage.Giveaways.GIVEAWAY_LANGUAGE_CODE
 import me.y9san9.prizebot.database.giveaways_storage.Giveaways.GIVEAWAY_OWNER_ID
@@ -42,7 +43,7 @@ internal class TableGiveawaysStorage (
         participateButton: String,
         languageCode: String?,
         raffleDate: OffsetDateTime?,
-        winnersCount: WinnersCount,
+        winnersSettings: WinnersSettings,
         conditions: GiveawayConditions
     ) = transaction(database) {
         Giveaways.insert {
@@ -51,7 +52,8 @@ internal class TableGiveawaysStorage (
             it[GIVEAWAY_PARTICIPATE_BUTTON] = participateButton
             it[GIVEAWAY_LANGUAGE_CODE] = languageCode
             it[GIVEAWAY_RAFFLE_DATE] = raffleDate?.toString()
-            it[GIVEAWAY_WINNERS_COUNT] = winnersCount.value
+            it[GIVEAWAY_WINNERS_COUNT] = winnersSettings.winnersCount.value
+            it[GIVEAWAY_DISPLAY_WINNERS_WITH_EMOJIS] = winnersSettings.displayWithEmojis
         }
     }.let { data ->
         conditionsStorage.addConditions(data[GIVEAWAY_ID], conditions)
@@ -59,7 +61,11 @@ internal class TableGiveawaysStorage (
             id = data[GIVEAWAY_ID],
             ownerId, title, participateButton,
             languageCode, raffleDate, participantsStorage,
-            giveawaysPatchStorage, conditionsStorage, winnersCount
+            giveawaysPatchStorage, conditionsStorage,
+            WinnersSettings.create (
+                WinnersCount.create(data[GIVEAWAY_WINNERS_COUNT]),
+                data[GIVEAWAY_DISPLAY_WINNERS_WITH_EMOJIS]
+            )
         )
     }
 
@@ -84,7 +90,10 @@ internal class TableGiveawaysStorage (
                 this[GIVEAWAY_LANGUAGE_CODE],
                 this[GIVEAWAY_RAFFLE_DATE]?.let(OffsetDateTime::parse),
                 participantsStorage, giveawaysPatchStorage, conditionsStorage,
-                WinnersCount.create(this[GIVEAWAY_WINNERS_COUNT])
+                WinnersSettings.create (
+                    WinnersCount.create(this[GIVEAWAY_WINNERS_COUNT]),
+                    this[GIVEAWAY_DISPLAY_WINNERS_WITH_EMOJIS]
+                )
             )
         else
             FinishedGiveaway (
@@ -94,6 +103,10 @@ internal class TableGiveawaysStorage (
                 this[GIVEAWAY_PARTICIPATE_BUTTON],
                 this[GIVEAWAY_LANGUAGE_CODE],
                 this[GIVEAWAY_RAFFLE_DATE]?.let(OffsetDateTime::parse),
+                WinnersSettings.create (
+                    WinnersCount.create(this[GIVEAWAY_WINNERS_COUNT]),
+                    this[GIVEAWAY_DISPLAY_WINNERS_WITH_EMOJIS]
+                ),
                 participantsStorage, giveawaysPatchStorage,
                 conditionsStorage, winnersStorage
             )

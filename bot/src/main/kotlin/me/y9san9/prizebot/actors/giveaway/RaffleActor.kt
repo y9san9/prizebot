@@ -36,8 +36,7 @@ object RaffleActor {
         titlesStorage: UserTitlesStorage,
         giveaway: ActiveGiveaway
     ): Boolean {
-
-        val winnerIds = chooseWinners (
+        val winnerIds = chooseWinners(
             bot,
             giveaway,
             ConditionsChecker.cacheChatsUsernames(bot, giveaway)

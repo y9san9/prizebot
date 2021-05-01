@@ -7,6 +7,7 @@ import me.y9san9.prizebot.actors.giveaway.CreateGiveawayActor
 import me.y9san9.prizebot.database.giveaways_storage.WinnersCount
 import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.*
 import me.y9san9.extensions.offset_date_time.OffsetDateTimeSerializer
+import me.y9san9.prizebot.database.giveaways_storage.WinnersSettings
 import me.y9san9.prizebot.extensions.telegram.*
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.MainState
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.conditions.InvitationsCountInputState
@@ -23,7 +24,7 @@ data class ConditionInputData (
     val participateText: String,
     @Serializable(with = OffsetDateTimeSerializer::class)
     val raffleDate: OffsetDateTime?,
-    val winnersCount: WinnersCount,
+    val winnersSettings: WinnersSettings,
     val conditions: List<Condition> = listOf()
 )
 
@@ -44,7 +45,7 @@ object ConditionInputState : PrizebotFSMState<ConditionInputData> {
                     is GiveawayConditions -> return CreateGiveawayActor.create (
                         event, data.title,
                         data.participateText, data.raffleDate,
-                        data.winnersCount, conditions
+                        data.winnersSettings, conditions
                     )
                 }
             }

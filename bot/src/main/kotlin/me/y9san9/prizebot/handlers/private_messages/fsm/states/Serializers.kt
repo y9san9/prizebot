@@ -12,11 +12,12 @@ val statesSerializers = SerializersModule {
 
     polymorphic(Any::class) {
         subclass(Unit::class, Unit.serializer())
-        subclass(GiveawayTitle::class, GiveawayTitle.serializer())
+        subclass(ParticipateTextInputData::class, ParticipateTextInputData.serializer())
         subclass(RaffleDateInputData::class, RaffleDateInputData.serializer())
         subclass(TimezoneInputData::class, TimezoneInputData.serializer())
         subclass(WinnersCountInputData::class, WinnersCountInputData.serializer())
         subclass(ConditionInputData::class, ConditionInputData.serializer())
         subclass(SubscriptionChannelInputData::class, SubscriptionChannelInputData.serializer())
+        subclass(DisplayWinnersWithEmojisInputData::class, DisplayWinnersWithEmojisInputData.serializer())
     }
 }

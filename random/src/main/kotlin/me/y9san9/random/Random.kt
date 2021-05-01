@@ -14,7 +14,7 @@ object Random {
      * Random numbers from 0 to 1_000_000_000
      */
     val randomSeeds = flow {
-        while(true) {
+        while (true) {
             RandomOrgAPI
                 .getRandomIntegers(min = 0, max = 1_000_000_000)
                 .forEach { emit(it) }
@@ -26,8 +26,10 @@ object Random {
      * so it is still safe and powered by random.org
      */
     val secureRandoms = flow {
-        randomSeeds.collect {
-            emit(SecureRandom(SecureRandom.getSeed(it)))
+        randomSeeds.collect { seed ->
+            val random = SecureRandom()
+            random.setSeed(seed.toLong())
+            emit(random)
         }
     }
 

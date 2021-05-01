@@ -199,6 +199,16 @@ open class Locale {
 
     open val thisChatIsNotPublic = "This chat is not public, please add a username"
 
+    open val displayWinnersWithEmoji = "Display winners with emojis like this?\n\n" +
+            "${Emoji.FIRST_PLACE} Foo Bar\n" +
+            "${Emoji.SECOND_PLACE} Bar Foo\n" +
+            "${Emoji.THIRD_PLACE} Baz Baz\n\n" +
+            "This is available only for giveaways with winners count from 2 to 10 inclusive"
+
+    open val yes = "Yes"
+
+    open val no = "No"
+
     companion object {
         fun with(language: String?) = locales
             .firstOrNull { it.code == language }

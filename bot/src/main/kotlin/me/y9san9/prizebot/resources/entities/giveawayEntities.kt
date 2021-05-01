@@ -9,7 +9,7 @@ import me.y9san9.prizebot.database.giveaways_storage.Giveaway
 import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.Condition
 import me.y9san9.prizebot.database.giveaways_storage.locale
 import me.y9san9.prizebot.database.user_titles_storage.UserTitlesStorage
-import me.y9san9.telegram.updates.primitives.BotUpdate
+import me.y9san9.prizebot.resources.Emoji
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -49,13 +49,19 @@ fun giveawayEntities (
                     }.dropLast(n = 1)
     } else listOf()
 
-    val winner = if(giveaway is FinishedGiveaway) {
+    val winners = if(giveaway is FinishedGiveaway) {
         val links = giveaway.winnerIds
             .map { id -> id.mention(text = titlesStorage.getUserTitle(id) ?: locale.deletedUser) }
-            .flatMap { it + ", " }
+            .flatMapIndexed { i, mention ->
+                if(giveaway.displayWinnersWithEmojis)
+                    regular(Emoji.getPlaceEmoji(place = i + 1)) + mention + regular("\n")
+                else
+                    mention + regular(", ")
+            }
             .dropLast(n = 1)
 
-        regular("${locale.winner(plural = giveaway.winnerIds.size > 1)}: ") + links
+        regular("${locale.winner(plural = giveaway.winnerIds.size > 1)}: ") +
+                (if(giveaway.displayWinnersWithEmojis) "\n" else "") + links
     } else listOf()
 
     val participateHint = if(giveaway is ActiveGiveaway)
@@ -63,7 +69,7 @@ fun giveawayEntities (
     else listOf()
 
     return listOf (
-        title, winnersCount, untilTime, conditionsEntities, winner, participateHint
+        title, winnersCount, untilTime, conditionsEntities, winners, participateHint
     ).flatMap { if(it.isEmpty()) it else it + "\n\n" }
         .dropLast(n = 1)
 }

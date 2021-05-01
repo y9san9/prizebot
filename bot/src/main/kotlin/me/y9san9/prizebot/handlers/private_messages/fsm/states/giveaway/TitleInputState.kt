@@ -20,7 +20,7 @@ object TitleInputState : PrizebotFSMState<Unit> {
                     .apply { MainState.cancellation(event) }
                 text.length > MAX_TITLE_LEN -> stateResult(TitleInputState)
                     .apply { event.sendMessage(event.locale.giveawayTitleTooLong) }
-                else -> stateResult(ParticipateTextInputState, GiveawayTitle(title = text))
+                else -> stateResult(ParticipateTextInputState, ParticipateTextInputData(title = text))
                     .apply { event.sendMessage(event.locale.giveawayParticipateInput) }
             }
         }

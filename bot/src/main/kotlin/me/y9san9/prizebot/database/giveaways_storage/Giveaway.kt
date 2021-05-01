@@ -9,30 +9,6 @@ import me.y9san9.prizebot.resources.locales.Locale
 import java.time.OffsetDateTime
 
 
-sealed interface CheckedWinnersCount {
-    object OutOfRange : CheckedWinnersCount
-}
-
-@JvmInline
-@Serializable
-value class WinnersCount private constructor(val value: Int) : CheckedWinnersCount  {
-    companion object {
-        fun create(value: Int): WinnersCount {
-            val createTry = createChecked(value)
-            require(createTry is WinnersCount)
-            return createTry
-        }
-
-        /**
-         * @param value should be in range from 1 to 50_000
-         */
-        fun createChecked(value: Int) = when(value) {
-            !in 1..50_000 -> CheckedWinnersCount.OutOfRange
-            else -> WinnersCount(value)
-        }
-    }
-}
-
 sealed class Giveaway {
     abstract val id: Long
     abstract val ownerId: Long
@@ -40,6 +16,7 @@ sealed class Giveaway {
     abstract val participateText: String
     abstract val languageCode: String?
     abstract val raffleDate: OffsetDateTime?
+    protected abstract val winnersSettings: WinnersSettings
 
     /* Participants composition */
 
@@ -75,8 +52,9 @@ data class ActiveGiveaway internal constructor (
     override val participantsStorage: ParticipantsStorage,
     override val giveawaysPatchStorage: GiveawaysPatchStorage,
     override val conditionsStorage: ConditionsStorage,
-    val winnersCount: WinnersCount
+    override val winnersSettings: WinnersSettings
 ) : Giveaway() {
+    val winnersCount = winnersSettings.winnersCount
     fun removeRaffleDate() = giveawaysPatchStorage.removeRaffleDate(id)
     fun finish(winnerIds: List<Long>) = giveawaysPatchStorage.finishGiveaway(id, winnerIds)
 }
@@ -88,12 +66,14 @@ data class FinishedGiveaway internal constructor (
     override val participateText: String,
     override val languageCode: String?,
     override val raffleDate: OffsetDateTime?,
+    override val winnersSettings: WinnersSettings,
     override val participantsStorage: ParticipantsStorage,
     override val giveawaysPatchStorage: GiveawaysPatchStorage,
     override val conditionsStorage: ConditionsStorage,
     private val winnersStorage: WinnersStorage
 ) : Giveaway() {
     val winnerIds by lazy { winnersStorage.getWinners(id) }
+    val displayWinnersWithEmojis = winnersSettings.displayWithEmojis
 }
 
 

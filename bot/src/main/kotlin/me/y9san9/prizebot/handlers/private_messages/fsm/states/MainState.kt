@@ -24,7 +24,11 @@ object MainState : PrizebotFSMState<Unit> {
     }
 
     override suspend fun process(data: Unit, event: PrizebotPrivateMessageUpdate): FSMStateResult<*> {
-        event.commandOrDefault {
+        event.commandOrDefault (
+            noTextMatchedMatched = {
+                event.sendMessage(event.locale.unknownCommand(it.actualText), replyMarkup = mainMarkup(event))
+            }
+        ) {
             case("/start") {
                 StartSender.send(event)
 

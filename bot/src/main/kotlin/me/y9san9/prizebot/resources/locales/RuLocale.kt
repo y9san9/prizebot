@@ -191,4 +191,15 @@ object RuLocale : Locale() {
     override val promoteBot = "Пожалуйста повысьте бота до администратора"
 
     override val thisChatIsNotPublic = "Сделайте чат публичным, чтобы подключить его"
+
+    override val displayWinnersWithEmoji = "Показывать победителей с эмодзи? Например:\n\n" +
+            "${Emoji.FIRST_PLACE} Foo Bar\n" +
+            "${Emoji.SECOND_PLACE} Bar Foo\n" +
+            "${Emoji.THIRD_PLACE} Baz Baz\n\n" +
+            "Это доступно только для розыгрышей с количеством участников от 2 до 10 включительно"
+
+    override val yes = "Да"
+
+    override val no = "Нет"
+
 }
