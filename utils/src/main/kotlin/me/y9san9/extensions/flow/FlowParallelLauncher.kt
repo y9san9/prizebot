@@ -7,19 +7,6 @@ import kotlinx.coroutines.sync.withLock
 import me.y9san9.extensions.any.unit
 
 
-suspend fun main() = coroutineScope {
-    MutableSharedFlow<Int>(replay = 1)
-        .also {
-            launch {
-                delay(1000)
-                for (i in 1..1000)
-                    it.emit(i)
-            }
-        }
-        .createParallelLauncher()
-        .launchEach(coroutineScope = this) {}
-}.unit
-
 /**
  * Main use-case of this class is paralleling user events:
  *  events from different users should be parallel while

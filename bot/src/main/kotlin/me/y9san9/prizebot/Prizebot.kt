@@ -14,7 +14,6 @@ import kotlinx.coroutines.launch
 import me.y9san9.extensions.flow.createParallelLauncher
 import me.y9san9.extensions.flow.launchEachSafely
 import me.y9san9.fsm.FSM
-import me.y9san9.fsm.statesOf
 import me.y9san9.prizebot.actors.giveaway.AutoRaffleActor
 import me.y9san9.prizebot.actors.giveaway.RaffleActor
 import me.y9san9.prizebot.database.giveaways_active_messages_storage.GiveawaysActiveMessagesStorage
@@ -27,16 +26,13 @@ import me.y9san9.prizebot.handlers.callback_queries.CallbackQueryHandler
 import me.y9san9.prizebot.handlers.choosen_inline_result.ChosenInlineResultHandler
 import me.y9san9.prizebot.handlers.inline_queries.InlineQueryHandler
 import me.y9san9.prizebot.handlers.private_messages.fsm.prizebotPrivateMessages
-import me.y9san9.prizebot.handlers.private_messages.fsm.states.MainState
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.statesSerializers
 import me.y9san9.prizebot.di.PrizebotDI
 import me.y9san9.prizebot.extensions.flow.launchEachSafelyByChatId
 import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
 import me.y9san9.prizebot.handlers.channel_group_messages.ChannelGroupMessagesHandler
 import me.y9san9.prizebot.handlers.my_chat_member_updated.MyChatMemberUpdateHandler
-import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.*
-import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.conditions.InvitationsCountInputState
-import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.conditions.SubscriptionChannelInputState
+import me.y9san9.prizebot.handlers.private_messages.fsm.states.prizebotStates
 import me.y9san9.telegram.updates.*
 import org.jetbrains.exposed.sql.Database
 
@@ -109,14 +105,7 @@ class Prizebot (
 
     private fun createFSM(events: Flow<PrizebotPrivateMessageUpdate>) = FSM.prizebotPrivateMessages (
         events,
-        states = statesOf (
-            initial = MainState,
-            TitleInputState, ParticipateTextInputState,
-            RaffleDateInputState, TimezoneInputState,
-            CustomTimezoneInputState, WinnersCountInputState,
-            ConditionInputState, InvitationsCountInputState,
-            SubscriptionChannelInputState, DisplayWinnersWithEmojisInputState
-        ),
+        states = prizebotStates,
         storage = PrizebotFSMStorage(database, statesSerializers),
         scope = scope,
         throwableHandler = ::logException
