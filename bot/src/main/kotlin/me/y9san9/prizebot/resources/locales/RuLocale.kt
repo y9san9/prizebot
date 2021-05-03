@@ -2,7 +2,7 @@ package me.y9san9.prizebot.resources.locales
 
 import dev.inmo.tgbotapi.CommonAbstracts.plus
 import dev.inmo.tgbotapi.types.MessageEntity.textsources.*
-import me.y9san9.prizebot.extensions.string.awesomeCut
+import me.y9san9.extensions.string.awesomeCut
 import me.y9san9.prizebot.resources.Emoji
 import me.y9san9.prizebot.resources.MAX_TITLE_LEN
 
@@ -54,7 +54,7 @@ object RuLocale : Locale() {
 
     override val nowParticipating = "Теперь ты участвуешь в розыгрыше!"
 
-    override val alreadyParticipating = "Ты уже участвуешь в розыгрыше!"
+    override val youHaveLeftGiveaway = "Вы вышли из розыгрыша"
 
     override val selectGiveawayToView = "Выбери розыгрыш, чтобы посмотреть подробнее"
 
@@ -72,11 +72,12 @@ object RuLocale : Locale() {
 
     override val raffle = "Разыграть ${Emoji.GIFT}"
 
-    override val winner = "Победитель"
+    override fun winner(plural: Boolean) = if(plural) "Победители" else "Победитель"
 
     override val deletedUser = "Пользователь удалён"
 
-    override val nobodyIsParticipatingYet = "Никто ещё не участвует в розыгрыше!"
+    override val participantsCountIsNotEnough =
+        "Участников недостаточно, чтобы выбрать победителей!"
 
     override val giveawayFinished = "Розыгрыш уже закончен!"
 
@@ -97,13 +98,14 @@ object RuLocale : Locale() {
     override val enterRaffleDateInput = regular("Введите дату для автоматического розыгрыша в одном из форматов: ") +
             bold("00:00") + ", " +
             bold("00:00 13.01") + ", " +
-            bold("00:00 13.01.2020") + " (используйте /skip, чтобы пропустить, и /cancel, чтобы отменить)"
+            bold("00:00 13.01.2020") + " (используйте /skip, чтобы пропустить, и /cancel, чтобы отменить). " +
+            "Смещение времени можно будет выбрать на следующем шаге."
 
     override val invalidDateFormat = "Неверный формат даты, попробуйте ещё раз"
 
-    override val selectTimezone = "Выберите часовой пояс с помощью кнопок"
+    override val selectOffset = "Выберите смещение времени с помощью кнопок"
 
-    override val customTimezone = "Другой часовой пояс"
+    override val customTimeOffset = "Другое смещение"
 
     override val `UTC-4` = "Нью-Йорк -4"
     override val GMT = "Гринвич +0"
@@ -121,6 +123,83 @@ object RuLocale : Locale() {
 
     override val raffleDate = "Дата розыгрыша"
 
-    override fun cannotRaffleGiveaway(title: String) =
-        "Не получилось автоматически разыграть '$title', вы можете сделать это вручную позже"
+    override fun lackOfParticipants(giveawayTitle: String) =
+        "Недостаточно участников, чтобы автоматически разыграть '$giveawayTitle', вы можете сделать это вручную позже"
+
+    override val winnersCountIsOutOfRange =
+        "Количество победителей должно быть от 1 до 50 000"
+
+    override val winnersCount = "Количество победителей"
+
+    override val enterNumber = "Пожалуйста, ведите число"
+
+    override val enterWinnersCount = "Введите количество победителей (используйте /skip, чтобы установить значение по умолчанию (1), или /cancel, чтобы отменить)"
+
+    override val chooseConditions = "Теперь выберите условия участия (используйте /next, чтобы создать розыгрыш без условий, или /cancel, чтобы отменить)"
+
+    override val chooseMoreConditions = "Выберите следующее условие (используйте /next, чтобы создать розыгрыш, или /cancel, чтобы отменить)"
+
+    override val invitations = "Пригласить друзей"
+
+    override val channelSubscription = "Присоединиться к каналу"
+
+    override val youHaveAlreadyAddedInvitations = "Вы уже добавили условие с приглашением друзей!"
+
+    override val enterInvitationsCount = "Введите количество приглашений для участия"
+
+    override val selectLinkedChat = "Выберите подключённый канал (используйте /help, чтобы узнать как привязать канал, или /cancel, чтобы отменить текущий шаг)"
+
+    override val updateChannels = "Обновить привязанные каналы"
+
+    override val channelsUpdated = "Обновлено!"
+
+    override val channelLinkingHelp = bold("Чтобы привязать канал/чат вам нужно выполнить следующие шаги:\n\n") +
+            "• Добавить @secure_prize_bot в ваш канал с " + bold("username") + ", который вы хотите привязать (чтобы любой мог присоединиться к нему), " +
+            "позже это будет использовано для проверки участников\n" +
+            "• Нажать на кнопку обновить\n\n" +
+            bold("Если бот уже находится в чате:\n\n") +
+            "• Напишите /connect_prizebot в чате/канале, затем нажмите кнопку обновления\n" +
+            "• Опционально можно разрешить боту удалять сообщения, чтобы он моментально удалил сообщение из предыдущего шага"
+
+    override val channelIsNotLinked = "Этот канал не привязан"
+
+    override val channelIsAlreadyInConditions = "Этот канал уже есть в условиях участия"
+
+    override val giveawayConditions = "Условия участия:"
+
+    override fun subscribeTo(username: String) = regular("Подписаться на ") + bold(username)
+
+    override fun inviteFriends(count: Int) = regular("Пригласить ") + bold("$count") + " ${getValidFriendsForm(count)} в розыгрыш"
+
+    private fun getValidFriendsForm(count: Int) = when {
+        count % 10 == 1 -> "друга"
+        else -> "друзей"
+    }
+
+    override val channelConditionRequiredForInvitations = "Добавьте хотя бы одну подписку на канал, чтобы использовать приглашения"
+
+    override val invitationsCountShouldBePositive = "Количество приглашений должно быть больше нуля"
+
+    override val giveawayInvalid = "Свяжитесь с организаторами, розыгрыш некорретный"
+
+    override val notSubscribedToConditions = "Вы не подписались на все каналы/чаты"
+
+    override fun friendsAreNotInvited(invitedCount: Int, requiredCount: Int) = "Вы пригласили $invitedCount / $requiredCount друзей"
+
+    override val raffleProcessing = "Подождите, идёт обработка розыгрыша"
+
+    override val promoteBot = "Пожалуйста повысьте бота до администратора"
+
+    override val thisChatIsNotPublic = "Сделайте чат публичным, чтобы подключить его"
+
+    override val displayWinnersWithEmoji = "Показывать победителей с эмодзи? Например:\n\n" +
+            "${Emoji.FIRST_PLACE} Foo Bar\n" +
+            "${Emoji.SECOND_PLACE} Bar Foo\n" +
+            "${Emoji.THIRD_PLACE} Baz Baz\n\n" +
+            "Это доступно только для розыгрышей с количеством победителей от 2 до 10 включительно"
+
+    override val yes = "Да"
+
+    override val no = "Нет"
+
 }

@@ -2,9 +2,14 @@ package me.y9san9.prizebot.actors.giveaway
 
 import me.y9san9.fsm.FSMStateResult
 import me.y9san9.fsm.stateResult
-import me.y9san9.prizebot.actors.telegram.sender.GiveawayCreatedSender
+import me.y9san9.prizebot.actors.telegram.sender.GiveawaySender
+import me.y9san9.prizebot.database.giveaways_storage.WinnersSettings
+import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.GiveawayConditions
 import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
+import me.y9san9.prizebot.extensions.telegram.locale
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.MainState
+import me.y9san9.prizebot.resources.markups.mainMarkup
+import me.y9san9.telegram.updates.extensions.send_message.sendMessage
 import java.time.OffsetDateTime
 
 
@@ -13,18 +18,21 @@ object CreateGiveawayActor {
         update: PrizebotPrivateMessageUpdate,
         title: String,
         participateText: String,
-        raffleDate: OffsetDateTime?
+        raffleDate: OffsetDateTime?,
+        winnersSettings: WinnersSettings,
+        conditions: GiveawayConditions
     ): FSMStateResult<*> {
 
         val giveaway = update.di.saveGiveaway (
-            update.chatId, title, participateText,
-            languageCode = update.di.getLanguageCode(update.chatId) ?: update.languageCode,
-            raffleDate
+            update.userId, title, participateText,
+            languageCode = update.di.getLanguageCode(update.userId) ?: update.languageCode,
+            raffleDate, winnersSettings, conditions
         )
 
-        GiveawayCreatedSender.send(update, giveaway)
+        update.sendMessage(update.locale.giveawayCreated, replyMarkup = mainMarkup(update))
+        GiveawaySender.send(update, update.di, giveaway, demo = true)
 
-        AutoRaffleActor.schedule(update.bot, giveaway, update.di)
+        AutoRaffleActor(update.di.raffleActor).schedule(update.bot, giveaway, update.di)
 
         return stateResult(MainState)
     }

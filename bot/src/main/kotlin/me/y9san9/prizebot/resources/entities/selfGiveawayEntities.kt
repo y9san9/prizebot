@@ -4,7 +4,7 @@ import dev.inmo.tgbotapi.CommonAbstracts.TextSourcesList
 import dev.inmo.tgbotapi.CommonAbstracts.plus
 import dev.inmo.tgbotapi.types.MessageEntity.textsources.bold
 import dev.inmo.tgbotapi.types.MessageEntity.textsources.regular
-import me.y9san9.prizebot.extensions.string.awesomeCut
+import me.y9san9.extensions.string.awesomeCut
 import me.y9san9.prizebot.resources.locales.Locale
 
 

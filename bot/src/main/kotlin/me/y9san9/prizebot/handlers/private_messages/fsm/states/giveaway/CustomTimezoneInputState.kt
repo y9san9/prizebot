@@ -2,13 +2,12 @@ package me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway
 
 import me.y9san9.fsm.FSMStateResult
 import me.y9san9.fsm.stateResult
-import me.y9san9.prizebot.actors.giveaway.CreateGiveawayActor
-import me.y9san9.prizebot.actors.telegram.sender.CancellationToMainStateSender
-import me.y9san9.prizebot.extensions.any.unit
+import me.y9san9.extensions.any.unit
 import me.y9san9.prizebot.extensions.telegram.PrizebotFSMState
 import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
 import me.y9san9.prizebot.extensions.telegram.locale
 import me.y9san9.prizebot.extensions.telegram.textOrDefault
+import me.y9san9.prizebot.handlers.private_messages.fsm.states.MainState
 import me.y9san9.telegram.updates.extensions.send_message.sendMessage
 import org.intellij.lang.annotations.Language
 import java.time.LocalDateTime
@@ -23,14 +22,15 @@ object CustomTimezoneInputState : PrizebotFSMState<TimezoneInputData> {
     ): FSMStateResult<*> {
         event.textOrDefault { offset ->
             if(offset == "/cancel")
-                return CancellationToMainStateSender.send(event)
+                return MainState.cancellation(event)
 
             val parsedOffset = parseOffset(offset)
                 ?: return@textOrDefault event.sendMessage(event.locale.invalidTimezoneFormat).unit
 
-            return CreateGiveawayActor.create (
-                event, data.title, data.participateText,
-                OffsetDateTime.of(LocalDateTime.parse(data.localDate, dateTimeFormatter), parsedOffset)
+            val date = OffsetDateTime.of(LocalDateTime.parse(data.localDate, dateTimeFormatter), parsedOffset)
+
+            return WinnersCountInputState (
+                event, WinnersCountInputData(data.title, data.participateText, date)
             )
         }
 

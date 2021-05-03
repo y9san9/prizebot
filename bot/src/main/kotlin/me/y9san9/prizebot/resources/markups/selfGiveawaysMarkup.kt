@@ -2,7 +2,7 @@ package me.y9san9.prizebot.resources.markups
 
 import dev.inmo.tgbotapi.types.buttons.InlineKeyboardButtons.CallbackDataInlineKeyboardButton
 import dev.inmo.tgbotapi.types.buttons.InlineKeyboardMarkup
-import me.y9san9.prizebot.actors.storage.giveaways_storage.Giveaway
+import me.y9san9.prizebot.database.giveaways_storage.Giveaway
 import me.y9san9.prizebot.resources.CALLBACK_ACTION_SELF_GIVEAWAYS_CONTROL
 
 

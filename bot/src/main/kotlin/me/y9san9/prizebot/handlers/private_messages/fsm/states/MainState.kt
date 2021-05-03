@@ -1,5 +1,6 @@
 package me.y9san9.prizebot.handlers.private_messages.fsm.states
 
+import dev.inmo.tgbotapi.types.buttons.ReplyKeyboardRemove
 import me.y9san9.fsm.FSMStateResult
 import me.y9san9.fsm.stateResult
 import me.y9san9.prizebot.actors.telegram.sender.*
@@ -7,20 +8,35 @@ import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.TitleInp
 import me.y9san9.prizebot.extensions.telegram.commandOrDefault
 import me.y9san9.prizebot.extensions.telegram.PrizebotFSMState
 import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
+import me.y9san9.prizebot.extensions.telegram.locale
 import me.y9san9.prizebot.resources.Emoji
+import me.y9san9.prizebot.resources.markups.mainMarkup
+import me.y9san9.telegram.updates.extensions.send_message.sendMessage
 
 
 object MainState : PrizebotFSMState<Unit> {
+
+    suspend fun cancellation(event: PrizebotPrivateMessageUpdate) = stateResult(MainState) {
+        event.sendMessage (
+            event.locale.cancelled,
+            replyMarkup = mainMarkup(event)
+        )
+    }
+
     override suspend fun process(data: Unit, event: PrizebotPrivateMessageUpdate): FSMStateResult<*> {
-        event.commandOrDefault {
+        event.commandOrDefault (
+            noTextMatchedMatched = {
+                event.sendMessage(event.locale.unknownCommand(it.actualText), replyMarkup = mainMarkup(event))
+            }
+        ) {
             case("/start") {
                 StartSender.send(event)
 
                 // fixme: business logic in declarative code
-                if (event.di.getLanguageCode(event.chatId) == null) {
+                if (event.di.getLanguageCode(event.userId) == null) {
                     SelectLocaleSender.send(event)
                     event.di.setLanguageCode (
-                        event.chatId,
+                        event.userId,
                         languageCode = event.languageCode ?: "en"
                     )
                 }
@@ -29,10 +45,13 @@ object MainState : PrizebotFSMState<Unit> {
                 SelectLocaleSender.send(event)
             }
             case("/help", Emoji.HELP) {
-                HelpSender.send(event)
+                event.sendMessage(event.locale.help)
             }
             case("/giveaway", Emoji.GIFT) {
-                GiveawayTitleInputSender.send(event)
+                event.sendMessage (
+                    text = event.locale.giveawayTitleInput,
+                    replyMarkup = ReplyKeyboardRemove()
+                )
                 return stateResult(TitleInputState)
             }
             case("/my_giveaways", Emoji.SETTINGS) {

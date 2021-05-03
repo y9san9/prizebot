@@ -1,8 +1,9 @@
 package me.y9san9.fsm
 
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.*
+import me.y9san9.extensions.flow.createParallelLauncher
+import me.y9san9.extensions.flow.launchEachSafely
 import me.y9san9.fsm.storage.MemoryStorage
 
 typealias SingleChannelFSM <TEvent> = FSM<Unit, TEvent>
@@ -41,40 +42,34 @@ class FSM <TChannel, TEvent> (
     )
 
     init {
-        scope.launch {
-            processEvents(events, states.states)
-        }
+        events
+            .map { eventChannelProvider(it) to it }
+            .createParallelLauncher()
+            .launchEachSafely(scope, throwableHandler, { (channel) -> channel }) { (channel, event) ->
+                processEvent(channel, event, states.states)
+            }
     }
 
-    private suspend fun processEvents(events: Flow<TEvent>, states: List<FSMState<*, TEvent>>) {
-        while(true) {
-            val event = events.first()
-            val channel = eventChannelProvider(event)
-            val context = contextManager.get(channel)
+    private suspend fun processEvent(channel: TChannel, event: TEvent, states: List<FSMState<*, TEvent>>) {
+        val context = contextManager.get(channel)
 
-            val processingState = states
-                .singleOrNull { it.name == context.name }
-                ?: error("Exactly one state with name ${context.name} expected")
+        val processingState = states
+            .singleOrNull { it.name == context.name }
+            ?: error("Exactly one state with name ${context.name} expected")
 
-            @Suppress("UNCHECKED_CAST")
-            suspend fun <TDataIn> uncheckedProcess(processingState: FSMState<TDataIn, TEvent>) {
-                // This cast is always successful because of state data out == next state data in
-                val result = try {
-                    processingState.process(context.data as TDataIn, event)
-                } catch (throwable: Throwable) {
-                    throwableHandler(throwable)
-                    return
-                }
+        @Suppress("UNCHECKED_CAST")
+        suspend fun <TDataIn> uncheckedProcess(processingState: FSMState<TDataIn, TEvent>) {
+            // This cast is always successful because of state data out == next state data in
+            val result = processingState.process(context.data as TDataIn, event)
 
-                contextManager.set (
-                    channel, FSMContext (
-                        name = result.nextState.name,
-                        data = result.data
-                    )
+            contextManager.set(
+                channel, FSMContext(
+                    name = result.nextState.name,
+                    data = result.data
                 )
-            }
-
-            uncheckedProcess(processingState)
+            )
         }
+
+        uncheckedProcess(processingState)
     }
 }

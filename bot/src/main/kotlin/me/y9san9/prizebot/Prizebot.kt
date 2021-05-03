@@ -1,44 +1,52 @@
 package me.y9san9.prizebot
 
-import dev.inmo.micro_utils.coroutines.subscribeSafely
 import dev.inmo.tgbotapi.bot.Ktor.telegramBot
 import dev.inmo.tgbotapi.bot.TelegramBot
 import dev.inmo.tgbotapi.extensions.api.send.sendMessage
 import dev.inmo.tgbotapi.extensions.utils.updates.retrieving.longPolling
 import dev.inmo.tgbotapi.types.ChatId
-import dev.inmo.tgbotapi.types.MessageEntity.textsources.regular
+import dev.inmo.tgbotapi.types.message.abstracts.ChannelContentMessage
 import dev.inmo.tgbotapi.types.message.abstracts.PrivateContentMessage
+import dev.inmo.tgbotapi.types.message.abstracts.PublicContentMessage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import me.y9san9.extensions.flow.createParallelLauncher
+import me.y9san9.extensions.flow.launchEachSafely
 import me.y9san9.fsm.FSM
-import me.y9san9.fsm.statesOf
 import me.y9san9.prizebot.actors.giveaway.AutoRaffleActor
-import me.y9san9.prizebot.actors.storage.giveaways_active_messages_storage.GiveawaysActiveMessagesStorage
-import me.y9san9.prizebot.actors.storage.giveaways_storage.GiveawaysStorage
-import me.y9san9.prizebot.actors.storage.language_codes_storage.LanguageCodesStorage
-import me.y9san9.prizebot.actors.storage.participants_storage.ParticipantsStorage
-import me.y9san9.prizebot.actors.storage.states_storage.PrizebotFSMStorage
+import me.y9san9.prizebot.actors.giveaway.RaffleActor
+import me.y9san9.prizebot.database.giveaways_active_messages_storage.GiveawaysActiveMessagesStorage
+import me.y9san9.prizebot.database.giveaways_storage.GiveawaysStorage
+import me.y9san9.prizebot.database.language_codes_storage.LanguageCodesStorage
+import me.y9san9.prizebot.database.linked_channels_storage.LinkedChannelsStorage
+import me.y9san9.prizebot.database.states_storage.PrizebotFSMStorage
+import me.y9san9.prizebot.database.user_titles_storage.UserTitlesStorage
 import me.y9san9.prizebot.handlers.callback_queries.CallbackQueryHandler
 import me.y9san9.prizebot.handlers.choosen_inline_result.ChosenInlineResultHandler
 import me.y9san9.prizebot.handlers.inline_queries.InlineQueryHandler
 import me.y9san9.prizebot.handlers.private_messages.fsm.prizebotPrivateMessages
-import me.y9san9.prizebot.handlers.private_messages.fsm.states.MainState
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.statesSerializers
-import me.y9san9.prizebot.models.DatabaseConfig
-import me.y9san9.prizebot.models.di.PrizebotDI
+import me.y9san9.prizebot.di.PrizebotDI
+import me.y9san9.prizebot.extensions.flow.launchEachSafelyByChatId
 import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
-import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.*
-import me.y9san9.prizebot.resources.images.Image
-import me.y9san9.telegram.updates.CallbackQueryUpdate
-import me.y9san9.telegram.updates.ChosenInlineResultUpdate
-import me.y9san9.telegram.updates.InlineQueryUpdate
-import me.y9san9.telegram.updates.extensions.send_message.sendPhotoCached
+import me.y9san9.prizebot.handlers.channel_group_messages.ChannelGroupMessagesHandler
+import me.y9san9.prizebot.handlers.my_chat_member_updated.MyChatMemberUpdateHandler
+import me.y9san9.prizebot.handlers.private_messages.fsm.states.prizebotStates
+import me.y9san9.telegram.updates.*
 import org.jetbrains.exposed.sql.Database
 
 
+data class DatabaseConfig (
+    val url: String,
+    val user: String,
+    val password: String,
+    val driver: String?
+)
+
 class Prizebot (
     botToken: String,
+    randomOrgApiKey: String,
     databaseConfig: DatabaseConfig,
     private val logChatId: Long?,
     private val scope: CoroutineScope
@@ -46,46 +54,58 @@ class Prizebot (
     private val bot = telegramBot(botToken)
     private val database = connectDatabase(databaseConfig)
 
+    private val di = PrizebotDI (
+        giveawaysStorage = GiveawaysStorage(database),
+        giveawaysActiveMessagesStorage = GiveawaysActiveMessagesStorage(database),
+        languageCodesStorage = LanguageCodesStorage(database),
+        linkedChannelsStorage = LinkedChannelsStorage(database),
+        userTitlesStorage = UserTitlesStorage(database),
+        raffleActor = RaffleActor(randomOrgApiKey)
+    )
+
     fun start() = bot.longPolling {
-        val di = PrizebotDI (
-            giveawaysStorage = GiveawaysStorage(database),
-            participantsStorage = ParticipantsStorage(database),
-            giveawaysActiveMessagesStorage = GiveawaysActiveMessagesStorage(database),
-            languageCodesStorage = LanguageCodesStorage(database)
-        )
         scheduleRaffles(bot, di)
 
-        val messages = messageFlow
+        val privateMessages = messageFlow
             .mapNotNull { it.data as? PrivateContentMessage<*> }
-            .map { PrizebotPrivateMessageUpdate(bot, di, message = it) }
+            .map { PrivateMessageUpdate(bot, di, message = it) }
 
-        createFSM(events = messages)
+        createFSM(events = privateMessages)
+
+        messageFlow
+            .mapNotNull { it.data as? PublicContentMessage<*> ?: it.data as? ChannelContentMessage<*> }
+            .map { GroupMessageUpdate(bot, di, message = it) }
+            .createParallelLauncher()
+            .launchEachSafely(scope, ::logException, { it.chatId },  ChannelGroupMessagesHandler::handle)
+
+        myChatMemberUpdatedFlow
+            .map { MyChatMemberUpdate(bot, di, update = it) }
+            .createParallelLauncher()
+            .launchEachSafelyByChatId(scope, ::logException, MyChatMemberUpdateHandler::handle)
 
         inlineQueryFlow
             .map { InlineQueryUpdate(bot, di, query = it) }
-            .subscribeSafely(scope, ::logException, InlineQueryHandler::handle)
+            .createParallelLauncher()
+            .launchEachSafelyByChatId(scope, ::logException, InlineQueryHandler::handle)
 
         callbackQueryFlow
             .map { CallbackQueryUpdate(bot, di, query = it) }
-            .subscribeSafely(scope, ::logException, CallbackQueryHandler::handle)
+            .createParallelLauncher()
+            .launchEachSafelyByChatId(scope, ::logException, CallbackQueryHandler::handle)
 
         chosenInlineResultFlow
             .map { ChosenInlineResultUpdate(bot, di, update = it) }
-            .subscribeSafely(scope, ::logException, ChosenInlineResultHandler::handle)
+            .createParallelLauncher()
+            .launchEachSafelyByChatId(scope, ::logException, ChosenInlineResultHandler::handle)
     }
 
     private fun scheduleRaffles(bot: TelegramBot, di: PrizebotDI) = scope.launch {
-        AutoRaffleActor.scheduleAll(bot, di)
+        AutoRaffleActor(di.raffleActor).scheduleAll(bot, di)
     }
 
     private fun createFSM(events: Flow<PrizebotPrivateMessageUpdate>) = FSM.prizebotPrivateMessages (
         events,
-        states = statesOf (
-            initial = MainState,
-            TitleInputState, ParticipateTextInputState,
-            RaffleDateInputState, TimezoneInputState,
-            CustomTimezoneInputState
-        ),
+        states = prizebotStates,
         storage = PrizebotFSMStorage(database, statesSerializers),
         scope = scope,
         throwableHandler = ::logException

@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
+    implementation(utils)
     implementation(coroutines)
     implementation(serialization)
-    implementation(kds)
 }

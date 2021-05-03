@@ -1,17 +1,19 @@
+@file:Suppress("MemberVisibilityCanBePrivate")
+
 package me.y9san9.prizebot.handlers.callback_queries.command
 
-import me.y9san9.prizebot.actors.storage.giveaways_storage.FinishedGiveaway
-import me.y9san9.prizebot.actors.storage.participants_storage.ParticipantsStorage
+import me.y9san9.prizebot.actors.giveaway.ConditionsChecker
+import me.y9san9.prizebot.actors.giveaway.CheckConditionsResult
 import me.y9san9.prizebot.actors.telegram.extractor.GiveawayFromCommandExtractor
 import me.y9san9.prizebot.actors.telegram.updater.GiveawayCallbackQueryMessageUpdater
+import me.y9san9.prizebot.database.giveaways_storage.ActiveGiveaway
+import me.y9san9.prizebot.database.giveaways_storage.FinishedGiveaway
 import me.y9san9.prizebot.extensions.telegram.locale
 import me.y9san9.prizebot.extensions.telegram.PrizebotCallbackQueryUpdate
 
-
 object ParticipateCommand {
     suspend fun handle(update: PrizebotCallbackQueryUpdate) {
-        val storage = update.di as ParticipantsStorage
-        val participantId = update.chatId
+        val participantId = update.userId
         val locale = update.locale
 
         val giveaway = GiveawayFromCommandExtractor.extract(update, splitter = "_")
@@ -19,17 +21,24 @@ object ParticipateCommand {
 
         val answer = when {
             giveaway is FinishedGiveaway -> locale.giveawayFinished
-            giveaway.ownerId == participantId -> {
-                locale.cannotParticipateInSelfGiveaway
+            giveaway.ownerId == participantId -> locale.cannotParticipateInSelfGiveaway
+            giveaway.isParticipant(participantId) -> {
+                giveaway.removeParticipant(participantId)
+                locale.youHaveLeftGiveaway
             }
-            storage.isParticipant(giveaway.id, participantId) -> {
-                locale.alreadyParticipating
-            }
-            else -> {
-                storage.saveParticipant(giveaway.id, participantId)
-                locale.nowParticipating
+            else -> when(val result = ConditionsChecker.check(update.bot, participantId, giveaway as ActiveGiveaway)) {
+                is CheckConditionsResult.GiveawayInvalid -> locale.giveawayInvalid
+                is CheckConditionsResult.NotSubscribedToConditions -> locale.notSubscribedToConditions
+                is CheckConditionsResult.FriendsAreNotInvited -> locale.friendsAreNotInvited (
+                    result.invitedCount, result.requiredCount
+                )
+                is CheckConditionsResult.Success -> {
+                    giveaway.saveParticipant(participantId)
+                    locale.nowParticipating
+                }
             }
         }
+
         update.answer(answer)
 
         GiveawayCallbackQueryMessageUpdater.update(update, giveaway)

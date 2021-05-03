@@ -6,19 +6,19 @@ import dev.inmo.tgbotapi.types.ChatId
 import kotlinx.coroutines.*
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import me.y9san9.prizebot.actors.storage.giveaways_active_messages_storage.GiveawaysActiveMessagesStorage
-import me.y9san9.prizebot.actors.storage.giveaways_storage.ActiveGiveaway
-import me.y9san9.prizebot.actors.storage.giveaways_storage.Giveaway
-import me.y9san9.prizebot.actors.storage.giveaways_storage.GiveawaysStorage
-import me.y9san9.prizebot.actors.storage.language_codes_storage.LanguageCodesStorage
-import me.y9san9.prizebot.actors.storage.participants_storage.ParticipantsStorage
+import me.y9san9.prizebot.database.giveaways_active_messages_storage.GiveawaysActiveMessagesStorage
+import me.y9san9.prizebot.database.giveaways_storage.ActiveGiveaway
+import me.y9san9.prizebot.database.giveaways_storage.GiveawaysStorage
+import me.y9san9.prizebot.database.language_codes_storage.LanguageCodesStorage
 import me.y9san9.prizebot.actors.telegram.updater.GiveawayActiveMessagesUpdater
+import me.y9san9.prizebot.database.user_titles_storage.UserTitlesStorage
+import me.y9san9.prizebot.di.PrizebotDI
 import me.y9san9.prizebot.resources.locales.Locale
 import me.y9san9.telegram.updates.hierarchies.DIBotUpdate
 import java.time.Instant
 
 
-object AutoRaffleActor : CoroutineScope {
+class AutoRaffleActor(private val raffleActor: RaffleActor) : CoroutineScope {
 
     /**
      * Map of giveaway id to schedule job
@@ -27,21 +27,18 @@ object AutoRaffleActor : CoroutineScope {
 
     private val scheduledMutex = Mutex()
 
-    suspend fun <T> scheduleAll (
+    suspend fun scheduleAll (
         bot: TelegramBot,
-        di: T
-    ) where T : ParticipantsStorage, T : GiveawaysActiveMessagesStorage,
-            T : GiveawaysStorage, T : LanguageCodesStorage =
-        di.getAllGiveaways()
+        di: PrizebotDI
+    ) = di.getAllGiveaways()
             .filterIsInstance<ActiveGiveaway>()
             .forEach { schedule(bot, it, di) }
 
-    suspend fun <T> schedule (
+    suspend fun schedule (
         bot: TelegramBot,
         giveaway: ActiveGiveaway,
-        di: T
-    ) where T : GiveawaysActiveMessagesStorage, T : ParticipantsStorage,
-            T : GiveawaysStorage, T : LanguageCodesStorage = scheduledMutex.withLock {
+        di: PrizebotDI
+    ) = scheduledMutex.withLock {
         val scope = this
 
         if(giveaway.raffleDate != null && giveaway.id !in scheduled) {
@@ -52,7 +49,7 @@ object AutoRaffleActor : CoroutineScope {
                 scheduledMutex.withLock {
                     if (giveaway.id in scheduled && di.getGiveawayById(giveaway.id) != null) {
                         scheduled.remove(giveaway.id)
-                        handleRaffleResult(bot, di, giveaway, RaffleActor.raffle(giveaway.id, di))
+                        handleRaffleResult(bot, di, giveaway, raffleActor.raffle(bot, giveaway, di))
                     }
                 }
             }
@@ -60,15 +57,16 @@ object AutoRaffleActor : CoroutineScope {
     }
 
     private suspend fun <T> handleRaffleResult (
-        bot: TelegramBot, di: T, giveaway: Giveaway, successRaffle: Boolean
-    ) where T : GiveawaysActiveMessagesStorage, T : ParticipantsStorage,
-            T : GiveawaysStorage, T : LanguageCodesStorage {
+        bot: TelegramBot, di: T,
+        giveaway: ActiveGiveaway, successRaffle: Boolean
+    ) where T : GiveawaysActiveMessagesStorage,
+            T : GiveawaysStorage, T : LanguageCodesStorage, T : UserTitlesStorage {
         if (successRaffle) {
             GiveawayActiveMessagesUpdater.update(getEvent(bot, di), giveaway.id)
         } else {
-            di.removeRaffleDate(giveaway.id)
+            giveaway.removeRaffleDate()
             val locale = Locale.with(di.getLanguageCode(giveaway.ownerId))
-            bot.sendMessage(ChatId(giveaway.ownerId), locale.cannotRaffleGiveaway(giveaway.title))
+            bot.sendMessage(ChatId(giveaway.ownerId), locale.lackOfParticipants(giveaway.title))
         }
     }
 

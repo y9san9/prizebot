@@ -6,7 +6,7 @@ import dev.inmo.tgbotapi.CommonAbstracts.plus
 import dev.inmo.tgbotapi.types.MessageEntity.textsources.*
 import me.y9san9.prizebot.resources.Emoji
 import me.y9san9.prizebot.resources.MAX_TITLE_LEN
-import me.y9san9.prizebot.extensions.string.awesomeCut
+import me.y9san9.extensions.string.awesomeCut
 
 
 object DefaultLocale : Locale()
@@ -64,7 +64,7 @@ open class Locale {
 
     open val nowParticipating = "You are now participating in this giveaway!"
 
-    open val alreadyParticipating = "You are already participating in this giveaway!"
+    open val youHaveLeftGiveaway = "Now you are not participating"
 
     open val selectGiveawayToView = "Select giveaway from list below"
 
@@ -82,11 +82,12 @@ open class Locale {
 
     open val raffle = "Raffle ${Emoji.GIFT}"
 
-    open val winner = "Winner"
+    open fun winner(plural: Boolean) = if(plural) "Winners" else "Winner"
 
     open val deletedUser = "Deleted user"
 
-    open val nobodyIsParticipatingYet = "Nobody is participating in giveaway yet!"
+    open val participantsCountIsNotEnough =
+        "There is not enough participants to raffle!"
 
     open val giveawayFinished = "Giveaway already finished!"
 
@@ -107,13 +108,14 @@ open class Locale {
     open val enterRaffleDateInput = regular("Enter auto-raffle date in one of this formats: ") +
             bold("00:00") + ", " +
             bold("00:00 13.01") + ", " +
-            bold("00:00 13.01.2020") + " (use /skip to skip or /cancel to cancel)"
+            bold("00:00 13.01.2020") + " (use /skip to skip or /cancel to cancel). " +
+            "You can choose time offset in the next step."
 
     open val invalidDateFormat = "Invalid date format, try again"
 
-    open val selectTimezone = "Select timezone with buttons below"
+    open val selectOffset = "Select time offset with buttons below"
 
-    open val customTimezone = "Custom timezone"
+    open val customTimeOffset = "Custom offset"
 
     open val `UTC-4` = "New York -4"
     open val GMT = "GMT +0"
@@ -131,8 +133,81 @@ open class Locale {
 
     open val raffleDate = "Raffle date"
 
-    open fun cannotRaffleGiveaway(title: String) =
-        "Cannot automatically raffle giveaway '$title', so now you can raffle it manually later"
+    open fun lackOfParticipants(giveawayTitle: String) =
+        "Cannot automatically raffle giveaway '$giveawayTitle' because lack of participants, so you can raffle it manually later"
+
+    open val winnersCountIsOutOfRange = "Due to telegram message length, winners count may be from 1 to 50"
+
+    open val enterNumber = "Please, enter number"
+
+    open val enterWinnersCount = "Enter giveaway winners count (use /skip to set default value (1) or /cancel to cancel)"
+
+    open val winnersCount = "Winners count"
+
+    open val chooseConditions = "Now you can choose conditions for giveaway members (use /next to create giveaway without conditions or /cancel to cancel)"
+
+    open val chooseMoreConditions = "Choose next condition (use /next to create giveaway or /cancel to cancel)"
+
+    open val invitations = "Invite friends"
+
+    open val channelSubscription = "Join channel"
+
+    open val youHaveAlreadyAddedInvitations = "You have already added invitations condition!"
+
+    open val enterInvitationsCount = "Enter invitations count for participation"
+
+    open val selectLinkedChat = "Select linked chat with buttons below (use /help for channel linking help, or use /cancel to cancel current step)"
+
+    open val updateChannels = "Update linked channels"
+
+    open val channelsUpdated = "Linked channels updated!"
+
+    open val channelLinkingHelp = bold("To link a channel you should follow these steps:\n\n") +
+            "• Add @secure_prize_bot to channel/chat you want link as administrator (" + bold("it must have username") + " so anyone can join with it), " +
+            "later it will be used to check if member is joined\n" +
+            "• Than just click update button and select the channel\n\n" +
+            bold("In case the bot is already in the chat:\n\n") +
+            "• Type /connect_prizebot and click update button\n" +
+            "• Optionally you can allow bot to delete messages, so the message from previous step will be immediately deleted " +
+            "(it can help to silently connect bot in big channels)"
+
+    open val channelIsNotLinked = "This channel is not linked!"
+
+    open val channelIsAlreadyInConditions = "This channel is already in conditions"
+
+    open val giveawayConditions = "Giveaway conditions:"
+
+    open fun subscribeTo(username: String) = regular("Subscribe to ") + bold(username)
+
+    open fun inviteFriends(count: Int) = regular("Invite ") + bold("$count") + " friend" +
+            (if(count > 1) "s" else "") + " in giveaway"
+
+    open val channelConditionRequiredForInvitations = "At least one channel subscription required if you want to add " +
+            "friends invitations"
+
+    open val invitationsCountShouldBePositive = "Invitation count should be positive number"
+
+    open val giveawayInvalid = "Contact organizer because giveaway seems to be invalid"
+
+    open val notSubscribedToConditions = "You have not joined all chats/channels"
+
+    open fun friendsAreNotInvited(invitedCount: Int, requiredCount: Int) = "You have invited $invitedCount / $requiredCount friends"
+
+    open val raffleProcessing = "Please wait, raffle is being processed"
+
+    open val promoteBot = "Promote bot to admin first"
+
+    open val thisChatIsNotPublic = "This chat is not public, please add a username"
+
+    open val displayWinnersWithEmoji = "Display winners with emojis like this?\n\n" +
+            "${Emoji.FIRST_PLACE} Foo Bar\n" +
+            "${Emoji.SECOND_PLACE} Bar Foo\n" +
+            "${Emoji.THIRD_PLACE} Baz Baz\n\n" +
+            "This is available only for giveaways with winners count from 2 to 10 inclusive"
+
+    open val yes = "Yes"
+
+    open val no = "No"
 
     companion object {
         fun with(language: String?) = locales

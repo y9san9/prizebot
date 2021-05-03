@@ -13,4 +13,5 @@ inline fun <T> stateResult(nextState: FSMState<T, *>, data: T, apply: () -> Unit
         nextState = nextState
     ).apply { apply() }
 
-fun stateResult(nextState: FSMState<Unit, *>) = stateResult(nextState, data = Unit)
+inline fun stateResult(nextState: FSMState<Unit, *>, apply: () -> Unit = {}) =
+    stateResult(nextState, data = Unit, apply)

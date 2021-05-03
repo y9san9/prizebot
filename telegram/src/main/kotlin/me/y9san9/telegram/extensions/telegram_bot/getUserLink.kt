@@ -8,7 +8,5 @@ import dev.inmo.tgbotapi.types.chat.abstracts.PrivateChat
 
 
 suspend fun TelegramBot.getUserLink(id: Long, defaultMentionText: String = "") = id.mention (
-    text = (getChat(ChatId(id)) as PrivateChat).let {
-        "${it.firstName} ${it.lastName}".takeIf(String::isNotBlank) ?: defaultMentionText
-    }
+    text = getUserTitle(id) ?: defaultMentionText
 )

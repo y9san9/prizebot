@@ -1,12 +1,14 @@
 package me.y9san9.prizebot
 
 import kotlinx.coroutines.coroutineScope
-import me.y9san9.prizebot.extensions.any.unit
-import me.y9san9.prizebot.models.DatabaseConfig
+import me.y9san9.extensions.any.unit
 
 
 suspend fun main() = coroutineScope {
     val token = System.getenv("BOT_TOKEN") ?: error("Provide BOT_TOKEN environment variable")
+    val randomOrgApiKey = System.getenv("RANDOM_ORG_API_KEY")
+        ?: error("Please visit api.random.org and provide RANDOM_ORG_API_KEY environment variable")
+
     val logChatId = System.getenv("LOG_CHAT_ID")?.toLongOrNull()
 
     val databaseConfig = DatabaseConfig (
@@ -21,6 +23,7 @@ suspend fun main() = coroutineScope {
 
     Prizebot (
         botToken = token,
+        randomOrgApiKey = randomOrgApiKey,
         databaseConfig = databaseConfig,
         logChatId = logChatId,
         scope = this

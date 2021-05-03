@@ -8,7 +8,7 @@ import me.y9san9.prizebot.extensions.telegram.PrizebotInlineQueryUpdate
 object PickGiveawayCommand {
     suspend fun handle(update: PrizebotInlineQueryUpdate) {
         val storage = update.di
-        val userId = update.chatId
+        val userId = update.userId
         val offset = update.offset.toLongOrNull() ?: 0
 
         val giveaways = storage.getUserGiveaways(userId, count = 10, offset)

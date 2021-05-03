@@ -8,7 +8,7 @@ import me.y9san9.prizebot.extensions.telegram.PrizebotCallbackQueryUpdate
 object SelfGiveawaysSendCommand {
     suspend fun handle(update: PrizebotCallbackQueryUpdate) {
         val giveaway = GiveawayFromCommandExtractor.extract(update, splitter = "_")
-            ?.takeIf { it.ownerId == update.chatId } ?: return
+            ?.takeIf { it.ownerId == update.userId } ?: return
 
         GiveawayCallbackQueryMessageUpdater.update(update, giveaway, demo = true)
     }

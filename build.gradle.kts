@@ -16,12 +16,11 @@ version = AppInfo.VERSION
 allprojects {
     repositories {
         mavenCentral()
-        jcenter()
-        maven(url = "https://dl.bintray.com/y9san9/kotlingang")
     }
 }
 
 dependencies {
+    implementation(utils)
     implementation(bot)
     implementation(coroutines)
 }

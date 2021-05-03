@@ -8,7 +8,7 @@ import me.y9san9.prizebot.extensions.telegram.locale
 
 fun timezoneKeyboard(update: PrizebotLocalizedUpdate) = ReplyKeyboardMarkup (
     keyboard = listOf (
-        listOf(SimpleKeyboardButton(update.locale.customTimezone)),
+        listOf(SimpleKeyboardButton(update.locale.customTimeOffset)),
         listOf (
             SimpleKeyboardButton(update.locale.GMT),
             SimpleKeyboardButton(update.locale.`UTC-4`),
@@ -24,5 +24,6 @@ fun timezoneKeyboard(update: PrizebotLocalizedUpdate) = ReplyKeyboardMarkup (
             SimpleKeyboardButton(update.locale.UTC9)
         )
     ),
-    resizeKeyboard = true
+    resizeKeyboard = true,
+    oneTimeKeyboard = true
 )

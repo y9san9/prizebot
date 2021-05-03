@@ -15,7 +15,8 @@ private class ResourceContainer
 fun ResourceImage(name: String) = MultipartFile (
     StorageFile (
         name,
-        ResourceContainer::class.java.getResourceAsStream("/images/$name").readBytes(),
+        bytes = ResourceContainer::class.java.getResourceAsStream("/images/$name")?.readBytes()
+            ?: error("Image $name not found"),
         BuiltinMimeTypes.Image.Jpg
     )
 )

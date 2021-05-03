@@ -2,54 +2,36 @@ package me.y9san9.prizebot.resources.content
 
 import dev.inmo.tgbotapi.CommonAbstracts.TextSourcesList
 import dev.inmo.tgbotapi.types.buttons.InlineKeyboardMarkup
-import me.y9san9.prizebot.actors.storage.giveaways_storage.Giveaway
-import me.y9san9.prizebot.actors.storage.giveaways_storage.GiveawaysStorage
-import me.y9san9.prizebot.actors.storage.language_codes_storage.LanguageCodesStorage
-import me.y9san9.prizebot.actors.storage.participants_storage.ParticipantsStorage
+import me.y9san9.prizebot.database.giveaways_storage.Giveaway
+import me.y9san9.prizebot.database.giveaways_storage.GiveawaysStorage
 import me.y9san9.prizebot.actors.telegram.extractor.GiveawayFromCommandExtractor
-import me.y9san9.prizebot.extensions.telegram.PrizebotLocalizedBotUpdate
+import me.y9san9.prizebot.database.user_titles_storage.UserTitlesStorage
 import me.y9san9.prizebot.resources.entities.giveawayEntities
 import me.y9san9.prizebot.resources.markups.giveawayMarkup
-import me.y9san9.telegram.updates.hierarchies.DIBotUpdate
-import me.y9san9.telegram.updates.hierarchies.FromChatLocalizedDIBotUpdate
+import me.y9san9.telegram.updates.hierarchies.PossiblyFromUserLocalizedDIBotUpdate
 import me.y9san9.telegram.updates.primitives.BotUpdate
-import me.y9san9.telegram.updates.primitives.DIUpdate
 import me.y9san9.telegram.updates.primitives.HasTextUpdate
 
 
-suspend fun <TUpdate, TDI> giveawayContent (
+fun <TUpdate, TDI> extractGiveawayContent (
     update: TUpdate,
+    userTitlesStorage: UserTitlesStorage,
     splitter: String = "\\s+",
     demo: Boolean = false
 ): Pair<TextSourcesList, InlineKeyboardMarkup?>? where
-        TUpdate : HasTextUpdate, TUpdate : FromChatLocalizedDIBotUpdate<TDI>,
-        TDI : GiveawaysStorage, TDI : ParticipantsStorage {
+        TUpdate : HasTextUpdate, TUpdate : PossiblyFromUserLocalizedDIBotUpdate<TDI>,
+        TDI : GiveawaysStorage {
     val giveaway = GiveawayFromCommandExtractor.extract(update, splitter) ?: return null
 
-    return giveawayEntities(update, giveaway) to
-        giveawayMarkup(update, giveaway, demo)
+    return giveawayEntities(userTitlesStorage, giveaway) to
+        giveawayMarkup(giveaway, demo)
 }
 
-suspend fun giveawayContent (
-    update: DIBotUpdate<ParticipantsStorage>,
+fun giveawayContent (
+    userTitlesStorage: UserTitlesStorage,
     giveaway: Giveaway,
-    demo: Boolean = false
-): Pair<TextSourcesList, InlineKeyboardMarkup?> =
-    // Zero won't be used if giveaway equals null
-    giveawayContent(update, giveaway, getParticipantsOrZero(giveaway, update), demo)
-
-private fun getParticipantsOrZero(giveaway: Giveaway?, update: DIUpdate<ParticipantsStorage>): Int {
-    return update.di.getParticipantsCount (
-        giveawayId = giveaway?.id ?: return 0
-    )
-}
-
-suspend fun giveawayContent (
-    update: BotUpdate,
-    giveaway: Giveaway,
-    participantsCount: Int,
     demo: Boolean = false
 ): Pair<TextSourcesList, InlineKeyboardMarkup?> {
-    return giveawayEntities(update, giveaway) to
-            giveawayMarkup(participantsCount, giveaway, demo)
+    return giveawayEntities(userTitlesStorage, giveaway) to
+            giveawayMarkup(giveaway, demo)
 }

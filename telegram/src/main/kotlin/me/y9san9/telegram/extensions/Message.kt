@@ -7,7 +7,7 @@ import dev.inmo.tgbotapi.types.message.abstracts.Message
 import dev.inmo.tgbotapi.types.message.content.TextContent
 
 
-val FromUserMessage.languageCode get() = (user as? CommonUser)?.languageCode
+val ContentMessage<*>.languageCode get() = ((this as? FromUserMessage)?.user as? CommonUser)?.languageCode
 
 @Suppress("UNCHECKED_CAST")
 fun Message.asTextContentMessage() = (this as? ContentMessage<*>)

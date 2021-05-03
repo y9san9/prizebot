@@ -1,12 +1,14 @@
 package me.y9san9.telegram.updates
 
 import dev.inmo.tgbotapi.bot.TelegramBot
+import dev.inmo.tgbotapi.bot.exceptions.RequestException
 import dev.inmo.tgbotapi.extensions.api.answers.answerInlineQuery
 import dev.inmo.tgbotapi.types.CommonUser
 import dev.inmo.tgbotapi.types.InlineQueries.InlineQueryResult.abstracts.InlineQueryResult
 import dev.inmo.tgbotapi.types.update.InlineQueryUpdate
-import me.y9san9.telegram.updates.hierarchies.FromChatLocalizedDIBotUpdate
+import me.y9san9.telegram.updates.hierarchies.PossiblyFromUserLocalizedDIBotUpdate
 import me.y9san9.telegram.updates.primitives.AnswerableUpdate
+import me.y9san9.telegram.updates.primitives.FromUserUpdate
 import me.y9san9.telegram.updates.primitives.HasTextUpdate
 
 
@@ -14,9 +16,9 @@ class InlineQueryUpdate <DI> (
     override val bot: TelegramBot,
     override val di: DI,
     private val query: InlineQueryUpdate,
-) : FromChatLocalizedDIBotUpdate<DI>, HasTextUpdate, AnswerableUpdate {
+) : PossiblyFromUserLocalizedDIBotUpdate<DI>, HasTextUpdate, AnswerableUpdate, FromUserUpdate {
 
-    override val chatId = query.data.from.id.chatId
+    override val userId = query.data.from.id.chatId
     override val languageCode = (query.data.from as? CommonUser)?.languageCode
     override val text = query.data.query
 
@@ -29,10 +31,12 @@ class InlineQueryUpdate <DI> (
         nextOffset: String? = null,
         switchPmText: String? = null,
         switchPmParameter: String? = null
-    ) = bot.answerInlineQuery (
-        query.data, results, cachedTime, isPersonal,
-        nextOffset, switchPmText, switchPmParameter
-    ).let { }
+    ) = try {
+        bot.answerInlineQuery (
+            query.data, results, cachedTime, isPersonal,
+            nextOffset, switchPmText, switchPmParameter
+        ).let { }
+    } catch (_: RequestException) {}
 
     suspend fun answer (
         result: InlineQueryResult,

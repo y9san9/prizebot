@@ -1,25 +1,86 @@
 package me.y9san9.prizebot.actors.giveaway
 
-import me.y9san9.prizebot.actors.storage.giveaways_storage.GiveawaysStorage
-import me.y9san9.prizebot.actors.storage.participants_storage.ParticipantsStorage
-import me.y9san9.random.extensions.shuffledRandomOrg
+import dev.inmo.tgbotapi.bot.TelegramBot
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
+import me.y9san9.extensions.flow.createParallelLauncher
+import me.y9san9.prizebot.database.giveaways_storage.ActiveGiveaway
+import me.y9san9.prizebot.database.user_titles_storage.UserTitlesStorage
+import me.y9san9.prizebot.di.PrizebotDI
+import me.y9san9.random.RandomOrgClient
+import me.y9san9.telegram.extensions.telegram_bot.getUserTitle
 
 
-object RaffleActor {
-    suspend fun <T> raffle (
-        giveawayId: Long,
-        di: T
-    ): Boolean where T : ParticipantsStorage, T : GiveawaysStorage {
-        val winner = chooseWinner(giveawayId, di) ?: return false
-        di.finishGiveaway(giveawayId, winner)
+class RaffleActor(randomOrgApiKey: String) {
+    private val random = RandomOrgClient(randomOrgApiKey)
+
+    private val scope = CoroutineScope(context = GlobalScope.coroutineContext + Job())
+
+    private val requests = MutableSharedFlow<Triple<TelegramBot, PrizebotDI, ActiveGiveaway>>(replay = 1)
+    private val responses = MutableSharedFlow<Result<Pair<ActiveGiveaway, Boolean>>>()
+
+    init {
+        requests
+            .createParallelLauncher()
+            .launchEach (
+                scope,
+                consistentKey = { (_, _, giveaway) -> giveaway.id },
+                consumer = { (bot, di, giveaway) ->
+                    responses.emit (
+                        runCatching {
+                            giveaway to raffleAction(bot, di, giveaway)
+                        }
+                    )
+                }
+            )
+    }
+
+    private suspend fun raffleAction (
+        bot: TelegramBot,
+        titlesStorage: UserTitlesStorage,
+        giveaway: ActiveGiveaway
+    ): Boolean {
+        val winnerIds = chooseWinners(
+            bot,
+            giveaway,
+            ConditionsChecker.cacheChatsUsernames(bot, giveaway)
+        ) ?: return false
+
+        giveaway.finish(winnerIds)
+        winnerIds.forEach { id ->
+            bot.getUserTitle(id)?.let { titlesStorage.saveUserTitle(id, it) }
+        }
+
         return true
     }
 
-    private suspend fun <T> chooseWinner (
-        giveawayId: Long,
-        di: T
-    ) where T : ParticipantsStorage =
-        di.getParticipantsIds(giveawayId)
-        .shuffledRandomOrg()
-        .firstOrNull()
+    /**
+     * Different giveaways raffles should be parallelled while one giveaway raffles should be consistent to prevent
+     * double raffle
+     */
+    suspend fun raffle (
+        bot: TelegramBot,
+        giveaway: ActiveGiveaway,
+        di: PrizebotDI
+    ): Boolean {
+        scope.launch { requests.emit(Triple(bot, di, giveaway)) }
+
+        return responses.map { it.getOrThrow() }.first { (g) -> g.id == giveaway.id }.second
+    }
+
+    private suspend fun chooseWinners (
+        bot: TelegramBot,
+        giveaway: ActiveGiveaway,
+        cachedChatsUsernames: Map<Long, String>
+    ): List<Long>? {
+        return random.shuffled(giveaway.participants)
+            .asFlow()
+            .map { userId -> userId to ConditionsChecker.check(bot, userId, giveaway, cachedChatsUsernames) }
+            .takeWhile { (_, check) -> check !is CheckConditionsResult.GiveawayInvalid }
+            .filter { (_, check) -> check is CheckConditionsResult.Success }
+            .map { (userId, _) -> userId }
+            .take(giveaway.winnersCount.value)
+            .toList()
+            .takeIf { it.size == giveaway.winnersCount.value }
+    }
 }
