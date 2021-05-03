@@ -8,6 +8,7 @@ import me.y9san9.telegram.updates.primitives.HasTextUpdate
 import org.intellij.lang.annotations.Language
 
 
+@CommandDSLMarker
 suspend inline fun <T> T.commandOrDefault (
     @Language("RegExp") splitter: String = "\\s+",
     noinline noTextMatchedMatched: suspend (Default.NoTextMatched) -> Unit =
