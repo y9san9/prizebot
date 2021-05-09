@@ -1,7 +1,7 @@
 rootProject.name = "prizebot"
 
 include("bot")
-include("telegram")
+include("bot:telegram")
 include("fsm")
 include("random")
 include("random:jsonRPC")

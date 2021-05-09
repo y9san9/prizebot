@@ -2,7 +2,6 @@
 /.idea/
 /build/
 /data/
-/telegram/build/
 /fsm/build/
 /buildSrc/.gradle/
 /buildSrc/build/
@@ -11,3 +10,4 @@
 /deploy.properties
 /utils/build/
 /random/jsonRPC/build/
+/bot/telegram/build/
