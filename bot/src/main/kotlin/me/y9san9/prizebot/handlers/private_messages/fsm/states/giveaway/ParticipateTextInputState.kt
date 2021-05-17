@@ -13,7 +13,7 @@ import me.y9san9.prizebot.resources.Emoji
 import me.y9san9.telegram.updates.extensions.send_message.sendMessage
 
 
-@SerialName("giveaway_title")
+@SerialName("participate_text_input")
 @Serializable
 data class ParticipateTextInputData (
     val title: String

@@ -1,5 +1,6 @@
 package me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import me.y9san9.fsm.FSMStateResult
 import me.y9san9.fsm.stateResult
@@ -18,6 +19,7 @@ import me.y9san9.telegram.updates.extensions.send_message.sendMessage
 import java.time.OffsetDateTime
 
 
+@SerialName("condition_input")
 @Serializable
 data class ConditionInputData (
     val title: String,
