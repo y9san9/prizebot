@@ -11,6 +11,7 @@ import dev.inmo.tgbotapi.types.message.abstracts.PublicContentMessage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import me.y9san9.db.migrations.MigrationsApplier
 import me.y9san9.extensions.flow.createParallelLauncher
 import me.y9san9.extensions.flow.launchEachSafely
 import me.y9san9.fsm.FSM
@@ -20,6 +21,7 @@ import me.y9san9.prizebot.database.giveaways_active_messages_storage.GiveawaysAc
 import me.y9san9.prizebot.database.giveaways_storage.GiveawaysStorage
 import me.y9san9.prizebot.database.language_codes_storage.LanguageCodesStorage
 import me.y9san9.prizebot.database.linked_channels_storage.LinkedChannelsStorage
+import me.y9san9.prizebot.database.migrations.databaseMigrations
 import me.y9san9.prizebot.database.states_storage.PrizebotFSMStorage
 import me.y9san9.prizebot.database.user_titles_storage.UserTitlesStorage
 import me.y9san9.prizebot.handlers.callback_queries.CallbackQueryHandler
@@ -64,7 +66,8 @@ class Prizebot (
     )
 
     fun start() = bot.longPolling {
-        scheduleRaffles(bot, di)
+        scheduleRaffles()
+        makeDatabaseMigrations()
 
         val privateMessages = messageFlow
             .mapNotNull { it.data as? PrivateContentMessage<*> }
@@ -99,9 +102,11 @@ class Prizebot (
             .launchEachSafelyByChatId(scope, ::logException, ChosenInlineResultHandler::handle)
     }
 
-    private fun scheduleRaffles(bot: TelegramBot, di: PrizebotDI) = scope.launch {
+    private fun scheduleRaffles() = scope.launch {
         AutoRaffleActor(di.raffleActor).scheduleAll(bot, di)
     }
+
+    private fun makeDatabaseMigrations() = MigrationsApplier.apply(database, databaseMigrations)
 
     private fun createFSM(events: Flow<PrizebotPrivateMessageUpdate>) = FSM.prizebotPrivateMessages (
         events,

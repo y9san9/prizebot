@@ -11,6 +11,9 @@ import me.y9san9.prizebot.database.giveaways_storage.locale
 import me.y9san9.prizebot.database.user_titles_storage.UserTitlesStorage
 import me.y9san9.prizebot.extensions.emoji.getPlaceEmoji
 import me.y9san9.prizebot.resources.Emoji
+import java.time.Duration
+import java.time.LocalDateTime
+import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -23,11 +26,20 @@ fun giveawayEntities (
 
     val title = bold(giveaway.title) + ""
 
-    val untilTime = if(giveaway.raffleDate == null) listOf() else {
+    val raffleDate = giveaway.raffleDate
+
+    val untilTime = if(raffleDate == null) listOf() else {
+        val nowDate = OffsetDateTime.now(raffleDate.offset)
+
+        val pattern = if (
+            raffleDate.year != nowDate.year &&
+            Duration.between(nowDate, raffleDate) > Duration.ofDays(100)
+        ) "d MMMM yyyy, HH:mm (XXX)" else "d MMMM, HH:mm (XXX)"
+
         val format = DateTimeFormatter.ofPattern (
-            "d MMMM, HH:mm (XXX)", Locale.forLanguageTag(giveaway.languageCode)
+            pattern, Locale.forLanguageTag(giveaway.languageCode)
         )
-        val date = giveaway.raffleDate!!.format(format)
+        val date = raffleDate.format(format)
         bold(locale.raffleDate) + ": $date" + ""
     }
 

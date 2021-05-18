@@ -22,6 +22,7 @@ internal class TableUserTitlesStorage (
     }
 
     override fun saveUserTitle(userId: Long, title: String) = transaction(database) {
+        UserTitles.deleteWhere { USER_ID eq userId }
         UserTitles.insert {
             it[USER_ID] = userId
             it[USER_TITLE] = title
