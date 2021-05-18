@@ -11,3 +11,4 @@
 /utils/build/
 /random/jsonRPC/build/
 /bot/telegram/build/
+/db-migrations/build/

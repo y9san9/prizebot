@@ -15,6 +15,7 @@ dependencies {
     implementation(slf4j)
 
     implementation(fsm)
+    implementation(`db-migrations`)
     implementation(telegram)
     implementation(random)
     implementation(utils)
