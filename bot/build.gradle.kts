@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
     kotlin(plugin.jvm)
     kotlin(plugin.serialization)
@@ -10,7 +8,7 @@ dependencies {
 
     implementation(exposed)
     implementation(exposedJdbc)
-    implementation(postgresql)  // default jdbc driver dependency; replace with your own if you want.
+    implementation(databaseDriver)  // default jdbc driver dependency; replace with your own if you want.
 
     implementation(slf4j)
 
