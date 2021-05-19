@@ -1,3 +1,6 @@
+<!--suppress HtmlDeprecatedAttribute -->
+<!-- I don't want to use css in readme 🙈 -->
+
 <h1 align="center">Welcome to prizebot 👋</h1>
 <p align="center">
     <a href="https://www.codacy.com/gh/y9san9/prizebot/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=y9san9/prizebot&amp;utm_campaign=Badge_Grade"><img alt="Codacy" src="https://app.codacy.com/project/badge/Grade/ef298b554e2340508e1f8b1635dcc6b9"/></a>
@@ -19,12 +22,14 @@ Simple demo how the bot works. It is very intuitive and cool, also have ability 
     <img alt="Demo-Gif" src="https://user-images.githubusercontent.com/46930374/113611429-2ca0f800-9657-11eb-8908-d11ff248c939.gif"/>
 </p>
 
+## 🚀 Running
+To run this bot by yourself, read [this](docs/RUNNING.md) tutorial
+
+## ✈ Onboarding
+I made a nice [note](docs/ONBOARDING.md) about onboarding on this project. This will also be useful to you if you just want to surf around the code. 
+
 ## 🚩 TODO
 There is a huge plans to do the most convenient prize raffling in the universe via this bot. Some of this accumulated [there](https://github.com/y9san9/prizebot/milestone/1)
-
-## 🚀 Running
-
-To run this bot by yourself, read [this](https://github.com/y9san9/prizebot/blob/master/docs/RUNNING.md) tutorial
 
 ## 📖 Licence
 This software is absolutely free and using [MIT](https://github.com/y9san9/prizebot/blob/master/LICENCE) licence

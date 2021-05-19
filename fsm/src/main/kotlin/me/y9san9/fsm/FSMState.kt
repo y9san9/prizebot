@@ -6,13 +6,3 @@ interface FSMState<TDataIn, TEvent> {
 
     suspend fun process(data: TDataIn, event: TEvent): FSMStateResult<*>
 }
-
-
-inline fun <TDataIn, TEvent> context (
-    name: String,
-    crossinline processor: suspend (data: TDataIn, event: TEvent) -> FSMStateResult<*>
-) = object : FSMState<TDataIn, TEvent> {
-    override val name = name
-
-    override suspend fun process(data: TDataIn, event: TEvent) = processor(data, event)
-}

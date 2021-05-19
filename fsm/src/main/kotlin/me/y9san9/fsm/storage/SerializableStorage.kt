@@ -6,16 +6,9 @@ import kotlinx.serialization.*
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.modules.SerializersModule
 import kotlinx.serialization.modules.plus
-import kotlinx.serialization.modules.polymorphic
 import me.y9san9.fsm.FSMContext
 import me.y9san9.fsm.FSMStorage
 
-
-@Serializable
-@SerialName("long")
-data class LongWrapper (
-    val value: Long
-)
 
 @Serializable
 private data class SerializedData (
@@ -29,11 +22,6 @@ abstract class SerializableStorage <TChannel : Any, TData> (
 ) : FSMStorage<TChannel, TData> {
 
     private val json = Json {
-        serializersModule = SerializersModule {
-            polymorphic(Any::class) {
-                subclass(LongWrapper::class, LongWrapper.serializer())
-            }
-        }
         serializersModule += serializers
     }
 

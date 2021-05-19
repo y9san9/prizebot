@@ -15,7 +15,7 @@ First, provide this _environment_ variables:
 - `DATABASE_PASSWORD`
 - `DATABASE_DRIVER` - driver class name (optional, by default 'Exposed' will try to extract it from url)
 
-Do not forget to [include](https://github.com/y9san9/prizebot/blob/dev/buildSrc/src/main/kotlin/Dependencies.kt#L9) the driver dependency via gradle, Postgres included by default
+Do not forget to [include](../buildSrc/src/main/kotlin/Dependencies.kt#L9) the driver dependency via gradle, Postgres included by default
 
 ## Schema
     Created automatically and have auto schema migrations for releases.

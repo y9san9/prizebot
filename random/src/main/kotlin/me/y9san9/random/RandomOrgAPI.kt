@@ -7,10 +7,6 @@ import io.ktor.client.features.json.*
 import io.ktor.http.*
 import kotlinx.coroutines.coroutineScope
 import kotlinx.serialization.json.*
-import me.y9san9.random.models.Credentials
-import me.y9san9.random.rpc.draws.DrawRecordType
-import me.y9san9.random.rpc.draws.DrawResult
-import me.y9san9.random.rpc.draws.HoldDrawMethod
 import me.y9san9.random.rpc.integers.GenerateIntegersMethod
 import me.y9san9.rpc.JsonRPC
 
@@ -43,21 +39,4 @@ internal object RandomOrgAPI {
                 .takeIf { it.size == count } ?: error("Invalid API response")
         }
 
-    suspend fun holdDraw (
-        credentials: Credentials,
-        title: String,
-        recordType: DrawRecordType,
-        entries: List<String>,
-        winnerCount: Int = 1
-    ) = coroutineScope {
-        val json = rpc.request(scope = this, endpointApi) { rpcId ->
-            body = HoldDrawMethod (
-                rpcId,
-                credentials, title, recordType,
-                entries, winnerCount
-            )
-        }["result"]?.jsonObject ?: error("Invalid API response")
-
-        return@coroutineScope Json.decodeFromJsonElement<DrawResult>(json)
-    }
 }
