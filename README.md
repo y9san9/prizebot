@@ -26,7 +26,7 @@ Simple demo how the bot works. It is very intuitive and cool, also have ability 
 To run this bot by yourself, read [this](docs/RUNNING.md) tutorial
 
 ## ✈ Onboarding
-I made a nice [note](docs/ONBOARDING.md) about onboarding on this project. This will also be useful to you if you just want to surf around the code. 
+I made a nice [note](docs/ONBOARDING.md) about onboarding on this project. This will also be useful if you just want to surf around the code. 
 
 ## 🚩 TODO
 There is a huge plans to do the most convenient prize raffling in the universe via this bot. Some of this accumulated [there](https://github.com/y9san9/prizebot/milestone/1)
