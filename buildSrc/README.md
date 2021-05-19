@@ -7,12 +7,12 @@
 
 All kinds of shortcuts is unpackaged (including due to imports doesn't work in `plugins` block):
 
-[AppInfo](https://github.com/y9san9/prizebot/blob/dev/buildSrc/src/main/kotlin/AppInfo.kt) - basic application info <br>
-[Dependencies](https://github.com/y9san9/prizebot/blob/dev/buildSrc/src/main/kotlin/Dependencies.kt) - dependencies string constants<br>
-[Version](https://github.com/y9san9/prizebot/blob/dev/buildSrc/src/main/kotlin/Version.kt) - all kinds of versions extracted here <br>
-[Plugins](https://github.com/y9san9/prizebot/blob/dev/buildSrc/src/main/kotlin/Plugins.kt) - gradle plugins string constants <br>
-[Modules](https://github.com/y9san9/prizebot/blob/dev/buildSrc/src/main/kotlin/Modules.kt) - project modules shortcuts
+- [AppInfo](src/main/kotlin/AppInfo.kt) - basic application info <br>
+- [Dependencies](src/main/kotlin/Dependencies.kt) - dependencies string constants<br>
+- [Version](src/main/kotlin/Version.kt) - all kinds of versions extracted here <br>
+- [Plugins](src/main/kotlin/Plugins.kt) - gradle plugins string constants <br>
+- [Modules](src/main/kotlin/Modules.kt) - project modules shortcuts
 
 Otherwise, plugins are packaged:
 
-[Deploy](https://github.com/y9san9/prizebot/blob/dev/buildSrc/src/main/kotlin/me/y9san9/deploy/Deploy.kt) - plugin for convenient deployment bot to server via ssh with `systemctl restart`
+- [Deploy](src/main/kotlin/me/y9san9/deploy/Deploy.kt) - plugin for convenient deployment bot to server via ssh with `systemctl restart`

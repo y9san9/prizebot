@@ -55,7 +55,8 @@ class FSM <TChannel, TEvent> (
 
         val processingState = states
             .singleOrNull { it.name == context.name }
-            ?: error("Exactly one state with name ${context.name} expected")
+            ?: error("Exactly one state with name ${context.name} expected " +
+                    "(may be you forgot to add this state to FSMStates?)")
 
         @Suppress("UNCHECKED_CAST")
         suspend fun <TDataIn> uncheckedProcess(processingState: FSMState<TDataIn, TEvent>) {

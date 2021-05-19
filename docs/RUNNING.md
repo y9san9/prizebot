@@ -20,4 +20,4 @@ Do not forget to [include](https://github.com/y9san9/prizebot/blob/dev/buildSrc/
 ## Schema
     Created automatically. Since 2.0 version, there are also auto migrations of schema for releases.
 
-> **Note**: There are migrations **only** for releases because official instance deployed on release only. So if you trying to deploy bot from last commit, incomplete migration will be applied (`21-22` for example) and if there will be added some other changes in `21-22` migration, program won't apply them since the `21-22` migration was already applied. This has been done for decreasing migrations count.
+> **Note**: There are migrations **only** for releases because official instance deployed on release only. So if you're trying to deploy bot from last commit, incomplete migration will be applied (`21-22` for example) and if there will be added some other changes in `21-22` migration, program won't apply them since the `21-22` migration was already applied. This has been done for decreasing migrations count.
