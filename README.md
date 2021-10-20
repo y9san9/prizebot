@@ -9,7 +9,7 @@
     <a href="https://wakatime.com/badge/github/y9san9/prizebot"><img src="https://wakatime.com/badge/github/y9san9/prizebot.svg" alt="wakatime"/></a>
     <br><br>
     An open source telegram bot to purely raffle prizes with <a href="https://random.org">random.org</a>. <br>
-    The official bot hosted at <a href="https://t.me/secure_prize_bot">@secure_prize_bot</a>, all discussions are welcome in issues, news feed available at <a href="https://t.me/prizebot_feed">telegram</a>
+    The official bot hosted at <a href="https://t.me/y9prizebot">@y9prizebot</a>, all discussions are welcome in issues, news feed available at <a href="https://t.me/prizebot_feed">telegram</a>
 </p>
 
 ## 👀 Demo
