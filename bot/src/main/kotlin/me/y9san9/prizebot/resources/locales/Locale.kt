@@ -167,9 +167,8 @@ open class Locale {
             "later it will be used to check if member is joined\n" +
             "• Than just click update button and select the channel\n\n" +
             bold("In case the bot is already in the chat:\n\n") +
-            "• Type /connect_prizebot and click update button\n" +
-            "• Optionally you can allow bot to delete messages, so the message from previous step will be immediately deleted " +
-            "(it can help to silently connect bot in big channels)"
+            "\n" +
+            "Bot will automatically leave the channel after the process."
 
     open val channelIsNotLinked = "This channel is not linked!"
 
