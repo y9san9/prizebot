@@ -163,7 +163,7 @@ open class Locale {
     open val channelsUpdated = "Linked channels updated!"
 
     open val channelLinkingHelp = bold("To link a channel you should follow these steps:\n\n") +
-            "• Add @secure_prize_bot to channel/chat you want link as administrator (" + bold("it must have username") + " so anyone can join with it), " +
+            "• Add @y9prizebot to channel/chat you want link as administrator (" + bold("it must have username") + " so anyone can join with it), " +
             "later it will be used to check if member is joined\n" +
             "• Than just click update button and select the channel\n\n" +
             bold("In case the bot is already in the chat:\n\n") +
