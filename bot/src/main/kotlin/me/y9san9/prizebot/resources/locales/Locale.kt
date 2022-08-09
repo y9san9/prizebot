@@ -2,12 +2,13 @@
 
 package me.y9san9.prizebot.resources.locales
 
-import dev.inmo.tgbotapi.CommonAbstracts.plus
-import dev.inmo.tgbotapi.types.MessageEntity.textsources.*
+import dev.inmo.tgbotapi.types.message.textsources.bold
+import dev.inmo.tgbotapi.types.message.textsources.link
+import dev.inmo.tgbotapi.types.message.textsources.plus
+import dev.inmo.tgbotapi.types.message.textsources.regular
 import me.y9san9.prizebot.resources.Emoji
 import me.y9san9.prizebot.resources.MAX_TITLE_LEN
 import me.y9san9.extensions.string.awesomeCut
-
 
 object DefaultLocale : Locale()
 
@@ -189,6 +190,8 @@ open class Locale {
     open val giveawayInvalid = "Contact organizer because giveaway seems to be invalid"
 
     open val notSubscribedToConditions = "You have not joined all chats/channels"
+
+    open val cannotMentionsUser = "Bot can't mention you, please allow 'Forward Messages' for bot in settings"
 
     open fun friendsAreNotInvited(invitedCount: Int, requiredCount: Int) = "You have invited $invitedCount / $requiredCount friends"
 

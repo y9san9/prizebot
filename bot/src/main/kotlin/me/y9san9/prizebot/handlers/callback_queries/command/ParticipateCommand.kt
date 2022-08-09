@@ -2,6 +2,8 @@
 
 package me.y9san9.prizebot.handlers.callback_queries.command
 
+import dev.inmo.tgbotapi.extensions.api.chat.get.getChat
+import dev.inmo.tgbotapi.types.ChatId
 import me.y9san9.prizebot.actors.giveaway.ConditionsChecker
 import me.y9san9.prizebot.actors.giveaway.CheckConditionsResult
 import me.y9san9.prizebot.actors.telegram.extractor.GiveawayFromCommandExtractor
@@ -32,6 +34,7 @@ object ParticipateCommand {
                 is CheckConditionsResult.FriendsAreNotInvited -> locale.friendsAreNotInvited (
                     result.invitedCount, result.requiredCount
                 )
+                is CheckConditionsResult.CannotMentionUser -> locale.cannotMentionsUser
                 is CheckConditionsResult.Success -> {
                     giveaway.saveParticipant(participantId)
                     locale.nowParticipating

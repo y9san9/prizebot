@@ -1,11 +1,12 @@
 package me.y9san9.prizebot.resources.locales
 
-import dev.inmo.tgbotapi.CommonAbstracts.plus
-import dev.inmo.tgbotapi.types.MessageEntity.textsources.*
+import dev.inmo.tgbotapi.types.message.textsources.bold
+import dev.inmo.tgbotapi.types.message.textsources.link
+import dev.inmo.tgbotapi.types.message.textsources.plus
+import dev.inmo.tgbotapi.types.message.textsources.regular
 import me.y9san9.extensions.string.awesomeCut
 import me.y9san9.prizebot.resources.Emoji
 import me.y9san9.prizebot.resources.MAX_TITLE_LEN
-
 
 object RuLocale : Locale() {
     override val start = regular("Привет! Меня зовут ") + bold("PrizeBot") +
@@ -182,6 +183,8 @@ object RuLocale : Locale() {
     override val giveawayInvalid = "Свяжитесь с организаторами, розыгрыш некорретный"
 
     override val notSubscribedToConditions = "Вы не подписались на все каналы/чаты"
+
+    override val cannotMentionsUser = "Бот не может упомянуть вас, разрешите ему пересылку сообщений."
 
     override fun friendsAreNotInvited(invitedCount: Int, requiredCount: Int) = "Вы пригласили $invitedCount / $requiredCount друзей"
 

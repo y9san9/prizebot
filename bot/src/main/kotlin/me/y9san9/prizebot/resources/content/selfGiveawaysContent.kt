@@ -1,6 +1,6 @@
 package me.y9san9.prizebot.resources.content
 
-import dev.inmo.tgbotapi.CommonAbstracts.TextSourcesList
+import dev.inmo.tgbotapi.types.message.textsources.TextSourcesList
 import dev.inmo.tgbotapi.types.buttons.InlineKeyboardMarkup
 import me.y9san9.prizebot.database.giveaways_storage.Giveaway
 import me.y9san9.prizebot.database.giveaways_storage.GiveawaysStorage

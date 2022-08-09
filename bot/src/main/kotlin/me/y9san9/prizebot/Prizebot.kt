@@ -1,6 +1,6 @@
 package me.y9san9.prizebot
 
-import dev.inmo.tgbotapi.bot.Ktor.telegramBot
+import dev.inmo.tgbotapi.bot.ktor.telegramBot
 import dev.inmo.tgbotapi.bot.TelegramBot
 import dev.inmo.tgbotapi.extensions.api.send.sendMessage
 import dev.inmo.tgbotapi.extensions.utils.updates.retrieving.longPolling
@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import me.y9san9.db.migrations.MigrationsApplier
 import me.y9san9.extensions.flow.createParallelLauncher
-import me.y9san9.extensions.flow.launchEachSafely
 import me.y9san9.fsm.FSM
 import me.y9san9.prizebot.actors.giveaway.AutoRaffleActor
 import me.y9san9.prizebot.actors.giveaway.RaffleActor
@@ -32,7 +31,6 @@ import me.y9san9.prizebot.handlers.private_messages.fsm.states.statesSerializers
 import me.y9san9.prizebot.di.PrizebotDI
 import me.y9san9.prizebot.extensions.flow.launchEachSafelyByChatId
 import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
-import me.y9san9.prizebot.handlers.channel_group_messages.ChannelGroupMessagesHandler
 import me.y9san9.prizebot.handlers.my_chat_member_updated.MyChatMemberUpdateHandler
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.prizebotStates
 import me.y9san9.telegram.updates.*
@@ -69,34 +67,28 @@ class Prizebot (
         scheduleRaffles()
         makeDatabaseMigrations()
 
-        val privateMessages = messageFlow
+        val privateMessages = messagesFlow
             .mapNotNull { it.data as? PrivateContentMessage<*> }
             .map { PrivateMessageUpdate(bot, di, message = it) }
 
         createFSM(events = privateMessages)
 
-        messageFlow
-            .mapNotNull { it.data as? PublicContentMessage<*> ?: it.data as? ChannelContentMessage<*> }
-            .map { GroupMessageUpdate(bot, di, message = it) }
-            .createParallelLauncher()
-            .launchEachSafely(scope, ::logException, { it.chatId },  ChannelGroupMessagesHandler::handle)
-
-        myChatMemberUpdatedFlow
+        myChatMemberUpdatesFlow
             .map { MyChatMemberUpdate(bot, di, update = it) }
             .createParallelLauncher()
             .launchEachSafelyByChatId(scope, ::logException, MyChatMemberUpdateHandler::handle)
 
-        inlineQueryFlow
+        inlineQueriesFlow
             .map { InlineQueryUpdate(bot, di, query = it) }
             .createParallelLauncher()
             .launchEachSafelyByChatId(scope, ::logException, InlineQueryHandler::handle)
 
-        callbackQueryFlow
+        callbackQueriesFlow
             .map { CallbackQueryUpdate(bot, di, query = it) }
             .createParallelLauncher()
             .launchEachSafelyByChatId(scope, ::logException, CallbackQueryHandler::handle)
 
-        chosenInlineResultFlow
+        chosenInlineResultsFlow
             .map { ChosenInlineResultUpdate(bot, di, update = it) }
             .createParallelLauncher()
             .launchEachSafelyByChatId(scope, ::logException, ChosenInlineResultHandler::handle)

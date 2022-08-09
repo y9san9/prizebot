@@ -1,8 +1,11 @@
 package me.y9san9.prizebot.resources.entities
 
-import dev.inmo.tgbotapi.CommonAbstracts.TextSourcesList
-import dev.inmo.tgbotapi.CommonAbstracts.plus
-import dev.inmo.tgbotapi.types.MessageEntity.textsources.*
+import dev.inmo.tgbotapi.types.message.textsources.TextSourcesList
+import dev.inmo.tgbotapi.types.message.textsources.bold
+import dev.inmo.tgbotapi.types.message.textsources.italic
+import dev.inmo.tgbotapi.types.message.textsources.mention
+import dev.inmo.tgbotapi.types.message.textsources.plus
+import dev.inmo.tgbotapi.types.message.textsources.regular
 import me.y9san9.prizebot.database.giveaways_storage.ActiveGiveaway
 import me.y9san9.prizebot.database.giveaways_storage.FinishedGiveaway
 import me.y9san9.prizebot.database.giveaways_storage.Giveaway
@@ -12,7 +15,6 @@ import me.y9san9.prizebot.database.user_titles_storage.UserTitlesStorage
 import me.y9san9.prizebot.extensions.emoji.getPlaceEmoji
 import me.y9san9.prizebot.resources.Emoji
 import java.time.Duration
-import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*

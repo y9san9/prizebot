@@ -4,5 +4,5 @@ plugins {
 
 dependencies {
     implementation(ktorCore)
-    implementation(ktorSerialization)
+    implementation(serialization)
 }

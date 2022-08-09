@@ -5,18 +5,19 @@ import dev.inmo.tgbotapi.bot.exceptions.RequestException
 import dev.inmo.tgbotapi.extensions.api.chat.get.getChat
 import dev.inmo.tgbotapi.extensions.api.chat.members.getChatMember
 import dev.inmo.tgbotapi.types.ChatId
-import dev.inmo.tgbotapi.types.ChatMember.MemberChatMember
-import dev.inmo.tgbotapi.types.ChatMember.abstracts.AdministratorChatMember
-import dev.inmo.tgbotapi.types.UserId
-import dev.inmo.tgbotapi.types.chat.abstracts.UsernameChat
+import dev.inmo.tgbotapi.types.chat.ExtendedPrivateChat
+import dev.inmo.tgbotapi.types.chat.UsernameChat
+import dev.inmo.tgbotapi.types.chat.member.AdministratorChatMember
+import dev.inmo.tgbotapi.types.chat.member.MemberChatMember
+import me.y9san9.extensions.list.on
 import me.y9san9.prizebot.database.giveaways_storage.ActiveGiveaway
 import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.Condition
-import me.y9san9.extensions.list.on
 
 
 sealed class CheckConditionsResult {
     object GiveawayInvalid : CheckConditionsResult()
     object NotSubscribedToConditions : CheckConditionsResult()
+    object CannotMentionUser : CheckConditionsResult()
     class FriendsAreNotInvited(val invitedCount: Int, val requiredCount: Int) : CheckConditionsResult()
     object Success : CheckConditionsResult()
 }
@@ -43,13 +44,19 @@ object ConditionsChecker {
         bot: TelegramBot, participantId: Long,
         giveaway: ActiveGiveaway, cachedChatsUsernames: Map<Long, String>
     ): CheckConditionsResult {
+        val participant = (bot.getChat(ChatId(participantId)) as? ExtendedPrivateChat)
+            ?: return CheckConditionsResult.CannotMentionUser
+
+        if (participant.hasPrivateForwards)
+            return CheckConditionsResult.CannotMentionUser
+
         giveaway.conditions.list
             .on { condition: Condition.Subscription ->
                 if(cachedChatsUsernames[condition.channelId] != condition.channelUsername)
                     return CheckConditionsResult.GiveawayInvalid
 
                 try {
-                    bot.getChatMember(ChatId(condition.channelId), UserId(participantId))
+                    bot.getChatMember(ChatId(condition.channelId), ChatId(participantId))
                         .takeIf { it is MemberChatMember || it is AdministratorChatMember }
                 } catch (_: RequestException) { null }
                     ?: return CheckConditionsResult.NotSubscribedToConditions
