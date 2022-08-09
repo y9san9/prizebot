@@ -3,7 +3,6 @@ package me.y9san9.prizebot
 import kotlinx.coroutines.coroutineScope
 import me.y9san9.extensions.any.unit
 
-
 suspend fun main() = coroutineScope {
     val token = System.getenv("BOT_TOKEN") ?: error("Provide BOT_TOKEN environment variable")
     val randomOrgApiKey = System.getenv("RANDOM_ORG_API_KEY")
