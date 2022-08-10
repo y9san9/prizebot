@@ -171,7 +171,7 @@ open class Locale {
             "• Than just click update button and select the channel\n\n" +
             bold("In case the bot is already in the chat:\n\n") +
             "\n" +
-            "Bot will automatically leave the channel after the process."
+            "If bot is already in the channel, but you don't see the channel in the list, make the bot to rejoin."
 
     open val channelIsNotLinked = "This channel is not linked!"
 
