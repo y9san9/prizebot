@@ -34,7 +34,10 @@ object ParticipateCommand {
                 is CheckConditionsResult.FriendsAreNotInvited -> locale.friendsAreNotInvited (
                     result.invitedCount, result.requiredCount
                 )
-                is CheckConditionsResult.CannotMentionUser -> locale.cannotMentionsUser
+                is CheckConditionsResult.CannotMentionUser -> {
+                    update.answer(text = locale.cannotMentionsUser, showAlert = true)
+                    null
+                }
                 is CheckConditionsResult.Success -> {
                     giveaway.saveParticipant(participantId)
                     locale.nowParticipating

@@ -46,7 +46,10 @@ object ConditionsChecker {
                     it.participantId == checkRequest.participantId && it.giveawayId == checkRequest.giveaway.id
                 }
                 if (alreadyProcessing != null) {
-                    return@launch checkRequest.onCheck(alreadyProcessing.deferred.await())
+                    launch {
+                        checkRequest.onCheck(alreadyProcessing.deferred.await())
+                    }
+                    return@launch
                 }
 
                 val newProcessing = Processing(
@@ -73,16 +76,31 @@ object ConditionsChecker {
         }
     }
 
+    private class UsernameCached(
+        val username: String,
+        val timeCached: Long
+    )
+
+    private val cache = mutableMapOf<Long, UsernameCached>()
+
     suspend fun cacheChatsUsernames(bot: TelegramBot, giveaway: ActiveGiveaway): Map<Long, String> =
         giveaway.conditions.list
             .filterIsInstance<Condition.Subscription>()
             .mapNotNull { condition ->
-                val username = try {
-                        (bot.getChat(ChatId(condition.channelId)) as? UsernameChat)?.username?.username
-                } catch (_: Throwable) { null }
+                val cached = cache[condition.channelId]
+                    ?.takeIf { username ->
+                        System.currentTimeMillis() - username.timeCached <= 5 * 1000 * 60
+                    }
+                    ?: try {
+                        (bot.getChat(ChatId(condition.channelId)) as? UsernameChat)
+                            ?.username?.username
+                            ?.let { UsernameCached(it, timeCached = System.currentTimeMillis()) }
+                    } catch (_: Throwable) { null }
                     ?: return@mapNotNull null
 
-                condition.channelId to username
+                cache[condition.channelId] = cached
+
+                condition.channelId to cached.username
             }.associate { it }
 
     suspend fun check (
