@@ -1,6 +1,7 @@
 package me.y9san9.rpc
 
 import io.ktor.client.*
+import io.ktor.client.call.body
 import io.ktor.client.request.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -29,7 +30,7 @@ class JsonRPC (
 
         scope.launch {
             responses.emit (
-                client.post(endpointApi) { requestBody(rpcId) }
+                client.post(endpointApi) { requestBody(rpcId) }.body()
             )
         }
 

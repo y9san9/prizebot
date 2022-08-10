@@ -2,7 +2,7 @@ package me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.conditi
 
 import dev.inmo.tgbotapi.extensions.api.chat.get.getChat
 import dev.inmo.tgbotapi.types.ChatId
-import dev.inmo.tgbotapi.types.chat.abstracts.UsernameChat
+import dev.inmo.tgbotapi.types.chat.UsernameChat
 import kotlinx.serialization.Serializable
 import me.y9san9.fsm.FSMStateResult
 import me.y9san9.fsm.stateResult
@@ -12,7 +12,6 @@ import me.y9san9.prizebot.extensions.telegram.PrizebotFSMState
 import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
 import me.y9san9.prizebot.extensions.telegram.locale
 import me.y9san9.prizebot.extensions.telegram.textOrDefault
-import me.y9san9.prizebot.handlers.private_messages.fsm.states.MainState
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.ConditionInputData
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.ConditionInputState
 import me.y9san9.prizebot.resources.locales.Locale

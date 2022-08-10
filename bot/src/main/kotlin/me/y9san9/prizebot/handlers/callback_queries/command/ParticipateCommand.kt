@@ -23,8 +23,10 @@ object ParticipateCommand {
             giveaway is FinishedGiveaway -> locale.giveawayFinished
             giveaway.ownerId == participantId -> locale.cannotParticipateInSelfGiveaway
             giveaway.isParticipant(participantId) -> {
-                giveaway.removeParticipant(participantId)
-                locale.youHaveLeftGiveaway
+                // this line is commented to prevent spam. it is not too useful to have an ability to leave giveaway.
+//                giveaway.removeParticipant(participantId)
+//                locale.youHaveLeftGiveaway
+                locale.alreadyParticipating
             }
             else -> when(val result = ConditionsChecker.check(update.bot, participantId, giveaway as ActiveGiveaway)) {
                 is CheckConditionsResult.GiveawayInvalid -> locale.giveawayInvalid
@@ -32,6 +34,7 @@ object ParticipateCommand {
                 is CheckConditionsResult.FriendsAreNotInvited -> locale.friendsAreNotInvited (
                     result.invitedCount, result.requiredCount
                 )
+                is CheckConditionsResult.CannotMentionUser -> locale.cannotMentionsUser
                 is CheckConditionsResult.Success -> {
                     giveaway.saveParticipant(participantId)
                     locale.nowParticipating

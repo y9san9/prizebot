@@ -2,7 +2,7 @@ package me.y9san9.telegram.extensions.telegram_bot
 
 import dev.inmo.tgbotapi.bot.TelegramBot
 import dev.inmo.tgbotapi.extensions.api.bot.getMe
-import dev.inmo.tgbotapi.types.ExtendedBot
+import dev.inmo.tgbotapi.types.chat.ExtendedBot
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 

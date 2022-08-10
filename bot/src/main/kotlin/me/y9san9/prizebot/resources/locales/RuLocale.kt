@@ -1,11 +1,12 @@
 package me.y9san9.prizebot.resources.locales
 
-import dev.inmo.tgbotapi.CommonAbstracts.plus
-import dev.inmo.tgbotapi.types.MessageEntity.textsources.*
+import dev.inmo.tgbotapi.types.message.textsources.bold
+import dev.inmo.tgbotapi.types.message.textsources.link
+import dev.inmo.tgbotapi.types.message.textsources.plus
+import dev.inmo.tgbotapi.types.message.textsources.regular
 import me.y9san9.extensions.string.awesomeCut
 import me.y9san9.prizebot.resources.Emoji
 import me.y9san9.prizebot.resources.MAX_TITLE_LEN
-
 
 object RuLocale : Locale() {
     override val start = regular("Привет! Меня зовут ") + bold("PrizeBot") +
@@ -55,6 +56,8 @@ object RuLocale : Locale() {
     override val nowParticipating = "Теперь ты участвуешь в розыгрыше!"
 
     override val youHaveLeftGiveaway = "Вы вышли из розыгрыша"
+
+    override val alreadyParticipating = "Ты участвуешь в розыгрыше"
 
     override val selectGiveawayToView = "Выбери розыгрыш, чтобы посмотреть подробнее"
 
@@ -157,9 +160,8 @@ object RuLocale : Locale() {
             "• Добавить @y9prizebot в ваш канал с " + bold("username") + ", который вы хотите привязать (чтобы любой мог присоединиться к нему), " +
             "позже это будет использовано для проверки участников\n" +
             "• Нажать на кнопку обновить\n\n" +
-            bold("Если бот уже находится в чате:\n\n") +
-            "• Напишите /connect_prizebot в чате/канале, затем нажмите кнопку обновления\n" +
-            "• Опционально можно разрешить боту удалять сообщения, чтобы он моментально удалил сообщение из предыдущего шага"
+            "\n" +
+            "После добавления бота в канал он автоматически выйдет из него."
 
     override val channelIsNotLinked = "Этот канал не привязан"
 
@@ -183,6 +185,8 @@ object RuLocale : Locale() {
     override val giveawayInvalid = "Свяжитесь с организаторами, розыгрыш некорретный"
 
     override val notSubscribedToConditions = "Вы не подписались на все каналы/чаты"
+
+    override val cannotMentionsUser = "Разрешите боту пересылку сообщений, иначе он не сможет вас упомянуть"
 
     override fun friendsAreNotInvited(invitedCount: Int, requiredCount: Int) = "Вы пригласили $invitedCount / $requiredCount друзей"
 

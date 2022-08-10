@@ -2,12 +2,13 @@
 
 package me.y9san9.prizebot.resources.locales
 
-import dev.inmo.tgbotapi.CommonAbstracts.plus
-import dev.inmo.tgbotapi.types.MessageEntity.textsources.*
+import dev.inmo.tgbotapi.types.message.textsources.bold
+import dev.inmo.tgbotapi.types.message.textsources.link
+import dev.inmo.tgbotapi.types.message.textsources.plus
+import dev.inmo.tgbotapi.types.message.textsources.regular
 import me.y9san9.prizebot.resources.Emoji
 import me.y9san9.prizebot.resources.MAX_TITLE_LEN
 import me.y9san9.extensions.string.awesomeCut
-
 
 object DefaultLocale : Locale()
 
@@ -65,6 +66,8 @@ open class Locale {
     open val nowParticipating = "You are now participating in this giveaway!"
 
     open val youHaveLeftGiveaway = "Now you are not participating"
+
+    open val alreadyParticipating = "You are participating in the giveaway"
 
     open val selectGiveawayToView = "Select giveaway from list below"
 
@@ -167,9 +170,8 @@ open class Locale {
             "later it will be used to check if member is joined\n" +
             "• Than just click update button and select the channel\n\n" +
             bold("In case the bot is already in the chat:\n\n") +
-            "• Type /connect_prizebot and click update button\n" +
-            "• Optionally you can allow bot to delete messages, so the message from previous step will be immediately deleted " +
-            "(it can help to silently connect bot in big channels)"
+            "\n" +
+            "Bot will automatically leave the channel after the process."
 
     open val channelIsNotLinked = "This channel is not linked!"
 
@@ -190,6 +192,8 @@ open class Locale {
     open val giveawayInvalid = "Contact organizer because giveaway seems to be invalid"
 
     open val notSubscribedToConditions = "You have not joined all chats/channels"
+
+    open val cannotMentionsUser = "Please allow 'Forward Messages' to bot in settings or bot can't mention you"
 
     open fun friendsAreNotInvited(invitedCount: Int, requiredCount: Int) = "You have invited $invitedCount / $requiredCount friends"
 

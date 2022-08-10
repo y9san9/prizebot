@@ -3,12 +3,12 @@ package me.y9san9.deploy
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.file.CopySpec
+import org.gradle.api.file.DuplicatesStrategy
 import org.gradle.jvm.tasks.Jar
 import org.gradle.kotlin.dsl.*
 import org.hidetake.groovy.ssh.connection.AllowAnyHosts
 import org.hidetake.groovy.ssh.core.Remote
 import java.io.File
-
 
 open class DeployConfiguration {
     lateinit var mainClassName: String
@@ -84,6 +84,8 @@ class Deploy : Plugin<Project> {
             }
 
             target.tasks.withType<Jar> {
+                duplicatesStrategy = DuplicatesStrategy.INCLUDE
+
                 manifest {
                     attributes(mapOf("Main-Class" to configuration.mainClassName))
                 }

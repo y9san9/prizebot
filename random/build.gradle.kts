@@ -10,7 +10,8 @@ dependencies {
 
     implementation(ktorCore)
     implementation(ktorCio)
-    implementation(ktorSerialization)
+    implementation(ktorContentNegotiation)
+    implementation(ktorSerializationJson)
 
     implementation(coroutines)
 }

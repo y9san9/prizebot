@@ -4,22 +4,22 @@ package me.y9san9.prizebot.resources.images
 
 import dev.inmo.tgbotapi.requests.abstracts.MultipartFile
 import dev.inmo.tgbotapi.utils.BuiltinMimeTypes
-import dev.inmo.tgbotapi.utils.StorageFile
-import java.io.File
+import io.ktor.utils.io.core.Input
+import io.ktor.utils.io.streams.asInput
 import kotlin.properties.ReadOnlyProperty
 
 
 private class ResourceContainer
 
 // Constructor
-fun ResourceImage(name: String) = MultipartFile (
-    StorageFile (
-        name,
-        bytes = ResourceContainer::class.java.getResourceAsStream("/images/$name")?.readBytes()
-            ?: error("Image $name not found"),
-        BuiltinMimeTypes.Image.Jpg
-    )
-)
+fun ResourceImage(name: String) = MultipartFile(
+    filename = name,
+) {
+    ResourceContainer::class.java
+        .getResourceAsStream("/images/$name")
+        ?.asInput()
+        ?: error("Image $name not found")
+}
 
 // Delegate
 val resourceImage = ReadOnlyProperty { _: Any?, property

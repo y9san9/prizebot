@@ -2,9 +2,12 @@ package me.y9san9.random
 
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
-import io.ktor.client.features.*
-import io.ktor.client.features.json.*
+import io.ktor.client.plugins.DefaultRequest
+import io.ktor.client.plugins.UserAgent
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.setBody
 import io.ktor.http.*
+import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.coroutineScope
 import kotlinx.serialization.json.*
 import me.y9san9.random.rpc.integers.GenerateIntegersMethod
@@ -18,7 +21,9 @@ internal object RandomOrgAPI {
         install(DefaultRequest) {
             contentType(ContentType.Application.Json)
         }
-        install(JsonFeature)
+        install(ContentNegotiation) {
+            json()
+        }
 
         install(UserAgent) {
             // Email is required, but probably sources link will be better
@@ -31,7 +36,7 @@ internal object RandomOrgAPI {
     suspend fun getRandomIntegers(apiKey: String, min: Int, max: Int, count: Int = 100): List<Int> =
         coroutineScope {
             val json = rpc.request(scope = this, endpointApi) { rpcId ->
-                body = GenerateIntegersMethod(rpcId, apiKey, count, min, max)
+                setBody(GenerateIntegersMethod(rpcId, apiKey, count, min, max))
             }["result"]?.jsonObject?.get("random")
                 ?.jsonObject?.get("data") ?: error("Invalid API response")
 
