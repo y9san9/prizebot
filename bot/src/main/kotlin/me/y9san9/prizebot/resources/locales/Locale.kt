@@ -191,7 +191,7 @@ open class Locale {
 
     open val notSubscribedToConditions = "You have not joined all chats/channels"
 
-    open val cannotMentionsUser = "Bot can't mention you, please allow 'Forward Messages' for bot in settings"
+    open val cannotMentionsUser = "Please allow 'Forward Messages' to bot in settings or bot can't mention you"
 
     open fun friendsAreNotInvited(invitedCount: Int, requiredCount: Int) = "You have invited $invitedCount / $requiredCount friends"
 

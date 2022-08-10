@@ -184,7 +184,7 @@ object RuLocale : Locale() {
 
     override val notSubscribedToConditions = "Вы не подписались на все каналы/чаты"
 
-    override val cannotMentionsUser = "Бот не может упомянуть вас, разрешите ему пересылку сообщений."
+    override val cannotMentionsUser = "Разрешите боту пересылку сообщений, иначе он не сможет вас упомянуть"
 
     override fun friendsAreNotInvited(invitedCount: Int, requiredCount: Int) = "Вы пригласили $invitedCount / $requiredCount друзей"
 
