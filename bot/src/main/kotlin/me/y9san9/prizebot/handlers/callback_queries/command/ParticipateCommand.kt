@@ -2,8 +2,6 @@
 
 package me.y9san9.prizebot.handlers.callback_queries.command
 
-import dev.inmo.tgbotapi.extensions.api.chat.get.getChat
-import dev.inmo.tgbotapi.types.ChatId
 import me.y9san9.prizebot.actors.giveaway.ConditionsChecker
 import me.y9san9.prizebot.actors.giveaway.CheckConditionsResult
 import me.y9san9.prizebot.actors.telegram.extractor.GiveawayFromCommandExtractor
@@ -25,8 +23,10 @@ object ParticipateCommand {
             giveaway is FinishedGiveaway -> locale.giveawayFinished
             giveaway.ownerId == participantId -> locale.cannotParticipateInSelfGiveaway
             giveaway.isParticipant(participantId) -> {
-                giveaway.removeParticipant(participantId)
-                locale.youHaveLeftGiveaway
+                // this line is commented to prevent spam. it is not too useful to have an ability to leave giveaway.
+//                giveaway.removeParticipant(participantId)
+//                locale.youHaveLeftGiveaway
+                locale.alreadyParticipating
             }
             else -> when(val result = ConditionsChecker.check(update.bot, participantId, giveaway as ActiveGiveaway)) {
                 is CheckConditionsResult.GiveawayInvalid -> locale.giveawayInvalid

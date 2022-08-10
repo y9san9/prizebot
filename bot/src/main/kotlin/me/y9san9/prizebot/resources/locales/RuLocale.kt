@@ -57,6 +57,8 @@ object RuLocale : Locale() {
 
     override val youHaveLeftGiveaway = "Вы вышли из розыгрыша"
 
+    override val alreadyParticipating = "Ты участвуешь в розыгрыше"
+
     override val selectGiveawayToView = "Выбери розыгрыш, чтобы посмотреть подробнее"
 
     override val noGiveawaysYet = "Ты ещё не создал ни одного розыгрыша. Его можно создать с помощью команды /giveaway"

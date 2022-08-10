@@ -67,6 +67,8 @@ open class Locale {
 
     open val youHaveLeftGiveaway = "Now you are not participating"
 
+    open val alreadyParticipating = "You are participating in the giveaway"
+
     open val selectGiveawayToView = "Select giveaway from list below"
 
     open val noGiveawaysYet = "You have not created any giveaway. Create one with /giveaway command"

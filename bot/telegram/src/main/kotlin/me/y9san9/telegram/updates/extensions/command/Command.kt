@@ -10,6 +10,8 @@ data class Command (
     val args: List<String>
 )
 
+inline operator fun Command?.invoke(builder: CommandDSL.() -> Unit) = CommandDSL(command = this).apply(builder)
+
 fun String.parseCommand(@Language("RegExp") splitter: String = "\\s+"): Command {
     val source = trim()
     val parts = source.split(Regex(splitter))
