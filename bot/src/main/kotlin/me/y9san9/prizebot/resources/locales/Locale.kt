@@ -171,7 +171,7 @@ open class Locale {
             "• Than just click update button and select the channel\n\n" +
             bold("In case the bot is already in the chat:\n\n") +
             "\n" +
-            "Bot will automatically leave the channel after the process."
+            "If bot is already in the channel, but you don't see the channel in the list, make the bot to rejoin."
 
     open val channelIsNotLinked = "This channel is not linked!"
 
@@ -193,7 +193,7 @@ open class Locale {
 
     open val notSubscribedToConditions = "You have not joined all chats/channels"
 
-    open val cannotMentionsUser = "Please allow 'Forward Messages' to bot in settings or bot can't mention you"
+    open val cannotMentionsUser = "Please allow 'Forward Messages' to the bot in settings or bot can't mention you (setting will apply within 5 minutes)"
 
     open fun friendsAreNotInvited(invitedCount: Int, requiredCount: Int) = "You have invited $invitedCount / $requiredCount friends"
 

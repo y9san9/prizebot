@@ -2,7 +2,6 @@ package me.y9san9.prizebot.actors.telegram
 
 import dev.inmo.tgbotapi.bot.exceptions.RequestException
 import dev.inmo.tgbotapi.extensions.api.chat.get.getChatAdministrators
-import dev.inmo.tgbotapi.extensions.api.chat.leaveChat
 import dev.inmo.tgbotapi.types.ChatId
 import me.y9san9.prizebot.di.PrizebotDI
 import me.y9san9.telegram.updates.hierarchies.DIBotUpdate
@@ -20,7 +19,5 @@ object ChatLinkerActor {
         for (admin in admins) {
             update.di.linkChannel(admin.user.id.chatId, update.chatId)
         }
-
-        update.bot.leaveChat(ChatId(update.chatId))
     }
 }
