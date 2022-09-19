@@ -42,6 +42,7 @@ object ParticipateCommand {
                     giveaway.saveParticipant(participantId)
                     locale.nowParticipating
                 }
+                is CheckConditionsResult.UnknownError -> null
             }
         }
 

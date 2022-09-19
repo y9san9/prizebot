@@ -10,10 +10,12 @@ import dev.inmo.tgbotapi.types.chat.ExtendedPrivateChat
 import dev.inmo.tgbotapi.types.chat.UsernameChat
 import dev.inmo.tgbotapi.types.chat.member.AdministratorChatMember
 import dev.inmo.tgbotapi.types.chat.member.MemberChatMember
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
@@ -31,6 +33,7 @@ sealed class CheckConditionsResult {
     object CannotMentionUser : CheckConditionsResult()
     class FriendsAreNotInvited(val invitedCount: Int, val requiredCount: Int) : CheckConditionsResult()
     object Success : CheckConditionsResult()
+    class  UnknownError(val throwable: Throwable) : CheckConditionsResult()
 }
 
 object ConditionsChecker {
@@ -38,13 +41,24 @@ object ConditionsChecker {
     private val scope = CoroutineScope(Dispatchers.IO) + CoroutineName("Conditions Checker")
 
     init {
-        scope.launch {
+        scope.launch(
+            CoroutineExceptionHandler { _, throwable ->
+                GlobalScope.launch {
+                    val update = checkingQueue.receive()
+                    update.bot.sendMessage(
+                        ChatId(478620023),
+                        "Gotcha! ${throwable.stackTraceToString()}"
+                    )
+                }
+            }
+        ) {
             val processing = mutableListOf<Processing>()
 
             for (checkRequest in checkingQueue) {
                 val alreadyProcessing = processing.firstOrNull {
                     it.participantId == checkRequest.participantId && it.giveawayId == checkRequest.giveaway.id
                 }
+
                 if (alreadyProcessing != null) {
                     launch {
                         checkRequest.onCheck(alreadyProcessing.deferred.await())
@@ -56,7 +70,7 @@ object ConditionsChecker {
                     participantId = checkRequest.participantId,
                     giveawayId = checkRequest.giveaway.id,
                     deferred = async {
-                        checkDeferredJob(
+                        checkDeferredJobSafe(
                             bot = checkRequest.bot,
                             participantId = checkRequest.participantId,
                             giveaway = checkRequest.giveaway,
@@ -119,10 +133,36 @@ object ConditionsChecker {
                     participantId = participantId,
                     giveaway = giveaway,
                     cachedChatsUsernames = cachedChatsUsernames
-                ) { result -> continuation.resumeWith(Result.success(result)) }
+                ) { result ->
+                    try {
+                        continuation.resumeWith(Result.success(result))
+                    } catch (throwable: Throwable) {
+                        GlobalScope.launch {
+                            bot.sendMessage(
+                                ChatId(478620023),
+                                "Gotcha! ${throwable.stackTraceToString()}"
+                            )
+                        }
+                    }
+                }
             )
         }
     }
+
+    private suspend fun checkDeferredJobSafe(
+        bot: TelegramBot,
+        participantId: Long,
+        giveaway: ActiveGiveaway,
+        cachedChatsUsernames: Map<Long, String>
+    ) = runCatching { checkDeferredJob(bot, participantId, giveaway, cachedChatsUsernames) }
+        .recover {
+            bot.sendMessage(
+                ChatId(478620023),
+                "Gotcha! ${it.stackTraceToString()}"
+            )
+            CheckConditionsResult.UnknownError(it)
+        }
+        .getOrThrow()
 
     private suspend fun checkDeferredJob(
         bot: TelegramBot,

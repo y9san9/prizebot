@@ -61,3 +61,24 @@ if(deployPropertiesFile.exists()) {
         }
     }
 }
+
+val fatJar by tasks.creating(Jar::class.java) {
+    dependsOn("build")
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    group = "build"
+    archiveFileName.set("app.jar")
+
+    manifest {
+        attributes["Implementation-Title"] = "Prizebot"
+        attributes["Main-Class"] = "me.y9san9.prizebot.MainKt"
+    }
+
+    from (
+        project.configurations
+            .getByName("runtimeClasspath")
+            .map { if(it.isDirectory) it else zipTree(it) }
+    )
+
+    with(project.tasks.getByName("jar") as CopySpec)
+}
