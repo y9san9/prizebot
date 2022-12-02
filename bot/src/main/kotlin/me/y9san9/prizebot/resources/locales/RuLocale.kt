@@ -137,7 +137,7 @@ object RuLocale : Locale() {
 
     override val winnersCount = "Количество победителей"
 
-    override val enterNumber = "Пожалуйста, ведите число"
+    override val enterNumber = "Пожалуйста, введите число"
 
     override val enterWinnersCount = "Введите количество победителей (используйте /skip, чтобы установить значение по умолчанию (1), или /cancel, чтобы отменить)"
 

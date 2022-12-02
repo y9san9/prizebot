@@ -31,5 +31,6 @@ object Emoji {
         const val GERMANY = "\uD83C\uDDE9\uD83C\uDDEA"
         const val ITALY = "\uD83C\uDDEE\uD83C\uDDF9"
         const val UKRAINE = "\uD83C\uDDFA\uD83C\uDDE6"
+        const val KAZAKHSTAN = "\uD83C\uDDF0\uD83C\uDDFF"
     }
 }
