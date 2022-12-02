@@ -11,9 +11,9 @@ import me.y9san9.prizebot.resources.MAX_TITLE_LEN
 object UkLocale : Locale() {
     override val start = regular("Привіт! Мене звати ") + bold("PrizeBot") +
             regular(
-                ", тут ви можете прозоро розіграти призи. " +
-                        "Головна особливість бота - ви можете вибрати умови для учасників " +
-                        "(підписка на канал і тд.). Випадковість вибору досягається за допомогою random.org, а "
+                ", за допомогою мене можна розігравати призи. " +
+                        "Головна особливість бота - ви можете обирати умови для учасників " +
+                        "(підписка на канал і тд.). Випадковість досягається за допомогою random.org, а "
             ) +
             link(text = "тут", url = "https://github.com/y9san9/prizebot") + " можна подивитись початковий код.\n" +
             "Щоб подивитись список всіх доступних команд, введіть /help"
@@ -28,7 +28,7 @@ object UkLocale : Locale() {
     override val help = "Привіт! Я покращений бот для розіграшів, ось список доступних команд:\n" +
             "- /help: Відправити це повідомлення\n" +
             "- /giveaway: Створити новий розіграш\n" +
-            "- /my_giveaways: Подивитись створені розіграші\n" +
+            "- /my_giveaways: Переглянути створені розіграші\n" +
             "- /language: Вибрати мову бота\n"
 
     override val helpKeyboard = "${Emoji.HELP} Допомога"
@@ -36,7 +36,7 @@ object UkLocale : Locale() {
     override val selfGiveawaysKeyboard = "${Emoji.SETTINGS} Мої розіграші"
 
     override val giveawayTitleInput =
-        "Добре, давай розпочнемо створення розіграшу, для початку відправ назву конкурсу (Натисни /cancel щоб скасувати)"
+        "Добре, розпочнім створення розіграшу, для початку відправ назву конкурсу (Натисни /cancel щоб скасувати)"
     override val giveawayParticipateInput =
         "Чудово! Тепер відправ текст для кнопки участі (Натисни /cancel щоб скасувати або /skip для використання ${Emoji.HEART} за замовчуванням.)"
 
@@ -47,7 +47,7 @@ object UkLocale : Locale() {
 
     override val giveawayCreated = "Розіграш створено, нижче можна подивитись повідомлення з демонстрацією"
 
-    override val giveawayParticipateHint = "Щоб брати участь у розіграші, нажми кнопку нижче."
+    override val giveawayParticipateHint = "Щоб взяти участь у розіграші, натисни кнопку нижче."
 
     override val giveawayTitleTooLong =
         "Максимальна довжина для назви розіграшу - $MAX_TITLE_LEN символів, спробуй ще раз"
@@ -56,7 +56,7 @@ object UkLocale : Locale() {
 
     override fun participateText(text: String) = "Кнопка участі: $text"
 
-    override val cannotParticipateInSelfGiveaway = "Ви не можете брати участь у своєму конкурсі :("
+    override val cannotParticipateInSelfGiveaway = "Ви не можете брати участь у власному конкурсі :("
 
     override val nowParticipating = "Тепер ти береш участь у розіграші!"
 
@@ -68,7 +68,7 @@ object UkLocale : Locale() {
         "Зараз бот знаходиться під сильним навантаженням, будь ласка, прояви трішки терпіння. " +
                 "Якщо ти ще не писав боту, напиши /start, бот пізніше повідомить про свій статус."
 
-    override val selectGiveawayToView = "Вибери розіграш, щоб подивитись детальніше."
+    override val selectGiveawayToView = "Обери розіграш, щоб подивитись детальніше."
 
     override val noGiveawaysYet = "Ти ще не створив жодного розіграшу. Щоб створити, використовуй команду /giveaway"
 
@@ -161,7 +161,7 @@ object UkLocale : Locale() {
 
     override val selectLinkedChat = "Виберіть підключений канал (використовуйте /help, щоб дізнатися, як привязати канал, або /cancel, щоб скасувати поточний крок)"
 
-    override val updateChannels = "Оновити привязанні канали"
+    override val updateChannels = "Оновити прив'язанні канали"
 
     override val channelsUpdated = "Оновленно!"
 
@@ -187,7 +187,7 @@ object UkLocale : Locale() {
         else -> "друзів"
     }
 
-    override val channelConditionRequiredForInvitations = "Додайте хоча б одну підписку на канал, щоб використовувати запрошення"
+    override val channelConditionRequiredForInvitations = "Додайте принаймні одну підписку на канал, щоб використовувати запрошення"
 
     override val invitationsCountShouldBePositive = "Кількість запрошень має бути більше нуля"
 
@@ -195,7 +195,7 @@ object UkLocale : Locale() {
 
     override val notSubscribedToConditions = "Ви не підписались на всі канали/чати"
 
-    override val cannotMentionsUser = "Дозвольте 'Пересилати повідомлення' в налаштуваннях, бо інакше бот не зможе вас згадати (налаштування прийметься через 5 хвилин)"
+    override val cannotMentionsUser = "Дозвольте 'Пересилати повідомлення' в налаштуваннях, бо інакше бот не зможе вас згадати (налаштування вступить в силу через 5 хвилин)"
 
     override fun friendsAreNotInvited(invitedCount: Int, requiredCount: Int) = "Ви запросили $invitedCount / $requiredCount друзів"
 
