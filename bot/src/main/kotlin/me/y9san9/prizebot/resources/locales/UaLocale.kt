@@ -8,7 +8,8 @@ import me.y9san9.extensions.string.awesomeCut
 import me.y9san9.prizebot.resources.Emoji
 import me.y9san9.prizebot.resources.MAX_TITLE_LEN
 
-object RuLocale : Locale() {
+// todo
+object UaLocale : Locale() {
     override val start = regular("Привет! Меня зовут ") + bold("PrizeBot") +
             regular(", здесь вы можете прозрачно разыграть призы. " +
                     "Главная особенность бота - вы можете выбирать условия для участников " +

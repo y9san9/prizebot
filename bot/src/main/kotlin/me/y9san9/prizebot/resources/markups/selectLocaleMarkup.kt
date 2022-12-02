@@ -1,6 +1,5 @@
 package me.y9san9.prizebot.resources.markups
 
-import dev.inmo.tgbotapi.extensions.utils.types.buttons.InlineKeyboardMarkup
 import dev.inmo.tgbotapi.types.buttons.InlineKeyboardButtons.CallbackDataInlineKeyboardButton
 import dev.inmo.tgbotapi.types.buttons.InlineKeyboardMarkup
 import me.y9san9.prizebot.extensions.telegram.PrizebotLocalizedUpdate
@@ -20,12 +19,14 @@ fun selectLocaleMarkup (
             "${locale.label} ${Emoji.CHECKMARK}"
         else locale.label
 
-    val buttons = locales.map {
-        CallbackDataInlineKeyboardButton(
-            addCheckmarkIfSelected(it),
-            "${CALLBACK_ACTION_SELECT_LOCALE}_${it.code}"
-        )
-    }.toTypedArray()
+    val buttons = locales.chunked(size = 2).map { chunk ->
+        chunk.map { locale ->
+            CallbackDataInlineKeyboardButton(
+                text = addCheckmarkIfSelected(locale),
+                callbackData = "${CALLBACK_ACTION_SELECT_LOCALE}_${locale.code}"
+            )
+        }
+    }
 
-    return InlineKeyboardMarkup(*buttons)
+    return InlineKeyboardMarkup(buttons)
 }

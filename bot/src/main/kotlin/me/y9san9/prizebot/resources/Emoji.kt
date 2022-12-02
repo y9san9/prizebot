@@ -12,6 +12,8 @@ object Emoji {
     const val CHECKMARK = "✅"
     const val RUSSIAN = "\uD83C\uDDF7\uD83C\uDDFA"
     const val ENGLISH = "\uD83C\uDDEC\uD83C\uDDE7"
+    const val GERMAN = "\uD83C\uDDE9\uD83C\uDDEA"
+    const val ITALIAN = "\uD83C\uDDEE\uD83C\uDDF9"
     const val HOURGLASS = "⏳"
 
     // Places emojis
