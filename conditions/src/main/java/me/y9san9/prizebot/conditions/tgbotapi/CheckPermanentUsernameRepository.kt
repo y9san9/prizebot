@@ -2,8 +2,9 @@ package me.y9san9.prizebot.conditions.tgbotapi
 
 import dev.inmo.tgbotapi.bot.TelegramBot
 import dev.inmo.tgbotapi.extensions.api.chat.get.getChat
+import dev.inmo.tgbotapi.extensions.utils.whenUsernameChat
 import dev.inmo.tgbotapi.types.ChatId
-import dev.inmo.tgbotapi.types.chat.UsernameChat
+import dev.inmo.tgbotapi.utils.PreviewFeature
 
 class CheckPermanentUsernameRepository(
     private val cacheTime: Long = 10_000,
@@ -32,13 +33,13 @@ class CheckPermanentUsernameRepository(
         return inMemoryUsername?.username == username
     }
 
+    @OptIn(PreviewFeature::class)
     private suspend fun loadChannelAndSaveToCache(channelId: Long): CachedUsername? {
         val username = runCatching {
-            (bot.getChat(ChatId(channelId)) as? UsernameChat)
-                ?.username?.username
-                ?.let { username ->
-                    CachedUsername(channelId, username, System.currentTimeMillis())
-                }
+            bot.getChat(ChatId(channelId)).whenUsernameChat { chat ->
+                val username = chat.username?.username ?: return@whenUsernameChat null
+                CachedUsername(channelId, username, System.currentTimeMillis())
+            }
         }.getOrNull() ?: return null
 
         inMemoryCache += username
