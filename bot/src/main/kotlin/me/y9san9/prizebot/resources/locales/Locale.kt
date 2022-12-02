@@ -2,28 +2,34 @@
 
 package me.y9san9.prizebot.resources.locales
 
+import dev.inmo.micro_utils.language_codes.asIetfLanguageCode
 import dev.inmo.tgbotapi.types.message.textsources.bold
 import dev.inmo.tgbotapi.types.message.textsources.link
 import dev.inmo.tgbotapi.types.message.textsources.plus
 import dev.inmo.tgbotapi.types.message.textsources.regular
+import dev.inmo.tgbotapi.utils.buildEntities
+import dev.inmo.tgbotapi.utils.newLine
 import me.y9san9.prizebot.resources.Emoji
 import me.y9san9.prizebot.resources.MAX_TITLE_LEN
 import me.y9san9.extensions.string.awesomeCut
+import me.y9san9.prizebot.resources.locales.ietf.ignoreDialect
 
 object DefaultLocale : Locale()
 
-
 open class Locale {
-    open val start = regular("Hi there! My name is ") + bold("PrizeBot") +
-            regular(
-                ", here you can transparently raffle prizes among random users. " +
-                        "One of the main features is that you can " +
-                        "choose conditions for members " +
-                        "(they must be subscribed on some channels, etc.). " +
-                        "\nBot's random is powered by random.org and "
-            ) + link(text = "there", url = "https://github.com/y9san9/prizebot") +
-            " you can check sources.\n\n" +
-            "To see all available commands, use /help"
+    open val start = buildEntities {
+        +"Hi there! My name is " + bold("PrizeBot")
+        +", here you can transparently raffle prizes among random users. "
+        +"One of the main features is that you can choose conditions for members "
+        +"(they must be subscribed on some channels, etc.). "
+        +newLine
+        +"Bot's random is powered by random.org and "
+        +link(text = "there", url = "https://github.com/y9san9/prizebot")
+        +" you can check sources."
+        +newLine
+        +newLine
+        +"To see all available commands, use /help"
+    }
 
     open val help = "Hey! I am an advanced bot for giveaways, here is the available commands list:\n" +
             "- /start: Starts me! You've probably already used this\n" +
@@ -217,11 +223,15 @@ open class Locale {
     open val no = "No"
 
     companion object {
-        fun with(language: String?) = locales
-            .firstOrNull { it.code == language }
-            ?.locale ?: DefaultLocale
+        fun with(language: String?): Locale {
+            val ietf = language?.asIetfLanguageCode()
 
-        fun all(getter: (Locale) -> String) = locales
+            return locales
+                .firstOrNull { it.ietf == ietf?.ignoreDialect() }
+                ?.locale ?: DefaultLocale
+        }
+
+        fun strings(getter: (Locale) -> String) = locales
             .map(LocaleModel::locale)
             .map(getter)
             .toSet().toList()

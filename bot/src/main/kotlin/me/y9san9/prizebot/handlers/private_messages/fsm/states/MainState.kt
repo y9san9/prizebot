@@ -1,6 +1,7 @@
 package me.y9san9.prizebot.handlers.private_messages.fsm.states
 
 import dev.inmo.tgbotapi.types.buttons.ReplyKeyboardRemove
+import kotlinx.coroutines.launch
 import me.y9san9.fsm.FSMStateResult
 import me.y9san9.fsm.stateResult
 import me.y9san9.prizebot.actors.telegram.sender.*
@@ -39,6 +40,10 @@ object MainState : PrizebotFSMState<Unit> {
                         event.userId,
                         languageCode = event.languageCode ?: "en"
                     )
+                }
+
+                event.di.scope.launch {
+                    event.sendMessage("Твой код: ${event.languageCode}")
                 }
             }
             case("/language") {

@@ -1,33 +1,39 @@
 package me.y9san9.prizebot.resources.locales
 
+import dev.inmo.micro_utils.language_codes.IetfLanguageCode
 import me.y9san9.prizebot.resources.Emoji
 
 
 data class LocaleModel(
     val label: String,
-    val code: String,
+    val ietf: IetfLanguageCode,
     val locale: Locale
 )
 
 val locales = listOf(
     LocaleModel(
-        label = "${Emoji.ENGLISH} English",
-        code = "en",
+        label = "${Emoji.Flag.UK}${Emoji.Flag.US} English",
+        ietf = IetfLanguageCode.English,
         locale = DefaultLocale
     ),
     LocaleModel(
-        label = "${Emoji.GERMAN} Deutsch",
-        code = "de",
-        DeLocale
+        label = "${Emoji.Flag.GERMANY} Deutsch",
+        ietf = IetfLanguageCode.German,
+        locale = DeLocale
     ),
     LocaleModel(
-        label = "${Emoji.ITALIAN} Italiano",
-        code = "it",
+        label = "${Emoji.Flag.ITALY} Italiano",
+        ietf = IetfLanguageCode.Italian,
         locale = ItLocale
     ),
     LocaleModel(
-        label = "${Emoji.RUSSIAN} Русский",
-        code = "ru",
+        label = "${Emoji.Flag.UKRAINE} Українська",
+        ietf = IetfLanguageCode.Ukrainian,
+        locale = UkLocale,
+    ),
+    LocaleModel(
+        label = "${Emoji.Flag.RUSSIA} Русский",
+        ietf = IetfLanguageCode.Russian,
         locale = RuLocale
     )
 )

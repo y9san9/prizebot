@@ -36,4 +36,4 @@ suspend inline fun <T> T.commandOrDefault (
 inline fun CommandDSL.raw (
     noinline getter: (Locale) -> String,
     action: CommandContext.() -> Unit
-) = raw(Locale.all(getter), action)
+) = raw(Locale.strings(getter), action)
