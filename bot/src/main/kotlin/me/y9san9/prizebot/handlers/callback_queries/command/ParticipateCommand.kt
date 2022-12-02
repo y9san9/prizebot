@@ -74,9 +74,9 @@ object ParticipateCommand {
     }
 
     private fun processCondition(
-        conditionsClient: BaseConditionsClient.Condition?,
+        condition: BaseConditionsClient.Condition?,
         locale: Locale
-    ): ProcessResult = when (conditionsClient) {
+    ): ProcessResult = when (condition) {
         is BaseConditionsClient.Condition.CanMention ->
             ProcessResult(locale.cannotMentionsUser, showAlert = true)
         is BaseConditionsClient.Condition.MemberOfChannel ->
