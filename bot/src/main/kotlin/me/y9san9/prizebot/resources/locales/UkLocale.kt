@@ -163,7 +163,7 @@ object UkLocale : Locale() {
 
     override val updateChannels = "Оновити прив'язанні канали"
 
-    override val channelsUpdated = "Оновленно!"
+    override val channelsUpdated = "Оновлено!"
 
     override val channelLinkingHelp = bold("Щоб прив'язати канал/чат, вам потрібно виконати наступні кроки:\n\n") +
             "• Додати @y9prizebot до вашого каналу з " + bold("username") + ", який ви хочете прив'язати (щоб хто завгодно міг приєднатися до нього), " +
