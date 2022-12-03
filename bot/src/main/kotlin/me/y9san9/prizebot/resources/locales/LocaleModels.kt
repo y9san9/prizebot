@@ -40,5 +40,10 @@ val locales = listOf(
         label = "${Emoji.Flag.RUSSIA} Русский",
         ietf = IetfLanguageCode.Russian,
         locale = RuLocale
+    ),
+    LocaleModel(
+        label = "${Emoji.Flag.BELARUS} Беларуская",
+        ietf = IetfLanguageCode.Belarusian,
+        locale = BeLocale
     )
 )
