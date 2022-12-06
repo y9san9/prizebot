@@ -11,8 +11,8 @@ import me.y9san9.prizebot.actors.telegram.updater.GiveawayCallbackQueryMessageUp
 import me.y9san9.prizebot.conditions.BaseConditionsClient
 import me.y9san9.prizebot.database.giveaways_storage.ActiveGiveaway
 import me.y9san9.prizebot.database.giveaways_storage.FinishedGiveaway
-import me.y9san9.prizebot.extensions.telegram.locale
 import me.y9san9.prizebot.extensions.telegram.PrizebotCallbackQueryUpdate
+import me.y9san9.prizebot.extensions.telegram.locale
 import me.y9san9.prizebot.resources.locales.Locale
 
 object ParticipateCommand {
