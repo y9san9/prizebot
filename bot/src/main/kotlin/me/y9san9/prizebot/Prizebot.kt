@@ -128,9 +128,11 @@ class Prizebot (
         System.err.println("Unexpected exception occurred: $stacktrace")
         println("But still working")
 
-        logChatId ?: return
         runCatching {
-            bot.sendMessage(ChatId(logChatId), stacktrace)
+            bot.sendMessage(
+                chatId = ChatId(chatId = logChatId ?: return),
+                text = stacktrace
+            )
         }
     }
 }
