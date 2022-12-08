@@ -129,6 +129,8 @@ class Prizebot (
         println("But still working")
 
         logChatId ?: return
-        bot.sendMessage(ChatId(logChatId), stacktrace)
+        runCatching {
+            bot.sendMessage(ChatId(logChatId), stacktrace)
+        }
     }
 }
