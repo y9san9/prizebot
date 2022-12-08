@@ -8,8 +8,8 @@ import me.y9san9.extensions.string.awesomeCut
 import me.y9san9.prizebot.resources.locales.Locale
 
 
-fun selfGiveawaysEntities(languageCode: String?, giveawaysTitles: List<String>, offset: Long): TextSourcesList {
-    val giveawaysTitle = regular("${Locale.with(languageCode).selectGiveawayToView}: \n\n")
+fun selfGiveawaysEntities(locale: Locale, giveawaysTitles: List<String>, offset: Long): TextSourcesList {
+    val giveawaysTitle = regular("${locale.selectGiveawayToView}: \n\n")
     val giveaways = giveawaysTitles.flatMapIndexed { i, title ->
         regular("${offset + i + 1}. ") + bold(title.awesomeCut(maxLength = 25)) + "\n"
     }
