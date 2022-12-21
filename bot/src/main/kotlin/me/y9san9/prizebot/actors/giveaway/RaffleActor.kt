@@ -11,7 +11,7 @@ import me.y9san9.prizebot.conditions.BaseConditionsClient.*
 import me.y9san9.prizebot.database.giveaways_storage.ActiveGiveaway
 import me.y9san9.prizebot.di.PrizebotDI
 import me.y9san9.random.RandomOrgClient
-import me.y9san9.telegram.extensions.telegram_bot.getUserTitle
+import me.y9san9.telegram.extensions.telegram_bot.getUserTitleOrNull
 import kotlin.Result
 
 
@@ -48,7 +48,7 @@ class RaffleActor(randomOrgApiKey: String) {
 
         giveaway.finish(winnerIds)
         winnerIds.forEach { id ->
-            bot.getUserTitle(id)?.let { di.saveUserTitle(id, it) }
+            bot.getUserTitleOrNull(id)?.let { di.saveUserTitle(id, it) }
         }
 
         return true

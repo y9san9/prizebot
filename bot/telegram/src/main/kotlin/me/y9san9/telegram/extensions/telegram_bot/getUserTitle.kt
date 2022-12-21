@@ -6,7 +6,7 @@ import dev.inmo.tgbotapi.types.ChatId
 import dev.inmo.tgbotapi.types.chat.PrivateChat
 
 
-suspend fun TelegramBot.getUserTitle(id: Long): String? {
+suspend fun TelegramBot.getUserTitleOrNull(id: Long): String? {
     val chat = try {
         getChat(ChatId(id)) as PrivateChat
     } catch (_: Throwable) {
