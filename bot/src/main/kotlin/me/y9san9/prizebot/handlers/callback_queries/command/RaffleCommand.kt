@@ -1,5 +1,6 @@
 package me.y9san9.prizebot.handlers.callback_queries.command
 
+import dev.inmo.micro_utils.coroutines.launchSafelyWithoutExceptions
 import dev.inmo.tgbotapi.extensions.api.edit.text.editMessageText
 import dev.inmo.tgbotapi.extensions.api.send.sendMessage
 import dev.inmo.tgbotapi.types.ChatId
@@ -41,9 +42,9 @@ object RaffleCommand : CoroutineScope {
         }
     }
 
-    private fun launchRaffleProcessingEdit(update: PrizebotCallbackQueryUpdate) = launch {
-        update.bot.editMessageText (
-            message = update.message?.asTextContentMessage() ?: return@launch,
+    private fun launchRaffleProcessingEdit(update: PrizebotCallbackQueryUpdate) = launchSafelyWithoutExceptions {
+        update.bot.editMessageText(
+            message = update.message?.asTextContentMessage() ?: return@launchSafelyWithoutExceptions,
             text = update.locale.raffleProcessing,
             replyMarkup = raffleProcessingMarkup()
         )

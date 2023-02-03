@@ -64,14 +64,16 @@ class Deploy : Plugin<Project> {
 
             target.extensions.create<SSH>("sshSession", target, webServer)
 
-            val fatJar = target.task("fatJar", type = Jar::class) {
+            val fatJarForDeploy = target.task("fatJarForDeploy", type = Jar::class) {
                 dependsOn("build")
 
+                duplicatesStrategy = DuplicatesStrategy.EXCLUDE
                 group = "build"
                 archiveFileName.set("app.jar")
 
                 manifest {
                     attributes["Implementation-Title"] = configuration.implementationTitle
+                    attributes["Main-Class"] = configuration.mainClassName
                 }
 
                 from (
@@ -83,22 +85,14 @@ class Deploy : Plugin<Project> {
                 with(project.tasks.getByName("jar") as CopySpec)
             }
 
-            target.tasks.withType<Jar> {
-                duplicatesStrategy = DuplicatesStrategy.INCLUDE
-
-                manifest {
-                    attributes(mapOf("Main-Class" to configuration.mainClassName))
-                }
-            }
-
             target.task("deploy") {
                 group = "deploy"
 
-                dependsOn(fatJar)
+                dependsOn(fatJarForDeploy)
 
                 doLast {
                     sshPlugin.session(webServer) {
-                        put("from" to fatJar.archiveFile.get().asFile, "into" to configuration.deployPath)
+                        put("from" to fatJarForDeploy.archiveFile.get().asFile, "into" to configuration.deployPath)
                         execute("systemctl restart ${configuration.serviceName}")
                     }
                 }

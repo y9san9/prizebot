@@ -5,6 +5,7 @@ import me.y9san9.prizebot.database.giveaways_active_messages_storage.TableGiveaw
 import me.y9san9.prizebot.database.giveaways_active_messages_storage.TableGiveawaysActiveMessagesStorage.Storage.MESSAGE_ID
 import me.y9san9.prizebot.database.giveaways_active_messages_storage.TableGiveawaysActiveMessagesStorage.Storage.ROW_ID
 import me.y9san9.extensions.any.unit
+import me.y9san9.prizebot.database.giveaways_active_messages_storage.TableGiveawaysActiveMessagesStorage.Storage.LAST_UPDATE_TIME
 import me.y9san9.prizebot.resources.ACTIVE_MESSAGES_LIMIT
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -15,6 +16,7 @@ class TableGiveawaysActiveMessagesStorage(private val database: Database) : Give
         val ROW_ID = long("rowId").autoIncrement()
         val GIVEAWAY_ID = long("giveawayId")
         val MESSAGE_ID = text("inlineMessageId")
+        val LAST_UPDATE_TIME = long("lastUpdateTime")
     }
 
     init {
@@ -24,11 +26,12 @@ class TableGiveawaysActiveMessagesStorage(private val database: Database) : Give
     }
 
     override fun addActiveMessage (
-        giveawayId: Long, inlineMessageId: InlineMessageIdentifier
+        giveawayId: Long, inlineMessage: GiveawaysActiveMessagesStorage.Message
     ) = transaction(database) {
         Storage.insert {
             it[GIVEAWAY_ID] = giveawayId
-            it[MESSAGE_ID] = inlineMessageId
+            it[MESSAGE_ID] = inlineMessage.id
+            it[LAST_UPDATE_TIME] = inlineMessage.lastUpdateTime
         }
 
         Storage.deleteWhere {
@@ -40,8 +43,21 @@ class TableGiveawaysActiveMessagesStorage(private val database: Database) : Give
         }
     }.unit
 
-    override fun getActiveMessage(giveawayId: Long) = transaction(database) {
-        Storage.select { GIVEAWAY_ID eq giveawayId }
-            .map { it[MESSAGE_ID] }
+    override fun getActiveMessages(giveawayId: Long): List<GiveawaysActiveMessagesStorage.Message> =
+        transaction(database) {
+            Storage.select { GIVEAWAY_ID eq giveawayId }.map {
+                GiveawaysActiveMessagesStorage.Message(
+                    id = it[MESSAGE_ID],
+                    lastUpdateTime = it[LAST_UPDATE_TIME]
+                )
+            }
+        }
+
+    override fun setLastUpdated(id: InlineMessageIdentifier, lastUpdateTime: Long) {
+        transaction(database) {
+            Storage.update({ MESSAGE_ID eq id }) {
+                it[LAST_UPDATE_TIME] = lastUpdateTime
+            }
+        }
     }
 }

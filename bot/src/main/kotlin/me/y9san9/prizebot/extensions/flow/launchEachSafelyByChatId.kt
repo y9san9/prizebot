@@ -1,12 +1,11 @@
 package me.y9san9.prizebot.extensions.flow
 
 import kotlinx.coroutines.CoroutineScope
-import me.y9san9.extensions.flow.FlowParallelLauncher
+import kotlinx.coroutines.flow.Flow
 import me.y9san9.extensions.flow.launchEachSafely
 import me.y9san9.telegram.updates.primitives.FromUserUpdate
 
-
-fun <T : FromUserUpdate> FlowParallelLauncher<T>.launchEachSafelyByChatId (
+fun <T : FromUserUpdate> Flow<T>.launchEachSafelyByChatId (
     coroutineScope: CoroutineScope,
     throwableHandler: suspend (Throwable) -> Unit = { throw it },
     consumer: suspend (T) -> Unit

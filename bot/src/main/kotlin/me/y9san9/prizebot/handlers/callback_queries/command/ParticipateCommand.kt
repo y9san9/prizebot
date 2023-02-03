@@ -2,51 +2,104 @@
 
 package me.y9san9.prizebot.handlers.callback_queries.command
 
-import me.y9san9.prizebot.actors.giveaway.ConditionsChecker
-import me.y9san9.prizebot.actors.giveaway.CheckConditionsResult
+import dev.inmo.tgbotapi.extensions.api.send.sendMessage
+import dev.inmo.tgbotapi.types.ChatId
+import kotlinx.coroutines.launch
+import me.y9san9.prizebot.actors.giveaway.check
 import me.y9san9.prizebot.actors.telegram.extractor.GiveawayFromCommandExtractor
+import me.y9san9.prizebot.actors.telegram.updater.GiveawayActiveMessagesUpdater
 import me.y9san9.prizebot.actors.telegram.updater.GiveawayCallbackQueryMessageUpdater
+import me.y9san9.prizebot.conditions.BaseConditionsClient
 import me.y9san9.prizebot.database.giveaways_storage.ActiveGiveaway
 import me.y9san9.prizebot.database.giveaways_storage.FinishedGiveaway
-import me.y9san9.prizebot.extensions.telegram.locale
 import me.y9san9.prizebot.extensions.telegram.PrizebotCallbackQueryUpdate
+import me.y9san9.prizebot.extensions.telegram.locale
+import me.y9san9.prizebot.resources.locales.Locale
 
 object ParticipateCommand {
     suspend fun handle(update: PrizebotCallbackQueryUpdate) {
         val participantId = update.userId
         val locale = update.locale
 
+        println("BEFORE EXTRACTION! ${update.query}")
+
         val giveaway = GiveawayFromCommandExtractor.extract(update, splitter = "_")
             ?: return update.answer(locale.thisGiveawayDeleted)
 
+        println("EXTRACTED! $giveaway ${update.query}")
+
         val answer = when {
-            giveaway is FinishedGiveaway -> locale.giveawayFinished
-            giveaway.ownerId == participantId -> locale.cannotParticipateInSelfGiveaway
+            giveaway is FinishedGiveaway -> ProcessResult(locale.giveawayFinished)
+            giveaway.ownerId == participantId -> ProcessResult(locale.cannotParticipateInSelfGiveaway)
             giveaway.isParticipant(participantId) -> {
                 // this line is commented to prevent spam. it is not too useful to have an ability to leave giveaway.
 //                giveaway.removeParticipant(participantId)
 //                locale.youHaveLeftGiveaway
-                locale.alreadyParticipating
+                ProcessResult(locale.alreadyParticipating)
             }
-            else -> when(val result = ConditionsChecker.check(update.bot, participantId, giveaway as ActiveGiveaway)) {
-                is CheckConditionsResult.GiveawayInvalid -> locale.giveawayInvalid
-                is CheckConditionsResult.NotSubscribedToConditions -> locale.notSubscribedToConditions
-                is CheckConditionsResult.FriendsAreNotInvited -> locale.friendsAreNotInvited (
-                    result.invitedCount, result.requiredCount
+            else -> when(
+                val result = update.di.conditionsClient.check(
+                    userId = participantId,
+                    giveaway = giveaway as ActiveGiveaway,
+                    firstHandler = { result ->
+                        val failedCondition = result.await().condition
+                        if (failedCondition == null) {
+                            giveaway.saveParticipant(participantId)
+                        }
+                        if (result is BaseConditionsClient.Result.HighLoad) {
+                            sendStatusMessage(update, failedCondition)
+                        }
+                    }
                 )
-                is CheckConditionsResult.CannotMentionUser -> {
-                    update.answer(text = locale.cannotMentionsUser, showAlert = true)
-                    null
-                }
-                is CheckConditionsResult.Success -> {
-                    giveaway.saveParticipant(participantId)
-                    locale.nowParticipating
-                }
+            ) {
+                is BaseConditionsClient.Result.Calculated ->
+                    processCondition(result.condition, update.locale)
+                is BaseConditionsClient.Result.HighLoad ->
+                    ProcessResult(locale.highLoadMessage, showAlert = true)
             }
         }
 
-        update.answer(answer)
+        println("CHECKED CONDITIONS! ${update.query}")
 
-        GiveawayCallbackQueryMessageUpdater.update(update, giveaway)
+        update.answer(answer.message, showAlert = answer.showAlert)
+
+
+        println("ANSWERED! ${update.query}")
+
+        GiveawayActiveMessagesUpdater.update(update, giveaway.id)
+
+        println("GOING UPDATE! ${update.query}")
     }
+
+    private fun sendStatusMessage(
+        update: PrizebotCallbackQueryUpdate,
+        condition: BaseConditionsClient.Condition?
+    ) {
+        update.di.scope.launch {
+            runCatching {
+                update.bot.sendMessage(
+                    chatId = ChatId(update.userId),
+                    text = processCondition(condition, update.locale).message
+                )
+            }
+        }
+    }
+
+    private fun processCondition(
+        condition: BaseConditionsClient.Condition?,
+        locale: Locale
+    ): ProcessResult = when (condition) {
+        is BaseConditionsClient.Condition.CanMention ->
+            ProcessResult(locale.cannotMentionsUser, showAlert = true)
+        is BaseConditionsClient.Condition.MemberOfChannel ->
+            ProcessResult(locale.notSubscribedToConditions)
+        is BaseConditionsClient.Condition.PermanentUsername ->
+            ProcessResult(locale.giveawayInvalid)
+        null -> ProcessResult(locale.nowParticipating)
+    }
+
+    private class ProcessResult(
+        val message: String,
+        val showAlert: Boolean = false
+    )
 }

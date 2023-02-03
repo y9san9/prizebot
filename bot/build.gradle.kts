@@ -17,4 +17,5 @@ dependencies {
     implementation(telegram)
     implementation(random)
     implementation(utils)
+    implementation(conditions)
 }

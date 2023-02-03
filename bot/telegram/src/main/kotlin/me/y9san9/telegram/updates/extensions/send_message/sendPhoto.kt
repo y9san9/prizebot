@@ -5,11 +5,10 @@ import dev.inmo.tgbotapi.requests.abstracts.FileId
 import dev.inmo.tgbotapi.requests.abstracts.InputFile
 import dev.inmo.tgbotapi.requests.abstracts.MultipartFile
 import dev.inmo.tgbotapi.types.ChatId
-import dev.inmo.tgbotapi.types.MessageIdentifier
+import dev.inmo.tgbotapi.types.MessageId
+import dev.inmo.tgbotapi.types.MessageThreadId
 import dev.inmo.tgbotapi.types.buttons.KeyboardMarkup
-import dev.inmo.tgbotapi.types.message.textsources.TextSource
 import dev.inmo.tgbotapi.types.message.textsources.TextSourcesList
-import me.y9san9.telegram.updates.hierarchies.PossiblyFromUserBotUpdate
 import me.y9san9.telegram.updates.primitives.BotUpdate
 import me.y9san9.telegram.updates.primitives.FromChatUpdate
 
@@ -24,33 +23,53 @@ private val cache = mutableMapOf<String, FileId>()
 suspend fun <T> T.sendPhotoCached (
     file: MultipartFile,
     entities: TextSourcesList,
+    threadId: MessageThreadId? = null,
     disableNotification: Boolean = false,
     protectContent: Boolean = false,
-    replyToMessageId: MessageIdentifier? = null,
+    replyToMessageId: MessageId? = null,
     allowSendingWithoutReply: Boolean? = null,
     replyMarkup: KeyboardMarkup? = null
 ) where T : BotUpdate, T : FromChatUpdate = if(file.filename in cache)
-    sendPhoto (
-        cache.getValue(file.filename), entities, disableNotification,
-        protectContent, replyToMessageId, allowSendingWithoutReply, replyMarkup
+    sendPhoto(
+        cache.getValue(file.filename),
+        entities,
+        threadId,
+        disableNotification,
+        protectContent,
+        replyToMessageId,
+        allowSendingWithoutReply,
+        replyMarkup
     )
 else
-    sendPhoto (
-        file, entities, disableNotification, protectContent,
-        replyToMessageId, allowSendingWithoutReply, replyMarkup
+    sendPhoto(
+        file,
+        entities,
+        threadId,
+        disableNotification,
+        protectContent,
+        replyToMessageId,
+        allowSendingWithoutReply,
+        replyMarkup
     ).apply { cache[file.filename] = content.media.fileId }
 
 
 suspend fun <T> T.sendPhoto (
     fileId: InputFile,
     entities: TextSourcesList,
+    threadId: MessageThreadId? = null,
     disableNotification: Boolean = false,
     protectContent: Boolean = false,
-    replyToMessageId: MessageIdentifier? = null,
+    replyToMessageId: MessageId? = null,
     allowSendingWithoutReply: Boolean? = null,
     replyMarkup: KeyboardMarkup? = null
-) where T : BotUpdate, T : FromChatUpdate = bot.sendPhoto (
-    ChatId(chatId), fileId, entities,
-    disableNotification, protectContent, replyToMessageId,
-    allowSendingWithoutReply, replyMarkup
+) where T : BotUpdate, T : FromChatUpdate = bot.sendPhoto(
+    ChatId(chatId),
+    fileId,
+    entities,
+    threadId,
+    disableNotification,
+    protectContent,
+    replyToMessageId,
+    allowSendingWithoutReply,
+    replyMarkup
 )

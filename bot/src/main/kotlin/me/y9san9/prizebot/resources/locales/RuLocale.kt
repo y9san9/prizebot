@@ -59,6 +59,9 @@ object RuLocale : Locale() {
 
     override val alreadyParticipating = "Ты участвуешь в розыгрыше"
 
+    override val highLoadMessage = "Сейчас бот находится под большой нагрузкой, пожалуйста, запасись терпением. " +
+            "Если ты ещё не писал боту, напиши ему /start, бот позже напишет о статусе"
+
     override val selectGiveawayToView = "Выбери розыгрыш, чтобы посмотреть подробнее"
 
     override val noGiveawaysYet = "Ты ещё не создал ни одного розыгрыша. Его можно создать с помощью команды /giveaway"
@@ -134,7 +137,7 @@ object RuLocale : Locale() {
 
     override val winnersCount = "Количество победителей"
 
-    override val enterNumber = "Пожалуйста, ведите число"
+    override val enterNumber = "Пожалуйста, введите число"
 
     override val enterWinnersCount = "Введите количество победителей (используйте /skip, чтобы установить значение по умолчанию (1), или /cancel, чтобы отменить)"
 
@@ -186,7 +189,7 @@ object RuLocale : Locale() {
 
     override val notSubscribedToConditions = "Вы не подписались на все каналы/чаты"
 
-    override val cannotMentionsUser = "Разрешите 'Пересылать сообщения' боту, иначе он не сможет вас упомянуть (настройка применится через 5 минут)"
+    override val cannotMentionsUser = "Разрешите 'Пересылать сообщения' в настройках, иначе бот не сможет вас упомянуть (настройка применится через 5 минут)"
 
     override fun friendsAreNotInvited(invitedCount: Int, requiredCount: Int) = "Вы пригласили $invitedCount / $requiredCount друзей"
 
