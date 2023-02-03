@@ -17,7 +17,7 @@ import me.y9san9.telegram.updates.primitives.HasTextUpdate
 class CallbackQueryUpdate <DI> (
     override val bot: TelegramBot,
     override val di: DI,
-    private val query: CallbackQueryUpdate,
+    val query: CallbackQueryUpdate,
 ) : PossiblyFromUserLocalizedDIBotUpdate<DI>, HasTextUpdate, AnswerableUpdate, FromUserUpdate {
 
     override val userId = query.data.user.id.chatId

@@ -1,14 +1,5 @@
-/.gradle/
-/.idea/
-/build/
+.gradle/
+.idea/
+build
 /data/
-/fsm/build/
-/buildSrc/.gradle/
-/buildSrc/build/
-/bot/build/
-/random/build/
 /deploy.properties
-/utils/build/
-/random/jsonRPC/build/
-/bot/telegram/build/
-/db-migrations/build/

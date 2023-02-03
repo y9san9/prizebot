@@ -43,8 +43,8 @@ class AutoRaffleActor(private val raffleActor: RaffleActor) : CoroutineScope {
 
         if(giveaway.raffleDate != null && giveaway.id !in scheduled) {
             scheduled[giveaway.id] = scope.launch {
-                val delay = giveaway.raffleDate.toInstant().toEpochMilli() - Instant.now().toEpochMilli()
-                delay(delay.takeIf { it > 0 } ?: 0)
+                val delayMillis = giveaway.raffleDate.toInstant().toEpochMilli() - Instant.now().toEpochMilli()
+                delay(delayMillis)
 
                 scheduledMutex.withLock {
                     if (giveaway.id in scheduled && di.getGiveawayById(giveaway.id) != null) {
@@ -66,7 +66,9 @@ class AutoRaffleActor(private val raffleActor: RaffleActor) : CoroutineScope {
         } else {
             giveaway.removeRaffleDate()
             val locale = Locale.with(di.getLanguageCode(giveaway.ownerId))
-            bot.sendMessage(ChatId(giveaway.ownerId), locale.lackOfParticipants(giveaway.title))
+            runCatching {
+                bot.sendMessage(ChatId(giveaway.ownerId), locale.lackOfParticipants(giveaway.title))
+            }
         }
     }
 

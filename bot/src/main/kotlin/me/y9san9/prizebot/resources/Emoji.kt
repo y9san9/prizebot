@@ -10,8 +10,6 @@ object Emoji {
     const val SETTINGS = "⚙️"
     const val TRASH = "\uD83D\uDDD1"
     const val CHECKMARK = "✅"
-    const val RUSSIAN = "\uD83C\uDDF7\uD83C\uDDFA"
-    const val ENGLISH = "\uD83C\uDDEC\uD83C\uDDE7"
     const val HOURGLASS = "⏳"
 
     // Places emojis
@@ -25,4 +23,16 @@ object Emoji {
     const val EIGHT = "8⃣"
     const val NINE = "9⃣"
     const val TEN = "\uD83D\uDD1F"
+
+    object Flag {
+        const val RUSSIA = "\uD83C\uDDF7\uD83C\uDDFA"
+        const val UK = "\uD83C\uDDEC\uD83C\uDDE7"
+        const val US = "\uD83C\uDDFA\uD83C\uDDF8"
+        const val GERMANY = "\uD83C\uDDE9\uD83C\uDDEA"
+        const val ITALY = "\uD83C\uDDEE\uD83C\uDDF9"
+        const val UKRAINE = "\uD83C\uDDFA\uD83C\uDDE6"
+        const val KAZAKHSTAN = "\uD83C\uDDF0\uD83C\uDDFF"
+        const val POLAND = "\uD83C\uDDF5\uD83C\uDDF1"
+        const val BELARUS = "\uD83C\uDDE7\uD83C\uDDFE"
+    }
 }

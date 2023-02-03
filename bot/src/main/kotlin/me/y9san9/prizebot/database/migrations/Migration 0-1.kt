@@ -6,7 +6,7 @@ import me.y9san9.db.migrations.DatabaseMigration
 import org.jetbrains.exposed.sql.Database
 
 
-object `Migration 0-1 2'0` : DatabaseMigration {
+object `Migration 0-1` : DatabaseMigration {
     override val applyVersion = 0
 
     /**

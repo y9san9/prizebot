@@ -4,6 +4,6 @@ import dev.inmo.tgbotapi.bot.TelegramBot
 import dev.inmo.tgbotapi.types.message.textsources.mention
 
 
-suspend fun TelegramBot.getUserLink(id: Long, defaultMentionText: String = "") = id.mention (
-    text = getUserTitle(id) ?: defaultMentionText
+suspend fun TelegramBot.getUserLinkOrNull(id: Long, defaultMentionText: String = "") = id.mention (
+    text = getUserTitleOrNull(id) ?: defaultMentionText
 )

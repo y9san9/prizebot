@@ -43,7 +43,7 @@ object SubscriptionChannelInputState : PrizebotFSMState<SubscriptionChannelInput
                 "/help" -> event.sendMessage (
                     event.locale.channelLinkingHelp
                 )
-                in Locale.all(Locale::updateChannels) -> {
+                in Locale.strings(Locale::updateChannels) -> {
                     val channels = getUserChannels(event)
                     return stateResult(SubscriptionChannelInputState, data.copy(channels = channels)) {
                         event.sendMessage (

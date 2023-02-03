@@ -2,7 +2,6 @@ package me.y9san9.fsm
 
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import me.y9san9.extensions.flow.createParallelLauncher
 import me.y9san9.extensions.flow.launchEachSafely
 import me.y9san9.fsm.storage.MemoryStorage
 
@@ -44,7 +43,6 @@ class FSM <TChannel, TEvent> (
     init {
         events
             .map { eventChannelProvider(it) to it }
-            .createParallelLauncher()
             .launchEachSafely(scope, throwableHandler, { (channel) -> channel }) { (channel, event) ->
                 processEvent(channel, event, states.states)
             }

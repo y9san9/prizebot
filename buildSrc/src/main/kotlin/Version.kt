@@ -9,6 +9,6 @@ object Version {
     const val SLF4J = "1.6.1"
     const val EXPOSED = "0.30.2"
     const val POSTGRESQL = "42.2.18"
-    const val TG_BOT_API = "3.0.2"
+    const val TG_BOT_API = "4.1.2"
     const val KTOR = "2.0.0"
 }
