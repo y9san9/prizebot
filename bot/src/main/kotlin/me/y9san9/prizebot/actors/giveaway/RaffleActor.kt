@@ -5,7 +5,7 @@ package me.y9san9.prizebot.actors.giveaway
 import dev.inmo.tgbotapi.bot.TelegramBot
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import me.y9san9.extensions.flow.createParallelLauncher
+import me.y9san9.extensions.flow.parallelEach
 import me.y9san9.prizebot.conditions.BaseConditionsClient
 import me.y9san9.prizebot.conditions.BaseConditionsClient.*
 import me.y9san9.prizebot.database.giveaways_storage.ActiveGiveaway
@@ -25,8 +25,7 @@ class RaffleActor(randomOrgApiKey: String) {
 
     init {
         requests
-            .createParallelLauncher()
-            .launchEach (
+            .parallelEach(
                 scope,
                 consistentKey = { (_, _, giveaway) -> giveaway.id },
                 consumer = { (bot, di, giveaway) ->

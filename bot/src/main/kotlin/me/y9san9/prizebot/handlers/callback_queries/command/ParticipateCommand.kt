@@ -7,6 +7,7 @@ import dev.inmo.tgbotapi.types.ChatId
 import kotlinx.coroutines.launch
 import me.y9san9.prizebot.actors.giveaway.check
 import me.y9san9.prizebot.actors.telegram.extractor.GiveawayFromCommandExtractor
+import me.y9san9.prizebot.actors.telegram.updater.GiveawayActiveMessagesUpdater
 import me.y9san9.prizebot.actors.telegram.updater.GiveawayCallbackQueryMessageUpdater
 import me.y9san9.prizebot.conditions.BaseConditionsClient
 import me.y9san9.prizebot.database.giveaways_storage.ActiveGiveaway
@@ -20,8 +21,12 @@ object ParticipateCommand {
         val participantId = update.userId
         val locale = update.locale
 
+        println("BEFORE EXTRACTION! ${update.query}")
+
         val giveaway = GiveawayFromCommandExtractor.extract(update, splitter = "_")
             ?: return update.answer(locale.thisGiveawayDeleted)
+
+        println("EXTRACTED! $giveaway ${update.query}")
 
         val answer = when {
             giveaway is FinishedGiveaway -> ProcessResult(locale.giveawayFinished)
@@ -54,9 +59,16 @@ object ParticipateCommand {
             }
         }
 
+        println("CHECKED CONDITIONS! ${update.query}")
+
         update.answer(answer.message, showAlert = answer.showAlert)
 
-        GiveawayCallbackQueryMessageUpdater.update(update, giveaway)
+
+        println("ANSWERED! ${update.query}")
+
+        GiveawayActiveMessagesUpdater.update(update, giveaway.id)
+
+        println("GOING UPDATE! ${update.query}")
     }
 
     private fun sendStatusMessage(

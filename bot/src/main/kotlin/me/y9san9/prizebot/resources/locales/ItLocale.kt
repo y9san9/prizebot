@@ -193,7 +193,8 @@ object ItLocale : Locale() {
 
     override val notSubscribedToConditions = "Non sei entrato in tutte le chat/canali"
 
-    override val cannotMentionsUser = "Per favore, permetti al bot 'l'inoltro dei messaggi' dalle impostazioni altrimenti il bot non può menzionarti (l'impostazione sarà applicata entro 5 minuti)"
+    override val cannotMentionsUser = "Attenzione, per partecipare, il bot ha bisogno che tu abbia attiva l'opzione privacy \"Inoltro dei messaggi\"\n" +
+            "Per attivarla, vai nelle impostazioni Telegram > \"Privacy\" > \"Inoltro messaggi\" > \"Tutti\""
 
     override fun friendsAreNotInvited(invitedCount: Int, requiredCount: Int) = "Hai invitato $invitedCount / $requiredCount amici"
 

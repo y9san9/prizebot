@@ -55,5 +55,7 @@ object CallbackQueryHandler {
         case("$CALLBACK_ACTION_SELECT_LOCALE", argsCount = 1) {
             SelectLocaleCommand.handle(update)
         }
+    }.also {
+        println("ANSWERED! ${update.query}")
     }
 }
