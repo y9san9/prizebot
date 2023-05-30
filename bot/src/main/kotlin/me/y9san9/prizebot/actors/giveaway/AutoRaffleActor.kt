@@ -34,6 +34,13 @@ class AutoRaffleActor(private val raffleActor: RaffleActor) : CoroutineScope {
             .filterIsInstance<ActiveGiveaway>()
             .forEach { schedule(bot, it, di) }
 
+    suspend fun cancelSchedulesRaffle(giveawayId: Long): Boolean {
+        return scheduledMutex.withLock {
+            scheduled[giveawayId]?.cancel()
+            scheduled.remove(giveawayId) != null
+        }
+    }
+
     suspend fun schedule (
         bot: TelegramBot,
         giveaway: ActiveGiveaway,

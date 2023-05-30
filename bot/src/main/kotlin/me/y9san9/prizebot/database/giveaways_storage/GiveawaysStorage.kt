@@ -1,11 +1,15 @@
 package me.y9san9.prizebot.database.giveaways_storage
 
+import me.y9san9.prizebot.actors.giveaway.AutoRaffleActor
 import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.GiveawayConditions
 import org.jetbrains.exposed.sql.Database
 import java.time.OffsetDateTime
 
 
-fun GiveawaysStorage(database: Database): GiveawaysStorage = TableGiveawaysStorage(database)
+fun GiveawaysStorage(
+    database: Database,
+    autoRaffleActor: AutoRaffleActor
+): GiveawaysStorage = TableGiveawaysStorage(database, autoRaffleActor)
 
 interface GiveawaysStorage {
     fun getGiveawayById(id: Long): Giveaway?

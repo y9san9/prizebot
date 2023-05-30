@@ -1,5 +1,6 @@
 package me.y9san9.prizebot.database.giveaways_storage
 
+import me.y9san9.prizebot.actors.giveaway.AutoRaffleActor
 import me.y9san9.prizebot.database.giveaways_storage.Giveaways.GIVEAWAY_DISPLAY_WINNERS_WITH_EMOJIS
 import me.y9san9.prizebot.database.giveaways_storage.Giveaways.GIVEAWAY_ID
 import me.y9san9.prizebot.database.giveaways_storage.Giveaways.GIVEAWAY_LANGUAGE_CODE
@@ -19,7 +20,8 @@ import java.time.OffsetDateTime
 
 
 internal class TableGiveawaysStorage (
-    private val database: Database
+    private val database: Database,
+    private val autoRaffleActor: AutoRaffleActor
 ) : GiveawaysStorage {
 
     private val participantsStorage = ParticipantsStorage(database)
@@ -65,7 +67,8 @@ internal class TableGiveawaysStorage (
             WinnersSettings.create (
                 WinnersCount.create(data[GIVEAWAY_WINNERS_COUNT]),
                 data[GIVEAWAY_DISPLAY_WINNERS_WITH_EMOJIS]
-            )
+            ),
+            autoRaffleActor
         )
     }
 
@@ -93,7 +96,8 @@ internal class TableGiveawaysStorage (
                 WinnersSettings.create (
                     WinnersCount.create(this[GIVEAWAY_WINNERS_COUNT]),
                     this[GIVEAWAY_DISPLAY_WINNERS_WITH_EMOJIS]
-                )
+                ),
+                autoRaffleActor
             )
         else
             FinishedGiveaway (
