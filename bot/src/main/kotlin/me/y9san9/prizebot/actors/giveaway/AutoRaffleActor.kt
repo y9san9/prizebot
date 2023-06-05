@@ -35,8 +35,11 @@ class AutoRaffleActor(private val raffleActor: RaffleActor) : CoroutineScope {
             .forEach { schedule(bot, it, di) }
 
     suspend fun cancelSchedulesRaffle(giveawayId: Long): Boolean {
+        println("[$giveawayId]: CANCELLING RAFFLE")
         return scheduledMutex.withLock {
-            scheduled[giveawayId]?.cancel()
+            println("[$giveawayId]: GOT MUTEX")
+            scheduled[giveawayId]?.cancelAndJoin()
+            println("[$giveawayId]: CANCELLED")
             scheduled.remove(giveawayId) != null
         }
     }
@@ -53,12 +56,13 @@ class AutoRaffleActor(private val raffleActor: RaffleActor) : CoroutineScope {
                 val delayMillis = giveaway.raffleDate.toInstant().toEpochMilli() - Instant.now().toEpochMilli()
                 delay(delayMillis)
 
-                scheduledMutex.withLock {
-                    if (giveaway.id in scheduled && di.getGiveawayById(giveaway.id) != null) {
-                        scheduled.remove(giveaway.id)
-                        handleRaffleResult(bot, di, giveaway, raffleActor.raffle(bot, giveaway, di))
-                    }
+                scheduledMutex.lock()
+                if (giveaway.id in scheduled && di.getGiveawayById(giveaway.id) != null) {
+                    scheduled.remove(giveaway.id)
+                    scheduledMutex.unlock()
+                    handleRaffleResult(bot, di, giveaway, raffleActor.raffle(bot, giveaway, di))
                 }
+                if (scheduledMutex.isLocked) scheduledMutex.unlock()
             }
         }
     }
