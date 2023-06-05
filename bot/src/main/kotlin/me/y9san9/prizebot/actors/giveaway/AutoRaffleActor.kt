@@ -57,12 +57,19 @@ class AutoRaffleActor(private val raffleActor: RaffleActor) : CoroutineScope {
                 delay(delayMillis)
 
                 scheduledMutex.lock()
-                if (giveaway.id in scheduled && di.getGiveawayById(giveaway.id) != null) {
-                    scheduled.remove(giveaway.id)
-                    scheduledMutex.unlock()
-                    handleRaffleResult(bot, di, giveaway, raffleActor.raffle(bot, giveaway, di))
+                try {
+                    if (giveaway.id in scheduled && di.getGiveawayById(giveaway.id) != null) {
+                        scheduled.remove(giveaway.id)
+                        scheduledMutex.unlock()
+                        // `scope` used intentionally, so when cancelling parent scope, this job
+                        // is not being cancelled
+                        scope.launch {
+                            handleRaffleResult(bot, di, giveaway, raffleActor.raffle(bot, giveaway, di))
+                        }
+                    }
+                } finally {
+                    if (scheduledMutex.isLocked) scheduledMutex.unlock()
                 }
-                if (scheduledMutex.isLocked) scheduledMutex.unlock()
             }
         }
     }
@@ -89,5 +96,6 @@ class AutoRaffleActor(private val raffleActor: RaffleActor) : CoroutineScope {
         override val di = di
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     override val coroutineContext = GlobalScope.coroutineContext + Job()
 }
