@@ -64,13 +64,17 @@ class Prizebot (
     }
     private val database = connectDatabase(databaseConfig)
 
+    private val raffleActor = RaffleActor(randomOrgApiKey)
+    private val autoRaffleActor = AutoRaffleActor(raffleActor)
+
     private val di = PrizebotDI (
-        giveawaysStorage = GiveawaysStorage(database),
+        giveawaysStorage = GiveawaysStorage(database, autoRaffleActor = autoRaffleActor),
         giveawaysActiveMessagesStorage = GiveawaysActiveMessagesStorage(database),
         languageCodesStorage = LanguageCodesStorage(database),
         linkedChannelsStorage = LinkedChannelsStorage(database),
         userTitlesStorage = UserTitlesStorage(database),
-        raffleActor = RaffleActor(randomOrgApiKey),
+        raffleActor = raffleActor,
+        autoRaffleActor = autoRaffleActor,
         conditionsClient = TelegramConditionsClient(scope, bot),
         scope = scope
     )
@@ -106,7 +110,7 @@ class Prizebot (
     }
 
     private fun scheduleRaffles() = scope.launch {
-        AutoRaffleActor(di.raffleActor).scheduleAll(bot, di)
+        autoRaffleActor.scheduleAll(bot, di)
     }
 
     private fun makeDatabaseMigrations() = MigrationsApplier.apply(database, databaseMigrations)
