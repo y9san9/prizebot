@@ -33,3 +33,9 @@ There is a huge plans to do the most convenient prize raffling in the universe v
 
 ## 📖 Licence
 This software is absolutely free and using [MIT](https://github.com/y9san9/prizebot/blob/master/LICENCE) licence
+
+## Brought to you by
+
+<a href="https://github.com/y9san9/prizebot/graphs/contributors">
+  <img src="https://contributors-img.web.app/image?repo=y9san9/prizebot" alt="Contributors"/>
+</a>
