@@ -26,7 +26,7 @@ object RaffleCommand : CoroutineScope {
             if (giveaway is ActiveGiveaway) {
                 val job = launchRaffleProcessingEdit(update)
 
-                val success = update.di.raffleActor.raffle(update.bot, giveaway, update.di)
+                val success = update.di.raffleActor.raffle(update.bot, update.di, giveaway)
 
                 job.join()
                 updateMessage(update, update.di.getGiveawayById(giveaway.id)!!)

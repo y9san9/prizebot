@@ -8,6 +8,8 @@ import me.y9san9.extensions.any.unit
 import me.y9san9.prizebot.database.giveaways_active_messages_storage.TableGiveawaysActiveMessagesStorage.Storage.LAST_UPDATE_TIME
 import me.y9san9.prizebot.resources.ACTIVE_MESSAGES_LIMIT
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
 import org.jetbrains.exposed.sql.transactions.transaction
 
 
@@ -35,8 +37,8 @@ class TableGiveawaysActiveMessagesStorage(private val database: Database) : Give
         }
 
         Storage.deleteWhere {
-            MESSAGE_ID inList Storage
-                .select { GIVEAWAY_ID eq giveawayId }
+            MESSAGE_ID inList Storage.selectAll()
+                .where { GIVEAWAY_ID eq giveawayId }
                 .orderBy(ROW_ID, SortOrder.DESC)
                 .limit(Int.MAX_VALUE, offset = ACTIVE_MESSAGES_LIMIT.toLong())
                 .map { it[MESSAGE_ID] }
@@ -45,7 +47,7 @@ class TableGiveawaysActiveMessagesStorage(private val database: Database) : Give
 
     override fun getActiveMessages(giveawayId: Long): List<GiveawaysActiveMessagesStorage.Message> =
         transaction(database) {
-            Storage.select { GIVEAWAY_ID eq giveawayId }.map {
+            Storage.selectAll().where { GIVEAWAY_ID eq giveawayId }.map {
                 GiveawaysActiveMessagesStorage.Message(
                     id = it[MESSAGE_ID],
                     lastUpdateTime = it[LAST_UPDATE_TIME]

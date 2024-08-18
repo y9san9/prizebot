@@ -1,31 +1,34 @@
 package me.y9san9.prizebot.conditions
 
 import dev.inmo.tgbotapi.bot.TelegramBot
+import dev.inmo.tgbotapi.types.queryField
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
+import me.y9san9.aqueue.AQueue
+import me.y9san9.aqueue.io
 import me.y9san9.prizebot.conditions.tgbotapi.TgBotApiConditionsRepository
 
 @Suppress("FunctionName")
 fun TelegramConditionsClient(
     scope: CoroutineScope,
     bot: TelegramBot,
-    executor: SynchronizerEngine = SynchronizerEngine(scope),
+    queue: AQueue = AQueue.io(),
     timeoutMillis: Long = 2_000,
 ): BaseConditionsClient = BaseConditionsClient(
     scope = scope,
     conditionsRepository = TgBotApiConditionsRepository(bot),
-    executor = executor,
+    queue = queue,
     timeoutMillis = timeoutMillis
 )
 
 class BaseConditionsClient(
     private val scope: CoroutineScope,
     private val conditionsRepository: ConditionsRepository,
-    executor: SynchronizerEngine = SynchronizerEngine(scope),
+    queue: AQueue = AQueue.io(),
     private val timeoutMillis: Long = 2_000,
 ) {
-    private val client = RawConditionsClient(executor)
+    private val client = RawConditionsClient(queue)
 
     suspend fun check(
         userId: Long,

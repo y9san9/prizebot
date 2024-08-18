@@ -5,6 +5,7 @@ import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.TableCon
 import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.TableConditionsStorage.Conditions.SUBSCRIPTION_CHANNEL_ID
 import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.TableConditionsStorage.Conditions.SUBSCRIPTION_CHANNEL_USERNAME
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 
 
@@ -40,7 +41,7 @@ internal class TableConditionsStorage (
     }
 
     override fun loadConditions(giveawayId: Long): GiveawayConditions = transaction(database) {
-        Conditions.select { GIVEAWAY_ID eq giveawayId }
+        Conditions.selectAll().where { GIVEAWAY_ID eq giveawayId }
             .map { it.toCondition() }
             .let(GiveawayConditions.Companion::create)
     }

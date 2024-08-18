@@ -18,7 +18,7 @@ import me.y9san9.telegram.updates.hierarchies.DIBotUpdate
 import java.time.Instant
 
 
-class AutoRaffleActor(private val raffleActor: RaffleActor) : CoroutineScope {
+class AutoRaffleActor(private val raffleActor: RaffleActorV2) : CoroutineScope {
 
     /**
      * Map of giveaway id to schedule job
@@ -34,6 +34,16 @@ class AutoRaffleActor(private val raffleActor: RaffleActor) : CoroutineScope {
             .filterIsInstance<ActiveGiveaway>()
             .forEach { schedule(bot, it, di) }
 
+    suspend fun cancelSchedulesRaffle(giveawayId: Long): Boolean {
+        println("[$giveawayId]: CANCELLING RAFFLE")
+        return scheduledMutex.withLock {
+            println("[$giveawayId]: GOT MUTEX")
+            scheduled[giveawayId]?.cancelAndJoin()
+            println("[$giveawayId]: CANCELLED")
+            scheduled.remove(giveawayId) != null
+        }
+    }
+
     suspend fun schedule (
         bot: TelegramBot,
         giveaway: ActiveGiveaway,
@@ -46,11 +56,20 @@ class AutoRaffleActor(private val raffleActor: RaffleActor) : CoroutineScope {
                 val delayMillis = giveaway.raffleDate.toInstant().toEpochMilli() - Instant.now().toEpochMilli()
                 delay(delayMillis)
 
-                scheduledMutex.withLock {
+                scheduledMutex.lock()
+
+                try {
                     if (giveaway.id in scheduled && di.getGiveawayById(giveaway.id) != null) {
                         scheduled.remove(giveaway.id)
-                        handleRaffleResult(bot, di, giveaway, raffleActor.raffle(bot, giveaway, di))
+                        scheduledMutex.unlock()
+                        // `scope` used intentionally, so when cancelling parent scope, this job
+                        // is not being cancelled
+                        scope.launch {
+                            handleRaffleResult(bot, di, giveaway, raffleActor.raffle(bot, di, giveaway))
+                        }
                     }
+                } finally {
+                    if (scheduledMutex.isLocked) scheduledMutex.unlock()
                 }
             }
         }
@@ -78,5 +97,6 @@ class AutoRaffleActor(private val raffleActor: RaffleActor) : CoroutineScope {
         override val di = di
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     override val coroutineContext = GlobalScope.coroutineContext + Job()
 }

@@ -5,6 +5,7 @@ import me.y9san9.fsm.storage.SerializableStorage
 import me.y9san9.prizebot.database.states_storage.TableStorage.StatesTable.channel
 import me.y9san9.prizebot.database.states_storage.TableStorage.StatesTable.data
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 
 
@@ -25,7 +26,7 @@ internal class TableStorage <TData> (
     }
 
     override suspend fun saveData(key: String, state: String) = transaction(database) {
-        if(StatesTable.select { channel eq key.toLong() }.firstOrNull() == null) {
+        if(StatesTable.selectAll().where { channel eq key.toLong() }.firstOrNull() == null) {
             StatesTable.insert {
                 it[channel] = key.toLong()
                 it[data] = state
@@ -38,6 +39,6 @@ internal class TableStorage <TData> (
     }.let { }
 
     override suspend fun loadData(key: String): String? = transaction(database) {
-        StatesTable.select { channel eq key.toLong() }.firstOrNull()?.get(data)
+        StatesTable.selectAll().where { channel eq key.toLong() }.firstOrNull()?.get(data)
     }
 }

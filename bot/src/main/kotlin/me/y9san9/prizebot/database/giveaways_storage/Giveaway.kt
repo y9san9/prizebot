@@ -1,6 +1,6 @@
 package me.y9san9.prizebot.database.giveaways_storage
 
-import kotlinx.serialization.Serializable
+import me.y9san9.prizebot.actors.giveaway.AutoRaffleActor
 import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.ConditionsStorage
 import me.y9san9.prizebot.database.giveaways_storage.giveaways_patch_storage.GiveawaysPatchStorage
 import me.y9san9.prizebot.database.giveaways_storage.participants_storage.ParticipantsStorage
@@ -52,11 +52,16 @@ data class ActiveGiveaway internal constructor (
     override val participantsStorage: ParticipantsStorage,
     override val giveawaysPatchStorage: GiveawaysPatchStorage,
     override val conditionsStorage: ConditionsStorage,
-    override val winnersSettings: WinnersSettings
+    override val winnersSettings: WinnersSettings,
+    val raffleActor: AutoRaffleActor
 ) : Giveaway() {
     val winnersCount = winnersSettings.winnersCount
     fun removeRaffleDate() = giveawaysPatchStorage.removeRaffleDate(id)
-    fun finish(winnerIds: List<Long>) = giveawaysPatchStorage.finishGiveaway(id, winnerIds)
+    suspend fun finish(winnerIds: List<Long>) {
+        giveawaysPatchStorage.finishGiveaway(id, winnerIds)
+        giveawaysPatchStorage.removeRaffleDate(id)
+        raffleActor.cancelSchedulesRaffle(id)
+    }
 }
 
 data class FinishedGiveaway internal constructor (
