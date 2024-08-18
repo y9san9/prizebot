@@ -33,15 +33,17 @@ internal object RandomOrgAPI {
 
     private val rpc = JsonRPC(client)
 
-    suspend fun getRandomIntegers(apiKey: String, min: Int, max: Int, count: Int = 100): List<Int> =
+    suspend fun getRandomIntegers(apiKey: String, min: Int, max: Int, count: Int = 100): Result<List<Int>> =
         coroutineScope {
-            val json = rpc.request(scope = this, endpointApi) { rpcId ->
-                setBody(GenerateIntegersMethod(rpcId, apiKey, count, min, max))
-            }["result"]?.jsonObject?.get("random")
-                ?.jsonObject?.get("data") ?: error("Invalid API response")
+            runCatching {
+                val json = rpc.request(scope = this, endpointApi) { rpcId ->
+                    setBody(GenerateIntegersMethod(rpcId, apiKey, count, min, max))
+                }["result"]?.jsonObject?.get("random")
+                    ?.jsonObject?.get("data") ?: error("Invalid API response")
 
-            return@coroutineScope Json.decodeFromJsonElement<List<Int>>(json)
-                .takeIf { it.size == count } ?: error("Invalid API response")
+                Json.decodeFromJsonElement<List<Int>>(json)
+                    .takeIf { it.size == count } ?: error("Invalid API response")
+            }
         }
 
 }

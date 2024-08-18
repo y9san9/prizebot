@@ -17,7 +17,8 @@ class RandomOrgClient(private val apiKey: String) {
         while (true) {
             RandomOrgAPI
                 .getRandomIntegers(apiKey = apiKey, min = 0, max = 1_000_000_000)
-                .forEach { emit(it) }
+                .getOrNull()
+                ?.forEach { emit(it) }
         }
     }
 
