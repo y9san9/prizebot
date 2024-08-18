@@ -1,6 +1,8 @@
 package me.y9san9.prizebot
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.plus
 import me.y9san9.extensions.any.unit
 
 suspend fun main() = coroutineScope {
@@ -30,6 +32,6 @@ suspend fun main() = coroutineScope {
         randomOrgApiKey = randomOrgApiKey,
         databaseConfig = databaseConfig,
         logChatId = logChatId,
-        scope = this
+        scope = this + Dispatchers.IO
     ).start()
 }.unit
