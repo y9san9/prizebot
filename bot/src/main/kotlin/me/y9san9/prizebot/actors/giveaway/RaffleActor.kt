@@ -28,7 +28,7 @@ class RaffleActor(randomOrgApiKey: String) {
             .launchInAQueue(
                 scope,
                 key = { (_, _, giveaway) -> giveaway.id },
-                action = { (bot, di, giveaway) ->
+                block = { (bot, di, giveaway) ->
                     responses.emit (
                         runCatching {
                             giveaway to raffleAction(bot, di, giveaway)

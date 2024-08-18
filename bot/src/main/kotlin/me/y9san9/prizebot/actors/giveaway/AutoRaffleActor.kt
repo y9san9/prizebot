@@ -97,6 +97,5 @@ class AutoRaffleActor(private val raffleActor: RaffleActorV2) : CoroutineScope {
         override val di = di
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
-    override val coroutineContext = GlobalScope.coroutineContext + Job()
+    override val coroutineContext = Dispatchers.IO
 }

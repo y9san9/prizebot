@@ -53,5 +53,5 @@ object RaffleCommand : CoroutineScope {
     private suspend fun updateMessage(update: PrizebotCallbackQueryUpdate, giveaway: Giveaway) =
         GiveawayCallbackQueryMessageUpdater.update(update, giveaway, demo = true)
 
-    override val coroutineContext = GlobalScope.coroutineContext + Job()
+    override val coroutineContext = Dispatchers.IO
 }
