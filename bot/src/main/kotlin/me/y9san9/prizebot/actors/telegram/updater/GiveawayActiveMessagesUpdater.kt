@@ -47,38 +47,34 @@ object GiveawayActiveMessagesUpdater {
 
         println("AFTER TIME CHECK, BUT BEFORE LAUNCH: $inlineId $giveawayId")
 
-        scope.launch {
-            queue.execute(AQueueKey.ScheduleUpdate(inlineId)) {
-                val nextUpdateTime = lastUpdateTime + UPDATE_RATE
-                val delta = nextUpdateTime - System.currentTimeMillis()
+        queue.execute(AQueueKey.ScheduleUpdate(inlineId)) {
+            val nextUpdateTime = lastUpdateTime + UPDATE_RATE
+            val delta = nextUpdateTime - System.currentTimeMillis()
 
-                println("NEXT UPDATE: $inlineId $nextUpdateTime, DELTA: $delta, $giveawayId")
+            println("NEXT UPDATE: $inlineId $nextUpdateTime, DELTA: $delta, $giveawayId")
 
-                if (delta > 0) {
-                    update.di.setLastUpdated(inlineId, nextUpdateTime)
-                    scope.launch {
-                        delay(delta)
-                        println("UPDATING GIVEAWAY FROM DELTA $inlineId $giveawayId")
-                        updateMessage(
-                            update = update,
-                            giveawayId = giveawayId,
-                            inlineId = inlineId,
-                            lastUpdateTime = 0
-                        )
-                    }
-                    return@execute
-                }
-
-                update.di.setLastUpdated(inlineId, System.currentTimeMillis())
-
+            if (delta > 0) {
+                update.di.setLastUpdated(inlineId, nextUpdateTime)
                 scope.launch {
-                    queue.execute(AQueueKey.SendMessage(inlineId)) {
-                        val giveaway = update.di.getGiveawayById(giveawayId) ?: return@execute
-                        val (entities, markup) = giveawayContent(update.di, giveaway)
-                        runCatching {
-                            update.bot.editMessageText(inlineId, entities, replyMarkup = markup)
-                        }
-                    }
+                    delay(delta)
+                    println("UPDATING GIVEAWAY FROM DELTA $inlineId $giveawayId")
+                    updateMessage(
+                        update = update,
+                        giveawayId = giveawayId,
+                        inlineId = inlineId,
+                        lastUpdateTime = 0
+                    )
+                }
+                return@execute
+            }
+
+            update.di.setLastUpdated(inlineId, System.currentTimeMillis())
+
+            queue.execute(AQueueKey.SendMessage(inlineId)) {
+                val giveaway = update.di.getGiveawayById(giveawayId) ?: return@execute
+                val (entities, markup) = giveawayContent(update.di, giveaway)
+                runCatching {
+                    update.bot.editMessageText(inlineId, entities, replyMarkup = markup)
                 }
             }
         }
