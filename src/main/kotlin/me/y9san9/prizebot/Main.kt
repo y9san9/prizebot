@@ -10,17 +10,22 @@ suspend fun main() = coroutineScope {
 
     val logChatId = System.getenv("LOG_CHAT_ID")?.toLongOrNull()
 
-    val databaseConfig = DatabaseConfig (
-        url = System.getenv("DATABASE_URL")
-            ?: error("Provide DATABASE_URL environment variable"),
-        user = System.getenv("DATABASE_USER")
-            ?: error("Provide DATABASE_USER environment variable"),
-        password = System.getenv("DATABASE_PASSWORD")
-            ?: error("Provide DATABASE_PASSWORD environment variable"),
-        driver = System.getenv("DATABASE_DRIVER")
-    )
+    val databaseConfig = run {
+        DatabaseConfig.Actual(
+            url = System.getenv("DATABASE_URL")
+                ?: return@run null,
+            user = System.getenv("DATABASE_USER")
+                ?: return@run null,
+            password = System.getenv("DATABASE_PASSWORD")
+                ?: return@run null,
+            driver = System.getenv("DATABASE_DRIVER")
+        )
+    } ?: DatabaseConfig.InMemory
 
-    Prizebot (
+    System.err.println("Warning! Using in-memory database. All changes will be lost after restart. " +
+        "To with database, provide DATABASE_URL, DATABASE_USER and DATABASE_PASSWORD env variables")
+
+    Prizebot(
         botToken = token,
         randomOrgApiKey = randomOrgApiKey,
         databaseConfig = databaseConfig,

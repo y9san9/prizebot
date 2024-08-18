@@ -5,4 +5,5 @@ plugins {
 dependencies {
     implementation(coroutines)
     implementation(tgBotApi)
+    implementation(aqueue)
 }

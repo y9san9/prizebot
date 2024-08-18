@@ -4,6 +4,7 @@ import me.y9san9.prizebot.database.giveaways_storage.participants_storage.TableP
 import me.y9san9.prizebot.database.giveaways_storage.participants_storage.TableParticipantsStorage.Participants.PARTICIPANTS_USER_ID
 import me.y9san9.extensions.any.unit
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 
 
@@ -33,20 +34,20 @@ internal class TableParticipantsStorage(private val database: Database) : Partic
     }.unit
 
     override fun getParticipantsIds(giveawayId: Long): List<Long> = transaction(database) {
-        Participants.select { PARTICIPANTS_GIVEAWAY_ID eq giveawayId }
+        Participants.selectAll().where { PARTICIPANTS_GIVEAWAY_ID eq giveawayId }
             .map { it[PARTICIPANTS_USER_ID] }
     }
 
     override fun getParticipantsCount(giveawayId: Long) = transaction(database) {
         Participants
-            .select { PARTICIPANTS_GIVEAWAY_ID eq giveawayId }
+            .selectAll().where { PARTICIPANTS_GIVEAWAY_ID eq giveawayId }
             .count()
             .toInt()
     }
 
     override fun isParticipant(giveawayId: Long, userId: Long) = transaction(database) {
         Participants
-            .select { (PARTICIPANTS_GIVEAWAY_ID eq giveawayId) and (PARTICIPANTS_USER_ID eq userId) }
+            .selectAll().where { (PARTICIPANTS_GIVEAWAY_ID eq giveawayId) and (PARTICIPANTS_USER_ID eq userId) }
             .firstOrNull() != null
     }
 }

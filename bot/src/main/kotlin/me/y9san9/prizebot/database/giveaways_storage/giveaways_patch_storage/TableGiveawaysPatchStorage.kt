@@ -5,6 +5,7 @@ import me.y9san9.prizebot.database.giveaways_storage.winners_storage.WinnersStor
 import me.y9san9.extensions.any.unit
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update

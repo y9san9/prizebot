@@ -15,6 +15,7 @@ import me.y9san9.prizebot.database.giveaways_storage.giveaways_patch_storage.Giv
 import me.y9san9.prizebot.database.giveaways_storage.participants_storage.ParticipantsStorage
 import me.y9san9.prizebot.database.giveaways_storage.winners_storage.WinnersStorage
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.OffsetDateTime
 
@@ -36,7 +37,7 @@ internal class TableGiveawaysStorage (
     }
 
     override fun getGiveawayById(id: Long): Giveaway? = transaction(database) {
-        Giveaways.select { GIVEAWAY_ID eq id }.firstOrNull()?.toGiveaway()
+        Giveaways.selectAll().where { GIVEAWAY_ID eq id }.firstOrNull()?.toGiveaway()
     }
 
     override fun saveGiveaway (
@@ -73,7 +74,7 @@ internal class TableGiveawaysStorage (
     }
 
     override fun getUserGiveaways(ownerId: Long, count: Int, offset: Long) = transaction(database) {
-        Giveaways.select { GIVEAWAY_OWNER_ID eq ownerId }
+        Giveaways.selectAll().where { GIVEAWAY_OWNER_ID eq ownerId }
             .orderBy(GIVEAWAY_ID, order = SortOrder.DESC)
             .limit(n = count, offset = offset)
             .map { it.toGiveaway() }

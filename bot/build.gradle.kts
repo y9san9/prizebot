@@ -18,4 +18,6 @@ dependencies {
     implementation(random)
     implementation(utils)
     implementation(conditions)
+
+    implementation(aqueue)
 }

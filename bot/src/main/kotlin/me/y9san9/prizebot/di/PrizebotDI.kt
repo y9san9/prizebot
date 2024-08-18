@@ -3,6 +3,7 @@ package me.y9san9.prizebot.di
 import kotlinx.coroutines.CoroutineScope
 import me.y9san9.prizebot.actors.giveaway.AutoRaffleActor
 import me.y9san9.prizebot.actors.giveaway.RaffleActor
+import me.y9san9.prizebot.actors.giveaway.RaffleActorV2
 import me.y9san9.prizebot.conditions.BaseConditionsClient
 import me.y9san9.prizebot.database.giveaways_active_messages_storage.GiveawaysActiveMessagesStorage
 import me.y9san9.prizebot.database.giveaways_storage.GiveawaysStorage
@@ -16,7 +17,7 @@ class PrizebotDI (
     languageCodesStorage: LanguageCodesStorage,
     linkedChannelsStorage: LinkedChannelsStorage,
     userTitlesStorage: UserTitlesStorage,
-    val raffleActor: RaffleActor,
+    val raffleActor: RaffleActorV2,
     val autoRaffleActor: AutoRaffleActor,
     val conditionsClient: BaseConditionsClient,
     val scope: CoroutineScope

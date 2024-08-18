@@ -18,7 +18,7 @@ import me.y9san9.telegram.updates.hierarchies.DIBotUpdate
 import java.time.Instant
 
 
-class AutoRaffleActor(private val raffleActor: RaffleActor) : CoroutineScope {
+class AutoRaffleActor(private val raffleActor: RaffleActorV2) : CoroutineScope {
 
     /**
      * Map of giveaway id to schedule job
@@ -57,6 +57,7 @@ class AutoRaffleActor(private val raffleActor: RaffleActor) : CoroutineScope {
                 delay(delayMillis)
 
                 scheduledMutex.lock()
+
                 try {
                     if (giveaway.id in scheduled && di.getGiveawayById(giveaway.id) != null) {
                         scheduled.remove(giveaway.id)
@@ -64,7 +65,7 @@ class AutoRaffleActor(private val raffleActor: RaffleActor) : CoroutineScope {
                         // `scope` used intentionally, so when cancelling parent scope, this job
                         // is not being cancelled
                         scope.launch {
-                            handleRaffleResult(bot, di, giveaway, raffleActor.raffle(bot, giveaway, di))
+                            handleRaffleResult(bot, di, giveaway, raffleActor.raffle(bot, di, giveaway))
                         }
                     }
                 } finally {

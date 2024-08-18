@@ -4,6 +4,7 @@ import me.y9san9.extensions.any.unit
 import me.y9san9.prizebot.database.user_titles_storage.TableUserTitlesStorage.UserTitles.USER_ID
 import me.y9san9.prizebot.database.user_titles_storage.TableUserTitlesStorage.UserTitles.USER_TITLE
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.transaction
 
 
@@ -30,6 +31,6 @@ internal class TableUserTitlesStorage (
     }.unit
 
     override fun getUserTitle(userId: Long) = transaction(database) {
-        UserTitles.select { USER_ID eq userId }.firstOrNull()?.get(USER_TITLE)
+        UserTitles.selectAll().where { USER_ID eq userId }.firstOrNull()?.get(USER_TITLE)
     }
 }

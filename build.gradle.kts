@@ -23,6 +23,7 @@ dependencies {
     implementation(utils)
     implementation(bot)
     implementation(coroutines)
+    implementation(h2Database)
 }
 
 allprojects {

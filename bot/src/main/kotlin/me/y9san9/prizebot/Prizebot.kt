@@ -18,6 +18,7 @@ import me.y9san9.extensions.flow.parallelEach
 import me.y9san9.fsm.FSM
 import me.y9san9.prizebot.actors.giveaway.AutoRaffleActor
 import me.y9san9.prizebot.actors.giveaway.RaffleActor
+import me.y9san9.prizebot.actors.giveaway.RaffleActorV2
 import me.y9san9.prizebot.conditions.TelegramConditionsClient
 import me.y9san9.prizebot.database.giveaways_active_messages_storage.GiveawaysActiveMessagesStorage
 import me.y9san9.prizebot.database.giveaways_storage.GiveawaysStorage
@@ -44,15 +45,18 @@ import me.y9san9.telegram.updates.MyChatMemberUpdate
 import me.y9san9.telegram.updates.PrivateMessageUpdate
 import org.jetbrains.exposed.sql.Database
 
+sealed interface DatabaseConfig {
+    data class Actual(
+        val url: String,
+        val user: String,
+        val password: String,
+        val driver: String?
+    ) : DatabaseConfig
 
-data class DatabaseConfig (
-    val url: String,
-    val user: String,
-    val password: String,
-    val driver: String?
-)
+    data object InMemory : DatabaseConfig
+}
 
-class Prizebot (
+class Prizebot(
     botToken: String,
     randomOrgApiKey: String,
     databaseConfig: DatabaseConfig,
@@ -64,7 +68,7 @@ class Prizebot (
     }
     private val database = connectDatabase(databaseConfig)
 
-    private val raffleActor = RaffleActor(randomOrgApiKey)
+    private val raffleActor = RaffleActorV2(randomOrgApiKey)
     private val autoRaffleActor = AutoRaffleActor(raffleActor)
 
     private val di = PrizebotDI (
@@ -80,8 +84,8 @@ class Prizebot (
     )
 
     fun start() = bot.longPolling {
-        scheduleRaffles()
         makeDatabaseMigrations()
+        scheduleRaffles()
 
         val privateMessages = messagesFlow
             .mapNotNull { it.data as? PrivateContentMessage<*> }
@@ -124,10 +128,15 @@ class Prizebot (
     )
 
     private fun connectDatabase(config: DatabaseConfig) = config.run {
-        if(driver != null) {
-            Database.connect(url, driver, user, password)
-        } else {
-            Database.connect(url, user = user, password = password)
+        when(this) {
+            is DatabaseConfig.Actual -> if (driver != null) {
+                Database.connect(url, driver, user, password)
+            } else {
+                Database.connect(url, user = user, password = password)
+            }
+            is DatabaseConfig.InMemory -> {
+                Database.connect("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1")
+            }
         }
     }
 
