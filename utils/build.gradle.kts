@@ -6,4 +6,5 @@ plugins {
 dependencies {
     implementation(coroutines)
     implementation(serialization)
+    implementation(aqueue)
 }

@@ -11,6 +11,6 @@ object Version {
     const val POSTGRESQL = "42.2.18"
     const val TG_BOT_API = "4.1.2"
     const val KTOR = "2.0.0"
-    const val AQUEUE = "1.0.2"
+    const val AQUEUE = "1.0.5"
     const val H2DATABASE = "2.3.232"
 }

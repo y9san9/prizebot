@@ -1,16 +1,9 @@
 package me.y9san9.prizebot.actors.telegram.updater
 
 import dev.inmo.tgbotapi.extensions.api.edit.text.editMessageText
-import dev.inmo.tgbotapi.types.InlineMessageIdentifier
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.joinAll
-import kotlinx.coroutines.launch
-import me.y9san9.extensions.job.JobLauncher
+import kotlinx.coroutines.*
+import me.y9san9.aqueue.AQueue
 import me.y9san9.prizebot.database.giveaways_active_messages_storage.GiveawaysActiveMessagesStorage
-import me.y9san9.prizebot.database.giveaways_storage.Giveaway
 import me.y9san9.prizebot.database.giveaways_storage.GiveawaysStorage
 import me.y9san9.prizebot.database.user_titles_storage.UserTitlesStorage
 import me.y9san9.prizebot.resources.content.giveawayContent
@@ -18,11 +11,11 @@ import me.y9san9.telegram.updates.hierarchies.DIBotUpdate
 
 
 object GiveawayActiveMessagesUpdater {
-    private val scope = CoroutineScope(context = SupervisorJob())
+    private val scope = CoroutineScope(context = Dispatchers.IO)
 
     private const val UPDATE_RATE = 10_000
 
-    private val jobLauncher = JobLauncher(scope)
+    private val queue = AQueue()
 
     fun <TDI> update (
         update: DIBotUpdate<TDI>,
@@ -54,42 +47,46 @@ object GiveawayActiveMessagesUpdater {
 
         println("AFTER TIME CHECK, BUT BEFORE LAUNCH: $inlineId $giveawayId")
 
-        jobLauncher.launch(JobId.ScheduleUpdate(inlineId)) {
-            val nextUpdateTime = lastUpdateTime + UPDATE_RATE
-            val delta = nextUpdateTime - System.currentTimeMillis()
+        scope.launch {
+            queue.execute(AQueueKey.ScheduleUpdate(inlineId)) {
+                val nextUpdateTime = lastUpdateTime + UPDATE_RATE
+                val delta = nextUpdateTime - System.currentTimeMillis()
 
-            println("NEXT UPDATE: $inlineId $nextUpdateTime, DELTA: $delta, $giveawayId")
+                println("NEXT UPDATE: $inlineId $nextUpdateTime, DELTA: $delta, $giveawayId")
 
-            if (delta > 0) {
-                update.di.setLastUpdated(inlineId, nextUpdateTime)
-                scope.launch delayed@{
-                    delay(delta)
-                    println("UPDATING GIVEAWAY FROM DELTA $inlineId $giveawayId")
-                    updateMessage(
-                        update = update,
-                        giveawayId = giveawayId,
-                        inlineId = inlineId,
-                        lastUpdateTime = 0
-                    )
+                if (delta > 0) {
+                    update.di.setLastUpdated(inlineId, nextUpdateTime)
+                    scope.launch {
+                        delay(delta)
+                        println("UPDATING GIVEAWAY FROM DELTA $inlineId $giveawayId")
+                        updateMessage(
+                            update = update,
+                            giveawayId = giveawayId,
+                            inlineId = inlineId,
+                            lastUpdateTime = 0
+                        )
+                    }
+                    return@execute
                 }
-                return@launch
-            }
 
-            update.di.setLastUpdated(inlineId, System.currentTimeMillis())
+                update.di.setLastUpdated(inlineId, System.currentTimeMillis())
 
-            jobLauncher.launch(JobId.SendMessage(inlineId)) {
-                val giveaway = update.di.getGiveawayById(giveawayId) ?: return@launch
-                val (entities, markup) = giveawayContent(update.di, giveaway)
-                runCatching {
-                    update.bot.editMessageText(inlineId, entities, replyMarkup = markup)
+                scope.launch {
+                    queue.execute(AQueueKey.SendMessage(inlineId)) {
+                        val giveaway = update.di.getGiveawayById(giveawayId) ?: return@execute
+                        val (entities, markup) = giveawayContent(update.di, giveaway)
+                        runCatching {
+                            update.bot.editMessageText(inlineId, entities, replyMarkup = markup)
+                        }
+                    }
                 }
             }
         }
     }
 
-    private sealed interface JobId {
-        data class ScheduleUpdate(val inlineId: String) : JobId
-        data class SendMessage(val inlineId: String) : JobId
+    private sealed interface AQueueKey {
+        data class ScheduleUpdate(val inlineId: String) : AQueueKey
+        data class SendMessage(val inlineId: String) : AQueueKey
     }
 
 }
