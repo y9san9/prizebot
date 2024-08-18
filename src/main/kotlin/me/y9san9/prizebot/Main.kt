@@ -22,10 +22,10 @@ suspend fun main() = coroutineScope {
                 ?: return@run null,
             driver = System.getenv("DATABASE_DRIVER")
         )
-    } ?: DatabaseConfig.InMemory
-
-    System.err.println("Warning! Using in-memory database. All changes will be lost after restart. " +
-        "To with database, provide DATABASE_URL, DATABASE_USER and DATABASE_PASSWORD env variables")
+    } ?: DatabaseConfig.InMemory.apply {
+        System.err.println("Warning! Using in-memory database. All changes will be lost after restart. " +
+            "To with database, provide DATABASE_URL, DATABASE_USER and DATABASE_PASSWORD env variables")
+    }
 
     Prizebot(
         botToken = token,
