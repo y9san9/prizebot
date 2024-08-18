@@ -56,20 +56,21 @@ class AutoRaffleActor(private val raffleActor: RaffleActorV2) : CoroutineScope {
                 val delayMillis = giveaway.raffleDate.toInstant().toEpochMilli() - Instant.now().toEpochMilli()
                 delay(delayMillis)
 
-                scheduledMutex.lock()
-
-                try {
-                    if (giveaway.id in scheduled && di.getGiveawayById(giveaway.id) != null) {
+                val isScheduled = scheduledMutex.withLock {
+                    if (giveaway.id in scheduled) {
                         scheduled.remove(giveaway.id)
-                        scheduledMutex.unlock()
-                        // `scope` used intentionally, so when cancelling parent scope, this job
-                        // is not being cancelled
-                        scope.launch {
-                            handleRaffleResult(bot, di, giveaway, raffleActor.raffle(bot, di, giveaway))
-                        }
+                        true
+                    } else {
+                        false
                     }
-                } finally {
-                    if (scheduledMutex.isLocked) scheduledMutex.unlock()
+                }
+
+                if (isScheduled && di.getGiveawayById(giveaway.id) != null) {
+                    // `scope` used intentionally, so when cancelling parent scope, this job
+                    // is not being cancelled
+                    scope.launch {
+                        handleRaffleResult(bot, di, giveaway, raffleActor.raffle(bot, di, giveaway))
+                    }
                 }
             }
         }
