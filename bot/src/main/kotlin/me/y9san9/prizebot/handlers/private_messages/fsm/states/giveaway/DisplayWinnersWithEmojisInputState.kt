@@ -58,5 +58,5 @@ suspend fun DisplayWinnersWithEmojisInputData (
     update: PrizebotPrivateMessageUpdate,
     data: DisplayWinnersWithEmojisInputData
 ) = stateResult(DisplayWinnersWithEmojisInputState, data) {
-    update.sendMessage(update.locale.displayWinnersWithEmoji, replyMarkup = yesNoMarkup(update.locale))
+    update.sendMessage(update.getLocale().displayWinnersWithEmoji, replyMarkup = yesNoMarkup(update.getLocale()))
 }

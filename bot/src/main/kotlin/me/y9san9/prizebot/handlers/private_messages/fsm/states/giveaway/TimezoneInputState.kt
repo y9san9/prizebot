@@ -33,7 +33,7 @@ object TimezoneInputState : PrizebotFSMState<TimezoneInputData> {
             }
             raw(Locale::customTimeOffset) {
                 return stateResult(CustomTimezoneInputState, data) {
-                    event.sendMessage(event.locale.customTimezoneInput)
+                    event.sendMessage(event.getLocale().customTimezoneInput)
                 }
             }
             raw(Locale::GMT) {
@@ -82,5 +82,5 @@ object TimezoneInputState : PrizebotFSMState<TimezoneInputData> {
 @Suppress("FunctionName")
 suspend fun TimezoneInputState(update: PrizebotPrivateMessageUpdate, data: TimezoneInputData) =
     stateResult(TimezoneInputState, data) {
-        update.sendMessage(update.locale.selectOffset, replyMarkup = timezoneKeyboard(update))
+        update.sendMessage(update.getLocale().selectOffset, replyMarkup = timezoneKeyboard(update))
     }

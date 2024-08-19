@@ -2,7 +2,7 @@ package me.y9san9.prizebot.handlers.inline_queries.command
 
 import me.y9san9.prizebot.actors.telegram.extractor.GiveawayFromCommandExtractor
 import me.y9san9.prizebot.actors.telegram.mapper.GiveawayToResultArticleMapper
-import me.y9san9.prizebot.extensions.telegram.locale
+import me.y9san9.prizebot.extensions.telegram.getLocale
 import me.y9san9.prizebot.extensions.telegram.PrizebotInlineQueryUpdate
 
 
@@ -19,7 +19,7 @@ object SendGiveawayCommand {
     }
 
     private suspend fun handleNullGiveaway(update: PrizebotInlineQueryUpdate) = update.answer (
-        switchPmText = update.locale.giveawayDoesNotExist,
+        switchPmText = update.getLocale().giveawayDoesNotExist,
         switchPmParameter = "giveaway_does_not_exist",
         cachedTime = 0,
         isPersonal = true

@@ -10,7 +10,7 @@ import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.Conditio
 import me.y9san9.extensions.any.unit
 import me.y9san9.prizebot.extensions.telegram.PrizebotFSMState
 import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
-import me.y9san9.prizebot.extensions.telegram.locale
+import me.y9san9.prizebot.extensions.telegram.getLocale
 import me.y9san9.prizebot.extensions.telegram.textOrDefault
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.ConditionInputData
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.ConditionInputState
@@ -41,13 +41,13 @@ object SubscriptionChannelInputState : PrizebotFSMState<SubscriptionChannelInput
             when(username) {
                 "/cancel" -> return ConditionInputState(event, data.conditionInputData)
                 "/help" -> event.sendMessage (
-                    event.locale.channelLinkingHelp
+                    event.getLocale().channelLinkingHelp
                 )
                 in Locale.strings(Locale::updateChannels) -> {
                     val channels = getUserChannels(event)
                     return stateResult(SubscriptionChannelInputState, data.copy(channels = channels)) {
                         event.sendMessage (
-                            event.locale.channelsUpdated,
+                            event.getLocale().channelsUpdated,
                             replyMarkup = selectLinkedChatMarkup(event, channels.map(Channel::username))
                         )
                     }
@@ -60,17 +60,17 @@ object SubscriptionChannelInputState : PrizebotFSMState<SubscriptionChannelInput
                         .map { it.channelUsername }
 
                     if(username in usernames)
-                        return@textOrDefault event.sendMessage(event.locale.channelIsAlreadyInConditions).unit
+                        return@textOrDefault event.sendMessage(event.getLocale().channelIsAlreadyInConditions).unit
 
                     val channel = data.channels.firstOrNull { it.username == username }
-                        ?: return@textOrDefault event.sendMessage(event.locale.channelIsNotLinked).unit
+                        ?: return@textOrDefault event.sendMessage(event.getLocale().channelIsNotLinked).unit
 
                     val newConditions = conditions + Condition.Subscription(channel.id, channel.username)
                     val conditionData = data.conditionInputData.copy (
                         conditions = newConditions
                     )
 
-                    return ConditionInputState(event, conditionData, event.locale.chooseMoreConditions)
+                    return ConditionInputState(event, conditionData, event.getLocale().chooseMoreConditions)
                 }
             }
         }
@@ -90,7 +90,7 @@ suspend fun SubscriptionChannelInputState (
     val usernames = channels.map(Channel::username)
 
     return stateResult(SubscriptionChannelInputState, SubscriptionChannelInputData(data, channels)) {
-        update.sendMessage(update.locale.selectLinkedChat, replyMarkup = selectLinkedChatMarkup(update, usernames))
+        update.sendMessage(update.getLocale().selectLinkedChat, replyMarkup = selectLinkedChatMarkup(update, usernames))
     }
 }
 

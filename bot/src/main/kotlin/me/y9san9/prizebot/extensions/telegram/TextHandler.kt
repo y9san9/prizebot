@@ -13,5 +13,5 @@ suspend inline fun <T> T.textOrDefault (handler: (String) -> Unit): Boolean wher
         T : FromChatUpdate =
     text(handler).also { handled ->
         if(!handled)
-            sendMessage(locale.enterText)
+            sendMessage(getLocale().enterText)
     }

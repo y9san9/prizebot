@@ -22,24 +22,24 @@ sealed class Giveaway {
 
     internal abstract val participantsStorage: ParticipantsStorage
 
-    val participants by lazy { participantsStorage.getParticipantsIds(id) }
-    val participantsCount by lazy { participantsStorage.getParticipantsCount(id) }
+    suspend fun getParticipantsIds(): List<Long> = participantsStorage.getParticipantsIds(id)
+    suspend fun getParticipantsCount(): Int = participantsStorage.getParticipantsCount(id)
 
-    fun isParticipant(userId: Long) = participantsStorage.isParticipant(id, userId)
-    fun saveParticipant(userId: Long) = participantsStorage.saveParticipant(id, userId)
-    fun removeParticipant(userId: Long) = participantsStorage.removeParticipant(id, userId)
+    suspend fun isParticipant(userId: Long) = participantsStorage.isParticipant(id, userId)
+    suspend fun saveParticipant(userId: Long) = participantsStorage.saveParticipant(id, userId)
+    suspend fun removeParticipant(userId: Long) = participantsStorage.removeParticipant(id, userId)
 
     /* Patch composition */
 
     internal abstract val giveawaysPatchStorage: GiveawaysPatchStorage
 
-    fun delete() = giveawaysPatchStorage.deleteGiveaway(id)
+    suspend fun delete() = giveawaysPatchStorage.deleteGiveaway(id)
 
     /* Conditions composition */
 
     internal abstract val conditionsStorage: ConditionsStorage
 
-    val conditions by lazy { conditionsStorage.loadConditions(id) }
+    suspend fun loadConditions() = conditionsStorage.loadConditions(id)
 }
 
 data class ActiveGiveaway internal constructor (
@@ -56,7 +56,7 @@ data class ActiveGiveaway internal constructor (
     val raffleActor: AutoRaffleActor
 ) : Giveaway() {
     val winnersCount = winnersSettings.winnersCount
-    fun removeRaffleDate() = giveawaysPatchStorage.removeRaffleDate(id)
+    suspend fun removeRaffleDate() = giveawaysPatchStorage.removeRaffleDate(id)
     suspend fun finish(winnerIds: List<Long>) {
         giveawaysPatchStorage.finishGiveaway(id, winnerIds)
         giveawaysPatchStorage.removeRaffleDate(id)
@@ -77,7 +77,7 @@ data class FinishedGiveaway internal constructor (
     override val conditionsStorage: ConditionsStorage,
     private val winnersStorage: WinnersStorage
 ) : Giveaway() {
-    val winnerIds by lazy { winnersStorage.getWinners(id) }
+    suspend fun getWinners() = winnersStorage.getWinners(id)
     val displayWinnersWithEmojis = winnersSettings.displayWithEmojis
 }
 

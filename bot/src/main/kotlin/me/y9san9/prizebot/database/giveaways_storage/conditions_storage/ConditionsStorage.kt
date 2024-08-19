@@ -6,6 +6,6 @@ import org.jetbrains.exposed.sql.Database
 internal fun ConditionsStorage(database: Database): ConditionsStorage = TableConditionsStorage(database)
 
 internal interface ConditionsStorage {
-    fun addConditions(giveawayId: Long, conditions: GiveawayConditions)
-    fun loadConditions(giveawayId: Long): GiveawayConditions
+    suspend fun addConditions(giveawayId: Long, conditions: GiveawayConditions)
+    suspend fun loadConditions(giveawayId: Long): GiveawayConditions
 }

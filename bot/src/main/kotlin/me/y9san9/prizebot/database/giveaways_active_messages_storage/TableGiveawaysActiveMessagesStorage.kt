@@ -1,6 +1,7 @@
 package me.y9san9.prizebot.database.giveaways_active_messages_storage
 
 import dev.inmo.tgbotapi.types.InlineMessageIdentifier
+import kotlinx.coroutines.Dispatchers
 import me.y9san9.prizebot.database.giveaways_active_messages_storage.TableGiveawaysActiveMessagesStorage.Storage.GIVEAWAY_ID
 import me.y9san9.prizebot.database.giveaways_active_messages_storage.TableGiveawaysActiveMessagesStorage.Storage.MESSAGE_ID
 import me.y9san9.prizebot.database.giveaways_active_messages_storage.TableGiveawaysActiveMessagesStorage.Storage.ROW_ID
@@ -10,6 +11,7 @@ import me.y9san9.prizebot.resources.ACTIVE_MESSAGES_LIMIT
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
+import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 
 
@@ -27,9 +29,9 @@ class TableGiveawaysActiveMessagesStorage(private val database: Database) : Give
         }
     }
 
-    override fun addActiveMessage (
+    override suspend fun addActiveMessage (
         giveawayId: Long, inlineMessage: GiveawaysActiveMessagesStorage.Message
-    ) = transaction(database) {
+    ) = newSuspendedTransaction(Dispatchers.IO, database) {
         Storage.insert {
             it[GIVEAWAY_ID] = giveawayId
             it[MESSAGE_ID] = inlineMessage.id
@@ -45,8 +47,8 @@ class TableGiveawaysActiveMessagesStorage(private val database: Database) : Give
         }
     }.unit
 
-    override fun getActiveMessages(giveawayId: Long): List<GiveawaysActiveMessagesStorage.Message> =
-        transaction(database) {
+    override suspend fun getActiveMessages(giveawayId: Long): List<GiveawaysActiveMessagesStorage.Message> =
+        newSuspendedTransaction(Dispatchers.IO, database) {
             Storage.selectAll().where { GIVEAWAY_ID eq giveawayId }.map {
                 GiveawaysActiveMessagesStorage.Message(
                     id = it[MESSAGE_ID],
@@ -55,8 +57,8 @@ class TableGiveawaysActiveMessagesStorage(private val database: Database) : Give
             }
         }
 
-    override fun setLastUpdated(id: InlineMessageIdentifier, lastUpdateTime: Long) {
-        transaction(database) {
+    override suspend fun setLastUpdated(id: InlineMessageIdentifier, lastUpdateTime: Long) {
+        newSuspendedTransaction(Dispatchers.IO, database) {
             Storage.update({ MESSAGE_ID eq id }) {
                 it[LAST_UPDATE_TIME] = lastUpdateTime
             }

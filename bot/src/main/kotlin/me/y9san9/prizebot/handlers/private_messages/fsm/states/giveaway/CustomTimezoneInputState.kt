@@ -5,7 +5,7 @@ import me.y9san9.fsm.stateResult
 import me.y9san9.extensions.any.unit
 import me.y9san9.prizebot.extensions.telegram.PrizebotFSMState
 import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
-import me.y9san9.prizebot.extensions.telegram.locale
+import me.y9san9.prizebot.extensions.telegram.getLocale
 import me.y9san9.prizebot.extensions.telegram.textOrDefault
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.MainState
 import me.y9san9.telegram.updates.extensions.send_message.sendMessage
@@ -25,7 +25,7 @@ object CustomTimezoneInputState : PrizebotFSMState<TimezoneInputData> {
                 return MainState.cancellation(event)
 
             val parsedOffset = parseOffset(offset)
-                ?: return@textOrDefault event.sendMessage(event.locale.invalidTimezoneFormat).unit
+                ?: return@textOrDefault event.sendMessage(event.getLocale().invalidTimezoneFormat).unit
 
             val date = OffsetDateTime.of(LocalDateTime.parse(data.localDate, dateTimeFormatter), parsedOffset)
 

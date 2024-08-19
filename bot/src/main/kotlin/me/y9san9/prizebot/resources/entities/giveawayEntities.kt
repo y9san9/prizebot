@@ -20,7 +20,7 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 
-fun giveawayEntities (
+suspend fun giveawayEntities (
     titlesStorage: UserTitlesStorage,
     giveaway: Giveaway
 ): TextSourcesList {
@@ -49,7 +49,7 @@ fun giveawayEntities (
         bold(locale.winnersCount) + ": ${giveaway.winnersCount.value}"
     else listOf()
 
-    val conditions = giveaway.conditions.list
+    val conditions = giveaway.loadConditions().list
     val conditionsEntities = if(conditions.isNotEmpty()) {
         bold(locale.giveawayConditions) + "\n" +
                 conditions
@@ -65,7 +65,8 @@ fun giveawayEntities (
     } else listOf()
 
     val winners = if(giveaway is FinishedGiveaway) {
-        val links = giveaway.winnerIds
+        val winners = giveaway.getWinners()
+        val links = winners
             .map { id -> id.mention(text = titlesStorage.getUserTitle(id) ?: locale.deletedUser) }
             .flatMapIndexed { i, mention ->
                 if(giveaway.displayWinnersWithEmojis)
@@ -75,7 +76,7 @@ fun giveawayEntities (
             }
             .dropLast(n = 1)
 
-        regular("${locale.winner(plural = giveaway.winnerIds.size > 1)}: ") +
+        regular("${locale.winner(plural = winners.size > 1)}: ") +
                 (if(giveaway.displayWinnersWithEmojis) "\n" else "") + links
     } else listOf()
 

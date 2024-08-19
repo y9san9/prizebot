@@ -1,5 +1,6 @@
 package me.y9san9.prizebot.database.giveaways_storage
 
+import kotlinx.coroutines.Dispatchers
 import me.y9san9.prizebot.actors.giveaway.AutoRaffleActor
 import me.y9san9.prizebot.database.giveaways_storage.Giveaways.GIVEAWAY_DISPLAY_WINNERS_WITH_EMOJIS
 import me.y9san9.prizebot.database.giveaways_storage.Giveaways.GIVEAWAY_ID
@@ -16,6 +17,7 @@ import me.y9san9.prizebot.database.giveaways_storage.participants_storage.Partic
 import me.y9san9.prizebot.database.giveaways_storage.winners_storage.WinnersStorage
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.OffsetDateTime
 
@@ -36,11 +38,11 @@ internal class TableGiveawaysStorage (
         }
     }
 
-    override fun getGiveawayById(id: Long): Giveaway? = transaction(database) {
+    override suspend fun getGiveawayById(id: Long): Giveaway? = newSuspendedTransaction(Dispatchers.IO, database) {
         Giveaways.selectAll().where { GIVEAWAY_ID eq id }.firstOrNull()?.toGiveaway()
     }
 
-    override fun saveGiveaway (
+    override suspend fun saveGiveaway (
         ownerId: Long,
         title: String,
         participateButton: String,
@@ -48,7 +50,7 @@ internal class TableGiveawaysStorage (
         raffleDate: OffsetDateTime?,
         winnersSettings: WinnersSettings,
         conditions: GiveawayConditions
-    ) = transaction(database) {
+    ) = newSuspendedTransaction(Dispatchers.IO, database) {
         Giveaways.insert {
             it[GIVEAWAY_OWNER_ID] = ownerId
             it[GIVEAWAY_TITLE] = title
@@ -73,18 +75,18 @@ internal class TableGiveawaysStorage (
         )
     }
 
-    override fun getUserGiveaways(ownerId: Long, count: Int, offset: Long) = transaction(database) {
+    override suspend fun getUserGiveaways(ownerId: Long, count: Int, offset: Long) = newSuspendedTransaction(Dispatchers.IO, database) {
         Giveaways.selectAll().where { GIVEAWAY_OWNER_ID eq ownerId }
             .orderBy(GIVEAWAY_ID, order = SortOrder.DESC)
             .limit(n = count, offset = offset)
             .map { it.toGiveaway() }
     }
 
-    override fun getAllGiveaways() = transaction(database) {
+    override suspend fun getAllGiveaways() = newSuspendedTransaction(Dispatchers.IO, database) {
         Giveaways.selectAll().map { it.toGiveaway() }
     }
 
-    private fun ResultRow.toGiveaway(): Giveaway {
+    private suspend fun ResultRow.toGiveaway(): Giveaway {
         return if(winnersStorage.hasWinners(this[GIVEAWAY_ID]))
             ActiveGiveaway (
                 this[GIVEAWAY_ID],

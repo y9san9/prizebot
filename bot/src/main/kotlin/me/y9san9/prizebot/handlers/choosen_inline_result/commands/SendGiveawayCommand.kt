@@ -6,7 +6,7 @@ import me.y9san9.telegram.updates.extensions.command.command
 
 
 object SendGiveawayCommand {
-    fun handle(update: PrizebotChosenInlineResultUpdate) {
+    suspend fun handle(update: PrizebotChosenInlineResultUpdate) {
         val giveawayId = update.command(splitter = "_")
             ?.args?.getOrNull(index = 0)
             ?.toLongOrNull() ?: return

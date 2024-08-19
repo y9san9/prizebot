@@ -1,11 +1,13 @@
 package me.y9san9.prizebot.database.states_storage
 
+import kotlinx.coroutines.Dispatchers
 import kotlinx.serialization.modules.SerializersModule
 import me.y9san9.fsm.storage.SerializableStorage
 import me.y9san9.prizebot.database.states_storage.TableStorage.StatesTable.channel
 import me.y9san9.prizebot.database.states_storage.TableStorage.StatesTable.data
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 
 
@@ -25,7 +27,7 @@ internal class TableStorage <TData> (
         }
     }
 
-    override suspend fun saveData(key: String, state: String) = transaction(database) {
+    override suspend fun saveData(key: String, state: String) = newSuspendedTransaction(Dispatchers.IO, database) {
         if(StatesTable.selectAll().where { channel eq key.toLong() }.firstOrNull() == null) {
             StatesTable.insert {
                 it[channel] = key.toLong()
@@ -38,7 +40,7 @@ internal class TableStorage <TData> (
         }
     }.let { }
 
-    override suspend fun loadData(key: String): String? = transaction(database) {
+    override suspend fun loadData(key: String): String? = newSuspendedTransaction(Dispatchers.IO, database) {
         StatesTable.selectAll().where { channel eq key.toLong() }.firstOrNull()?.get(data)
     }
 }

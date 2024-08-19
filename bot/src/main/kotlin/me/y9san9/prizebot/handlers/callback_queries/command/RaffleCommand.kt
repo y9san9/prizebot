@@ -11,7 +11,7 @@ import me.y9san9.prizebot.database.giveaways_storage.Giveaway
 import me.y9san9.prizebot.actors.telegram.extractor.GiveawayFromCommandExtractor
 import me.y9san9.prizebot.actors.telegram.updater.GiveawayActiveMessagesUpdater
 import me.y9san9.prizebot.actors.telegram.updater.GiveawayCallbackQueryMessageUpdater
-import me.y9san9.prizebot.extensions.telegram.locale
+import me.y9san9.prizebot.extensions.telegram.getLocale
 import me.y9san9.prizebot.extensions.telegram.PrizebotCallbackQueryUpdate
 import me.y9san9.prizebot.resources.markups.raffleProcessingMarkup
 import me.y9san9.telegram.extensions.asTextContentMessage
@@ -20,9 +20,9 @@ import me.y9san9.telegram.extensions.asTextContentMessage
 object RaffleCommand : CoroutineScope {
 
     fun handle(update: PrizebotCallbackQueryUpdate) {
-        val giveaway = GiveawayFromCommandExtractor.extract(update, splitter = "_") ?: return
-
         launch {
+            val giveaway = GiveawayFromCommandExtractor.extract(update, splitter = "_") ?: return@launch
+
             if (giveaway is ActiveGiveaway) {
                 val job = launchRaffleProcessingEdit(update)
 
@@ -32,7 +32,7 @@ object RaffleCommand : CoroutineScope {
                 updateMessage(update, update.di.getGiveawayById(giveaway.id)!!)
 
                 if (!success)
-                    return@launch update.answer(text = update.locale.participantsCountIsNotEnough)
+                    return@launch update.answer(text = update.getLocale().participantsCountIsNotEnough)
 
             } else updateMessage(update, giveaway)
 
@@ -45,7 +45,7 @@ object RaffleCommand : CoroutineScope {
     private fun launchRaffleProcessingEdit(update: PrizebotCallbackQueryUpdate) = launchSafelyWithoutExceptions {
         update.bot.editMessageText(
             message = update.message?.asTextContentMessage() ?: return@launchSafelyWithoutExceptions,
-            text = update.locale.raffleProcessing,
+            text = update.getLocale().raffleProcessing,
             replyMarkup = raffleProcessingMarkup()
         )
     }

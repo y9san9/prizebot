@@ -12,8 +12,8 @@ fun GiveawaysStorage(
 ): GiveawaysStorage = TableGiveawaysStorage(database, autoRaffleActor)
 
 interface GiveawaysStorage {
-    fun getGiveawayById(id: Long): Giveaway?
-    fun saveGiveaway (
+    suspend fun getGiveawayById(id: Long): Giveaway?
+    suspend fun saveGiveaway (
         ownerId: Long,
         title: String,
         participateButton: String,
@@ -22,6 +22,6 @@ interface GiveawaysStorage {
         winnersSettings: WinnersSettings,
         conditions: GiveawayConditions
     ): ActiveGiveaway
-    fun getUserGiveaways(ownerId: Long, count: Int = 20, offset: Long = 0): List<Giveaway>
-    fun getAllGiveaways(): List<Giveaway>
+    suspend fun getUserGiveaways(ownerId: Long, count: Int = 20, offset: Long = 0): List<Giveaway>
+    suspend fun getAllGiveaways(): List<Giveaway>
 }

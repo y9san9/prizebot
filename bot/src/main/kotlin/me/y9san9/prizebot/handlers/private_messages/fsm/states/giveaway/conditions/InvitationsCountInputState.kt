@@ -9,7 +9,7 @@ import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.Positive
 import me.y9san9.extensions.any.unit
 import me.y9san9.prizebot.extensions.telegram.PrizebotFSMState
 import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
-import me.y9san9.prizebot.extensions.telegram.locale
+import me.y9san9.prizebot.extensions.telegram.getLocale
 import me.y9san9.prizebot.extensions.telegram.textOrDefault
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.ConditionInputData
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.ConditionInputState
@@ -23,16 +23,16 @@ object InvitationsCountInputState : PrizebotFSMState<ConditionInputData> {
     ): FSMStateResult<*> {
         event.textOrDefault { text ->
             val number = text.toIntOrNull()
-                ?: return@textOrDefault event.sendMessage(event.locale.enterNumber).unit
+                ?: return@textOrDefault event.sendMessage(event.getLocale().enterNumber).unit
 
             when(val positiveInt = PositiveInt.createChecked(number)) {
-                is PositiveIntRequired -> event.sendMessage(event.locale.invitationsCountShouldBePositive)
+                is PositiveIntRequired -> event.sendMessage(event.getLocale().invitationsCountShouldBePositive)
                 is PositiveInt -> {
                     val conditions = data.conditions + Condition.Invitations(positiveInt)
                     return ConditionInputState(
                         event,
                         data.copy(conditions = conditions),
-                        event.locale.chooseMoreConditions
+                        event.getLocale().chooseMoreConditions
                     )
                 }
             }
@@ -47,5 +47,5 @@ object InvitationsCountInputState : PrizebotFSMState<ConditionInputData> {
 suspend fun InvitationsCountInputState (
     update: PrizebotPrivateMessageUpdate, data: ConditionInputData
 ) = stateResult(InvitationsCountInputState, data) {
-    update.sendMessage(update.locale.enterInvitationsCount, replyMarkup = ReplyKeyboardRemove())
+    update.sendMessage(update.getLocale().enterInvitationsCount, replyMarkup = ReplyKeyboardRemove())
 }

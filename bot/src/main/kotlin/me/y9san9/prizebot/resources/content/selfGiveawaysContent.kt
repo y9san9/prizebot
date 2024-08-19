@@ -5,14 +5,14 @@ import dev.inmo.tgbotapi.types.buttons.InlineKeyboardMarkup
 import me.y9san9.prizebot.database.giveaways_storage.Giveaway
 import me.y9san9.prizebot.database.giveaways_storage.GiveawaysStorage
 import me.y9san9.prizebot.database.language_codes_storage.LanguageCodesStorage
-import me.y9san9.prizebot.extensions.telegram.locale
+import me.y9san9.prizebot.extensions.telegram.getLocale
 import me.y9san9.prizebot.resources.entities.selfGiveawaysEntities
 import me.y9san9.prizebot.resources.markups.selfGiveawaysMarkup
 import me.y9san9.telegram.updates.hierarchies.PossiblyFromUserLocalizedDIBotUpdate
 import me.y9san9.telegram.updates.primitives.FromUserUpdate
 
 
-fun <TUpdate, TDI> selfGiveawaysContent (
+suspend fun <TUpdate, TDI> selfGiveawaysContent (
     update: TUpdate,
     offset: Long = 0,
     count: Int = 5
@@ -22,7 +22,7 @@ fun <TUpdate, TDI> selfGiveawaysContent (
         TDI : GiveawaysStorage, TDI : LanguageCodesStorage {
     val storage = update.di
     val userId = update.userId
-    val locale = update.locale
+    val locale = update.getLocale()
 
     val giveawaysPlusOne = storage.getUserGiveaways (
         ownerId = userId,

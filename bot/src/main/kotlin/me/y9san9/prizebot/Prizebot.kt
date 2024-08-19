@@ -59,7 +59,7 @@ class Prizebot(
     }
     private val database = connectDatabase(databaseConfig)
 
-    private val raffleActor = RaffleActorV2(randomOrgApiKey)
+    private val raffleActor = RaffleActorV2(randomOrgApiKey, scope)
     private val autoRaffleActor = AutoRaffleActor(raffleActor)
 
     private val di = PrizebotDI (

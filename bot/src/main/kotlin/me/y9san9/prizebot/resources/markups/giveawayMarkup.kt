@@ -10,14 +10,14 @@ import me.y9san9.extensions.list.plusIf
 import me.y9san9.prizebot.resources.*
 
 
-fun giveawayMarkup (
+suspend fun giveawayMarkup (
     giveaway: Giveaway?,
     demo: Boolean = false,
 ): InlineKeyboardMarkup? {
     giveaway ?: return null
 
     val locale = giveaway.locale
-    val participantsCount = giveaway.participantsCount
+    val participantsCount = giveaway.getParticipantsCount()
 
     val participateText = "${giveaway.participateText}${if(participantsCount == 0) "" else " $participantsCount"}"
 

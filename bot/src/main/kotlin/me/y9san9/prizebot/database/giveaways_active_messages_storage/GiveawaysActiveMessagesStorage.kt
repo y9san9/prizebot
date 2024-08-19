@@ -12,11 +12,11 @@ interface GiveawaysActiveMessagesStorage {
     /**
      * Should add to storage new message id and truncate messages to size [ACTIVE_MESSAGES_LIMIT]
      */
-    fun addActiveMessage(giveawayId: Long, inlineMessage: Message)
+    suspend fun addActiveMessage(giveawayId: Long, inlineMessage: Message)
 
-    fun getActiveMessages(giveawayId: Long): List<Message>
+    suspend fun getActiveMessages(giveawayId: Long): List<Message>
 
-    fun setLastUpdated(id: InlineMessageIdentifier, lastUpdateTime: Long)
+    suspend fun setLastUpdated(id: InlineMessageIdentifier, lastUpdateTime: Long)
 
     data class Message(val id: InlineMessageIdentifier, val lastUpdateTime: Long)
 }

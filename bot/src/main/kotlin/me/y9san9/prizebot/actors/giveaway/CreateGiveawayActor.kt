@@ -6,7 +6,7 @@ import me.y9san9.prizebot.actors.telegram.sender.GiveawaySender
 import me.y9san9.prizebot.database.giveaways_storage.WinnersSettings
 import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.GiveawayConditions
 import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
-import me.y9san9.prizebot.extensions.telegram.locale
+import me.y9san9.prizebot.extensions.telegram.getLocale
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.MainState
 import me.y9san9.prizebot.resources.markups.mainMarkup
 import me.y9san9.telegram.updates.extensions.send_message.sendMessage
@@ -29,7 +29,7 @@ object CreateGiveawayActor {
             raffleDate, winnersSettings, conditions
         )
 
-        update.sendMessage(update.locale.giveawayCreated, replyMarkup = mainMarkup(update))
+        update.sendMessage(update.getLocale().giveawayCreated, replyMarkup = mainMarkup(update))
         GiveawaySender.send(update, update.di, giveaway, demo = true)
 
         update.di.autoRaffleActor.schedule(update.bot, giveaway, update.di)

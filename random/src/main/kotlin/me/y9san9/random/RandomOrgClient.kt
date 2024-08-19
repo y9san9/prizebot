@@ -2,35 +2,45 @@
 
 package me.y9san9.random
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.launch
 import me.y9san9.random.extensions.shuffled
 import java.security.SecureRandom
 
 
-class RandomOrgClient(private val apiKey: String) {
-    /**
-     * Random numbers from 0 to 1_000_000_000
-     */
-    val randomSeeds = flow {
-        var retries = 0
-        while (true) {
-            val randomIntegers = RandomOrgAPI.getRandomIntegers(apiKey = apiKey, min = 0, max = 1_000_000_000).getOrNull()
-            if (randomIntegers == null) {
-                delay(5_000)
-                System.err.println("> RandomOrgClient: Cannot get random seed for secure random ${++retries} times")
-                if (retries > 10) {
-                    val secureRandomBackup = SecureRandom()
-                    emit(secureRandomBackup.nextInt(0, 1_000_000_000))
-                    System.err.println("> RandomOrgClient: BACKUP SECURE RANDOM WAS USED. This must be fixed soon, because bot must rely on random.org")
+class RandomOrgClient(
+    private val apiKey: String,
+    scope: CoroutineScope
+) {
+    private val _randomSeeds = Channel<Int>()
+    val randomSeeds: ReceiveChannel<Int> = _randomSeeds
+
+    init {
+        scope.launch {
+            var retries = 0
+            while (true) {
+                val randomIntegers = RandomOrgAPI.getRandomIntegers(apiKey = apiKey, min = 0, max = 1_000_000_000).getOrNull()
+                if (randomIntegers == null) {
+                    delay(5_000)
+                    System.err.println("> RandomOrgClient: Cannot get random seed for secure random ${++retries} times")
+                    if (retries > 10) {
+                        val secureRandomBackup = SecureRandom()
+                        _randomSeeds.send(element = secureRandomBackup.nextInt(0, 1_000_000_000))
+                        System.err.println("> RandomOrgClient: BACKUP SECURE RANDOM WAS USED. This must be fixed soon, because bot must rely on random.org")
+                    }
+                    continue
                 }
-                continue
-            }
-            retries = 0
-            for (integer in randomIntegers) {
-                emit(integer)
+                retries = 0
+                for (integer in randomIntegers) {
+                    _randomSeeds.send(integer)
+                }
             }
         }
     }
@@ -40,7 +50,7 @@ class RandomOrgClient(private val apiKey: String) {
      * so it is still safe and powered by random.org
      */
     val secureRandoms = flow {
-        randomSeeds.collect { seedInt ->
+        randomSeeds.receiveAsFlow().collect { seedInt ->
             val seed = byteArrayOf(
                 (seedInt shr 0).toByte(),
                 (seedInt shr 8).toByte(),

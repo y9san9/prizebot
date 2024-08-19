@@ -12,7 +12,7 @@ import me.y9san9.telegram.updates.hierarchies.PossiblyFromUserLocalizedDIBotUpda
 import me.y9san9.telegram.updates.primitives.HasTextUpdate
 
 
-fun <TUpdate, TDI> extractGiveawayContent (
+suspend fun <TUpdate, TDI> extractGiveawayContent (
     update: TUpdate,
     userTitlesStorage: UserTitlesStorage,
     splitter: String = "\\s+",
@@ -26,7 +26,7 @@ fun <TUpdate, TDI> extractGiveawayContent (
         giveawayMarkup(giveaway, demo)
 }
 
-fun giveawayContent (
+suspend fun giveawayContent (
     userTitlesStorage: UserTitlesStorage,
     giveaway: Giveaway,
     demo: Boolean = false

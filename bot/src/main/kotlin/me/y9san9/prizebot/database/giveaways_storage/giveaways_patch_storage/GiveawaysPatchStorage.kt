@@ -9,7 +9,7 @@ internal fun GiveawaysPatchStorage(database: Database, winnersStorage: WinnersSt
 
 
 internal interface GiveawaysPatchStorage {
-    fun finishGiveaway(giveawayId: Long, winnerIds: List<Long>)
-    fun removeRaffleDate(giveawayId: Long)
-    fun deleteGiveaway(id: Long)
+    suspend fun finishGiveaway(giveawayId: Long, winnerIds: List<Long>)
+    suspend fun removeRaffleDate(giveawayId: Long)
+    suspend fun deleteGiveaway(id: Long)
 }

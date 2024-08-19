@@ -9,7 +9,7 @@ import me.y9san9.prizebot.actors.telegram.sender.StartSender
 import me.y9san9.prizebot.extensions.telegram.PrizebotFSMState
 import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
 import me.y9san9.prizebot.extensions.telegram.commandOrDefault
-import me.y9san9.prizebot.extensions.telegram.locale
+import me.y9san9.prizebot.extensions.telegram.getLocale
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.TitleInputState
 import me.y9san9.prizebot.resources.Emoji
 import me.y9san9.prizebot.resources.markups.mainMarkup
@@ -20,7 +20,7 @@ object MainState : PrizebotFSMState<Unit> {
 
     suspend fun cancellation(event: PrizebotPrivateMessageUpdate) = stateResult(MainState) {
         event.sendMessage (
-            event.locale.cancelled,
+            event.getLocale().cancelled,
             replyMarkup = mainMarkup(event)
         )
     }
@@ -28,7 +28,7 @@ object MainState : PrizebotFSMState<Unit> {
     override suspend fun process(data: Unit, event: PrizebotPrivateMessageUpdate): FSMStateResult<*> {
         event.commandOrDefault (
             noTextMatchedMatched = {
-                event.sendMessage(event.locale.unknownCommand(it.actualText), replyMarkup = mainMarkup(event))
+                event.sendMessage(event.getLocale().unknownCommand(it.actualText), replyMarkup = mainMarkup(event))
             }
         ) {
             case("/start") {
@@ -47,11 +47,11 @@ object MainState : PrizebotFSMState<Unit> {
                 SelectLocaleSender.send(event)
             }
             case("/help", Emoji.HELP) {
-                event.sendMessage(event.locale.help)
+                event.sendMessage(event.getLocale().help)
             }
             case("/giveaway", Emoji.GIFT) {
                 event.sendMessage (
-                    text = event.locale.giveawayTitleInput,
+                    text = event.getLocale().giveawayTitleInput,
                     replyMarkup = ReplyKeyboardRemove()
                 )
                 return stateResult(TitleInputState)
