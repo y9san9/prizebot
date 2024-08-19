@@ -14,4 +14,5 @@ dependencies {
     implementation(ktorSerializationJson)
 
     implementation(coroutines)
+    implementation(aqueue)
 }

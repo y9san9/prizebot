@@ -14,26 +14,21 @@ import kotlinx.serialization.json.jsonPrimitive
 import java.util.concurrent.atomic.AtomicInteger
 
 
-class JsonRPC (
-    private val client: HttpClient,
-    private val rpcIdProvider: suspend (JsonObject) -> Int? = { it["id"]?.jsonPrimitive?.intOrNull }
+class JsonRPC(
+    private val client: HttpClient
 ) {
-    private val responses = MutableSharedFlow<JsonObject>()
     private val rpcId = AtomicInteger(0)
 
-    suspend fun request (
-        scope: CoroutineScope,
+    suspend fun request(
         endpointApi: String,
         requestBody: HttpRequestBuilder.(rpcId: Int) -> Unit
-    ): JsonObject {
+    ): Result<JsonObject> {
         val rpcId = rpcId.incrementAndGet()
 
-        scope.launch {
-            responses.emit (
-                client.post(endpointApi) { requestBody(rpcId) }.body()
-            )
+        val result: Result<JsonObject> = runCatching {
+            client.post(endpointApi) { requestBody(rpcId) }.body()
         }
 
-        return responses.first { rpcIdProvider(it) == rpcId }
+        return result
     }
 }
