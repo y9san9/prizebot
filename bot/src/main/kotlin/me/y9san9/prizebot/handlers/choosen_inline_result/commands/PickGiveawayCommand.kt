@@ -4,7 +4,7 @@ import me.y9san9.prizebot.database.giveaways_active_messages_storage.GiveawaysAc
 import me.y9san9.prizebot.extensions.telegram.PrizebotChosenInlineResultUpdate
 
 object PickGiveawayCommand {
-    fun handle(update: PrizebotChosenInlineResultUpdate) {
+    suspend fun handle(update: PrizebotChosenInlineResultUpdate) {
         val giveaway = update.di.getUserGiveaways (
             update.userId,
             count = 1,

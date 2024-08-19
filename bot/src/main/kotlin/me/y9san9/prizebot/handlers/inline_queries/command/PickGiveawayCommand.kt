@@ -1,7 +1,7 @@
 package me.y9san9.prizebot.handlers.inline_queries.command
 
 import me.y9san9.prizebot.actors.telegram.mapper.GiveawayToResultArticleMapper
-import me.y9san9.prizebot.extensions.telegram.locale
+import me.y9san9.prizebot.extensions.telegram.getLocale
 import me.y9san9.prizebot.extensions.telegram.PrizebotInlineQueryUpdate
 
 
@@ -22,7 +22,7 @@ object PickGiveawayCommand {
 
         if(results.isEmpty())
             if(offset == 0L) update.answer (
-                switchPmText = update.locale.switchPmNoGiveawaysYet,
+                switchPmText = update.getLocale().switchPmNoGiveawaysYet,
                 switchPmParameter = "giveaway",
                 cachedTime = 0,
                 isPersonal = true

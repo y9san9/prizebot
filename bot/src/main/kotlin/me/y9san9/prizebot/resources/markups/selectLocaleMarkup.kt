@@ -11,7 +11,7 @@ import me.y9san9.prizebot.resources.locales.ietf.ignoreDialect
 import me.y9san9.prizebot.resources.locales.locales
 
 
-fun selectLocaleMarkup (
+suspend fun selectLocaleMarkup (
     update: PrizebotLocalizedUpdate
 ): InlineKeyboardMarkup {
     val currentLocale = update.userId?.let { update.di.getLanguageCode(it) } ?: update.languageCode

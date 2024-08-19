@@ -1,10 +1,12 @@
 package me.y9san9.prizebot.database.language_codes_storage
 
+import kotlinx.coroutines.Dispatchers
 import me.y9san9.prizebot.database.language_codes_storage.TableLanguageCodesStorage.Storage.LANGUAGE_CODE
 import me.y9san9.prizebot.database.language_codes_storage.TableLanguageCodesStorage.Storage.USER_ID
 import me.y9san9.extensions.any.unit
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 
 
@@ -20,7 +22,7 @@ internal class TableLanguageCodesStorage(private val database: Database) : Langu
         }
     }
 
-    override fun setLanguageCode(userId: Long, languageCode: String) = transaction(database) {
+    override suspend fun setLanguageCode(userId: Long, languageCode: String) = newSuspendedTransaction(Dispatchers.IO, database) {
         Storage.deleteWhere { USER_ID eq userId }
         Storage.insert {
             it[USER_ID] = userId
@@ -28,11 +30,11 @@ internal class TableLanguageCodesStorage(private val database: Database) : Langu
         }
     }.unit
 
-    override fun getLanguageCode(userId: Long) = transaction(database) {
+    override suspend fun getLanguageCode(userId: Long) = newSuspendedTransaction(Dispatchers.IO, database) {
         Storage.selectAll().where { USER_ID eq userId }.firstOrNull()?.get(LANGUAGE_CODE)
     }
 
-    override fun containsLanguageCode(userId: Long) = transaction(database) {
+    override suspend fun containsLanguageCode(userId: Long) = newSuspendedTransaction(Dispatchers.IO, database) {
         Storage.selectAll().where { USER_ID eq userId }.firstOrNull() != null
     }
 }

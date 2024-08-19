@@ -16,9 +16,9 @@ import kotlin.Result
 
 
 class RaffleActor(randomOrgApiKey: String) {
-    private val random = RandomOrgClient(randomOrgApiKey)
-
     private val scope: CoroutineScope = GlobalScope
+
+    private val random = RandomOrgClient(randomOrgApiKey, scope)
 
     private val requests = MutableSharedFlow<Triple<TelegramBot, PrizebotDI, ActiveGiveaway>>(replay = 1)
     private val responses = MutableSharedFlow<Result<Pair<ActiveGiveaway, Boolean>>>()
@@ -71,7 +71,7 @@ class RaffleActor(randomOrgApiKey: String) {
         checker: BaseConditionsClient,
         giveaway: ActiveGiveaway
     ): List<Long>? {
-        return random.shuffled(giveaway.participants)
+        return random.shuffled(giveaway.getParticipantsIds())
             .asFlow()
             // Custom discriminator, so it won't be mixed with regular participate action
             .map { userId -> userId to checker.check(userId, giveaway, discriminator = -userId).await().condition }

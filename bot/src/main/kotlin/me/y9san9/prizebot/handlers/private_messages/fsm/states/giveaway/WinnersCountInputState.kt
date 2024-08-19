@@ -11,7 +11,7 @@ import me.y9san9.extensions.offset_date_time.OffsetDateTimeSerializer
 import me.y9san9.prizebot.database.giveaways_storage.WinnersSettings
 import me.y9san9.prizebot.extensions.telegram.PrizebotFSMState
 import me.y9san9.prizebot.extensions.telegram.PrizebotPrivateMessageUpdate
-import me.y9san9.prizebot.extensions.telegram.locale
+import me.y9san9.prizebot.extensions.telegram.getLocale
 import me.y9san9.prizebot.extensions.telegram.textOrDefault
 import me.y9san9.prizebot.handlers.private_messages.fsm.states.MainState
 import me.y9san9.telegram.updates.extensions.send_message.sendMessage
@@ -58,11 +58,11 @@ object WinnersCountInputState : PrizebotFSMState<WinnersCountInputData> {
                 "/skip" -> return next()
             }
 
-            val number = text.toIntOrNull() ?: return@textOrDefault event.sendMessage(event.locale.enterNumber).unit
+            val number = text.toIntOrNull() ?: return@textOrDefault event.sendMessage(event.getLocale().enterNumber).unit
 
             when (val winnersCount = WinnersCount.createChecked(number)) {
                 is CheckedWinnersCount.OutOfRange ->
-                    return@textOrDefault event.sendMessage(event.locale.winnersCountIsOutOfRange).unit
+                    return@textOrDefault event.sendMessage(event.getLocale().winnersCountIsOutOfRange).unit
                 is WinnersCount -> return next(winnersCount)
             }
         }
@@ -77,6 +77,6 @@ suspend fun WinnersCountInputState (
     data: WinnersCountInputData
 ) = stateResult(WinnersCountInputState, data) {
     update.sendMessage (
-        update.locale.enterWinnersCount
+        update.getLocale().enterWinnersCount
     )
 }

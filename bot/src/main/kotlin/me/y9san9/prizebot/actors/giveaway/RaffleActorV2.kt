@@ -1,6 +1,7 @@
 package me.y9san9.prizebot.actors.giveaway
 
 import dev.inmo.tgbotapi.bot.TelegramBot
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.*
 import me.y9san9.aqueue.AQueue
 import me.y9san9.aqueue.io
@@ -13,9 +14,10 @@ import me.y9san9.telegram.extensions.telegram_bot.getUserTitleOrNull
 
 class RaffleActorV2(
     randomOrgApiKey: String,
+    scope: CoroutineScope,
     private val queue: AQueue = AQueue.io()
 ) {
-    private val random = RandomOrgClient(randomOrgApiKey)
+    private val random = RandomOrgClient(randomOrgApiKey, scope)
 
     suspend fun raffle(
         bot: TelegramBot,
@@ -45,7 +47,7 @@ class RaffleActorV2(
         checker: BaseConditionsClient,
         giveaway: ActiveGiveaway
     ): List<Long>? {
-        return random.shuffled(giveaway.participants)
+        return random.shuffled(giveaway.getParticipantsIds())
             .asFlow()
             // Custom discriminator, so it won't be mixed with regular participate action
             .map { userId -> userId to checker.check(userId, giveaway, discriminator = -userId).await().condition }

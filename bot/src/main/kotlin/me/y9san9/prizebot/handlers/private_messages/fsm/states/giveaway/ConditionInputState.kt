@@ -42,7 +42,7 @@ object ConditionInputState : PrizebotFSMState<ConditionInputData> {
             case("/next") {
                 when(val conditions = GiveawayConditions.createChecked(data.conditions)) {
                     is ChannelConditionRequiredForInvitations ->
-                        event.sendMessage(event.locale.channelConditionRequiredForInvitations)
+                        event.sendMessage(event.getLocale().channelConditionRequiredForInvitations)
                     is OnlyOneInvitationConditionAllowed -> error("Checked before")
                     is GiveawayConditions -> return CreateGiveawayActor.create (
                         event, data.title,
@@ -54,7 +54,7 @@ object ConditionInputState : PrizebotFSMState<ConditionInputData> {
             raw(Locale::invitations) {
                 if(data.conditions.count { it is Condition.Invitations } > 0)
                     event.sendMessage (
-                        text = event.locale.youHaveAlreadyAddedInvitations,
+                        text = event.getLocale().youHaveAlreadyAddedInvitations,
                         replyMarkup = conditionsMarkup(event)
                     )
                 else
@@ -74,7 +74,10 @@ object ConditionInputState : PrizebotFSMState<ConditionInputData> {
 suspend fun ConditionInputState (
     update: PrizebotPrivateMessageUpdate,
     data: ConditionInputData,
-    text: String = update.locale.chooseConditions
+    text: String? = null
 ) = stateResult(ConditionInputState, data) {
-    update.sendMessage(text, replyMarkup = conditionsMarkup(update))
+    update.sendMessage(
+        text = text ?: update.getLocale().chooseConditions,
+        replyMarkup = conditionsMarkup(update)
+    )
 }

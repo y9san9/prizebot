@@ -13,13 +13,13 @@ import me.y9san9.prizebot.conditions.BaseConditionsClient
 import me.y9san9.prizebot.database.giveaways_storage.ActiveGiveaway
 import me.y9san9.prizebot.database.giveaways_storage.FinishedGiveaway
 import me.y9san9.prizebot.extensions.telegram.PrizebotCallbackQueryUpdate
-import me.y9san9.prizebot.extensions.telegram.locale
+import me.y9san9.prizebot.extensions.telegram.getLocale
 import me.y9san9.prizebot.resources.locales.Locale
 
 object ParticipateCommand {
     suspend fun handle(update: PrizebotCallbackQueryUpdate) {
         val participantId = update.userId
-        val locale = update.locale
+        val locale = update.getLocale()
 
         println("BEFORE EXTRACTION! ${update.query}")
 
@@ -53,7 +53,7 @@ object ParticipateCommand {
                 )
             ) {
                 is BaseConditionsClient.Result.Calculated ->
-                    processCondition(result.condition, update.locale)
+                    processCondition(result.condition, update.getLocale())
                 is BaseConditionsClient.Result.HighLoad ->
                     ProcessResult(locale.highLoadMessage, showAlert = true)
             }
@@ -79,7 +79,7 @@ object ParticipateCommand {
             runCatching {
                 update.bot.sendMessage(
                     chatId = ChatId(update.userId),
-                    text = processCondition(condition, update.locale).message
+                    text = processCondition(condition, update.getLocale()).message
                 )
             }
         }

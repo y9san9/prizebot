@@ -8,7 +8,7 @@ import me.y9san9.telegram.updates.extensions.command.command
 
 
 object ChosenInlineResultHandler {
-    fun handle(update: PrizebotChosenInlineResultUpdate) = update.command(splitter = "_") {
+    suspend fun handle(update: PrizebotChosenInlineResultUpdate) = update.command(splitter = "_") {
         raw("") {
             PickGiveawayCommand.handle(update)
         }

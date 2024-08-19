@@ -11,7 +11,7 @@ suspend fun BaseConditionsClient.check(
     firstHandler: suspend (BaseConditionsClient.Result) -> Unit = {}
 ) = check(
     userId = userId,
-    conditions = giveaway.conditions.list.flatMap { condition ->
+    conditions = giveaway.loadConditions().list.flatMap { condition ->
         when (condition) {
             is Condition.Invitations -> TODO()
             is Condition.Subscription -> listOf(

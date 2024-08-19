@@ -6,7 +6,7 @@ import org.jetbrains.exposed.sql.Database
 fun LinkedChannelsStorage(database: Database): LinkedChannelsStorage = TableLinkedChannelsStorage(database)
 
 interface LinkedChannelsStorage {
-    fun linkChannel(userId: Long, channelId: Long)
-    fun unlinkChannel(userId: Long, channelId: Long)
-    fun getChannels(userId: Long): List<Long>
+    suspend fun linkChannel(userId: Long, channelId: Long)
+    suspend fun unlinkChannel(userId: Long, channelId: Long)
+    suspend fun getChannels(userId: Long): List<Long>
 }

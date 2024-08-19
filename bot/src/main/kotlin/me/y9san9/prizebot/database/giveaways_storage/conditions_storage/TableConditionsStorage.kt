@@ -1,11 +1,13 @@
 package me.y9san9.prizebot.database.giveaways_storage.conditions_storage
 
+import kotlinx.coroutines.Dispatchers
 import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.TableConditionsStorage.Conditions.GIVEAWAY_ID
 import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.TableConditionsStorage.Conditions.INVITATIONS_COUNT
 import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.TableConditionsStorage.Conditions.SUBSCRIPTION_CHANNEL_ID
 import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.TableConditionsStorage.Conditions.SUBSCRIPTION_CHANNEL_USERNAME
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 
 
@@ -25,7 +27,7 @@ internal class TableConditionsStorage (
         }
     }
 
-    override fun addConditions(giveawayId: Long, conditions: GiveawayConditions) = transaction(database) {
+    override suspend fun addConditions(giveawayId: Long, conditions: GiveawayConditions) = newSuspendedTransaction(Dispatchers.IO, database) {
         conditions.list.forEach { condition ->
             Conditions.insert {
                 it[GIVEAWAY_ID] = giveawayId
@@ -40,7 +42,7 @@ internal class TableConditionsStorage (
         }
     }
 
-    override fun loadConditions(giveawayId: Long): GiveawayConditions = transaction(database) {
+    override suspend fun loadConditions(giveawayId: Long): GiveawayConditions = newSuspendedTransaction(Dispatchers.IO, database) {
         Conditions.selectAll().where { GIVEAWAY_ID eq giveawayId }
             .map { it.toCondition() }
             .let(GiveawayConditions.Companion::create)

@@ -2,7 +2,7 @@ package me.y9san9.prizebot.handlers.callback_queries.command
 
 import me.y9san9.prizebot.actors.telegram.updater.SelectLocaleUpdater
 import me.y9san9.prizebot.extensions.telegram.PrizebotCallbackQueryUpdate
-import me.y9san9.prizebot.extensions.telegram.locale
+import me.y9san9.prizebot.extensions.telegram.getLocale
 import me.y9san9.telegram.updates.extensions.command.command
 
 
@@ -17,6 +17,6 @@ object SelectLocaleCommand {
 
         SelectLocaleUpdater.update(update)
 
-        update.answer(update.locale.localeSelected)
+        update.answer(update.getLocale().localeSelected)
     }
 }

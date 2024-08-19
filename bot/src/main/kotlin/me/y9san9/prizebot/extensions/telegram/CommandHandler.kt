@@ -12,11 +12,11 @@ import org.intellij.lang.annotations.Language
 suspend inline fun <T> T.commandOrDefault (
     @Language("RegExp") splitter: String = "\\s+",
     noinline noTextMatchedMatched: suspend (Default.NoTextMatched) -> Unit =
-        { sendMessage(locale.unknownCommand(it.actualText)) },
+        { sendMessage(getLocale().unknownCommand(it.actualText)) },
     noinline invalidArgsCount: suspend (Default.InvalidArgsCount) -> Unit =
-        { sendMessage(locale.invalidArgsCount(it.expectedCount, it.actualCount)) },
+        { sendMessage(getLocale().invalidArgsCount(it.expectedCount, it.actualCount)) },
     noinline invalidContent: suspend (Default.InvalidContent) -> Unit =
-        { sendMessage(locale.enterText) },
+        { sendMessage(getLocale().enterText) },
     builder: CommandDSL.() -> Unit
 ) where T : HasTextUpdate, T : PrizebotLocalizedBotUpdate,
         T : FromChatUpdate = command(splitter) {
