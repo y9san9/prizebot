@@ -3,6 +3,7 @@ package me.y9san9.prizebot.handlers.private_messages.fsm.states.giveaway.conditi
 import dev.inmo.tgbotapi.extensions.api.chat.get.getChat
 import dev.inmo.tgbotapi.types.ChatId
 import dev.inmo.tgbotapi.types.chat.UsernameChat
+import dev.inmo.tgbotapi.types.toChatId
 import kotlinx.serialization.Serializable
 import me.y9san9.fsm.FSMStateResult
 import me.y9san9.fsm.stateResult
@@ -98,7 +99,7 @@ private suspend fun getUserChannels(update: PrizebotPrivateMessageUpdate) =
     update.di.getChannels(update.userId)
         .mapNotNull { channelId ->
             val username = try {
-                (update.bot.getChat(ChatId(channelId)) as? UsernameChat)?.username?.username
+                (update.bot.getChat(channelId.toChatId()) as? UsernameChat)?.username?.username
             } catch (_: Exception) { null }
                 ?: return@mapNotNull update.di.unlinkChannel(update.userId, channelId).run { null }
 

@@ -24,7 +24,10 @@ class RaffleActorV2(
         di: PrizebotDI,
         giveaway: ActiveGiveaway
     ): Boolean {
-        return queue.execute(key = giveaway.id) { raffleAction(bot, di, giveaway) }
+        println("> RaffleActorV2: Received request to raffle giveaway ${giveaway.id}")
+        val result = queue.execute(key = giveaway.id) { raffleAction(bot, di, giveaway) }
+        println("> RaffleActorV2: Giveaway ${giveaway.id} raffled")
+        return result
     }
 
     private suspend fun raffleAction(
@@ -32,12 +35,24 @@ class RaffleActorV2(
         di: PrizebotDI,
         giveaway: ActiveGiveaway
     ): Boolean {
-        val winnerIds = chooseWinners(di.conditionsClient, giveaway) ?: return false
+        println("> RaffleActorV2: Received raffle execution for giveaway ${giveaway.id}")
+
+        val winnerIds = chooseWinners(di.conditionsClient, giveaway) ?: run {
+            println("> RaffleActorV2: Can't raffle giveaway ${giveaway.id} for some reason")
+            return false
+        }
+
+        println("> RaffleActorV2: Winners are chosen for giveaway ${giveaway.id}")
 
         giveaway.finish(winnerIds)
+
+        println("> RaffleActorV2: Giveaway ${giveaway.id} is marked as finished")
+
         winnerIds.forEach { id ->
             bot.getUserTitleOrNull(id)?.let { di.saveUserTitle(id, it) }
         }
+
+        println("> RaffleActorV2: Winner titles from giveaway ${giveaway.id} successfully saved")
 
         return true
     }

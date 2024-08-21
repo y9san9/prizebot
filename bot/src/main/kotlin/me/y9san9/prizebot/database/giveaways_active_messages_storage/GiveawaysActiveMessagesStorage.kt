@@ -1,6 +1,6 @@
 package me.y9san9.prizebot.database.giveaways_active_messages_storage
 
-import dev.inmo.tgbotapi.types.InlineMessageIdentifier
+import dev.inmo.tgbotapi.types.InlineMessageId
 import me.y9san9.prizebot.resources.ACTIVE_MESSAGES_LIMIT
 import org.jetbrains.exposed.sql.Database
 
@@ -16,7 +16,7 @@ interface GiveawaysActiveMessagesStorage {
 
     suspend fun getActiveMessages(giveawayId: Long): List<Message>
 
-    suspend fun setLastUpdated(id: InlineMessageIdentifier, lastUpdateTime: Long)
+    suspend fun setLastUpdated(id: InlineMessageId, lastUpdateTime: Long)
 
-    data class Message(val id: InlineMessageIdentifier, val lastUpdateTime: Long)
+    data class Message(val id: InlineMessageId, val lastUpdateTime: Long)
 }

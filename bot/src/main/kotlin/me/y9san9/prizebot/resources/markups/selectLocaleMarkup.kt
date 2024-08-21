@@ -1,6 +1,6 @@
 package me.y9san9.prizebot.resources.markups
 
-import dev.inmo.micro_utils.language_codes.asIetfLanguageCode
+import dev.inmo.micro_utils.language_codes.asIetfLang
 import dev.inmo.tgbotapi.types.buttons.InlineKeyboardButtons.CallbackDataInlineKeyboardButton
 import dev.inmo.tgbotapi.types.buttons.InlineKeyboardMarkup
 import me.y9san9.prizebot.extensions.telegram.PrizebotLocalizedUpdate
@@ -17,7 +17,7 @@ suspend fun selectLocaleMarkup (
     val currentLocale = update.userId?.let { update.di.getLanguageCode(it) } ?: update.languageCode
 
     fun addCheckmarkIfSelected(locale: LocaleModel) =
-        if (locale.ietf == currentLocale?.asIetfLanguageCode()?.ignoreDialect())
+        if (locale.ietf == currentLocale?.asIetfLang()?.ignoreDialect())
             "${locale.label} ${Emoji.CHECKMARK}"
         else locale.label
 

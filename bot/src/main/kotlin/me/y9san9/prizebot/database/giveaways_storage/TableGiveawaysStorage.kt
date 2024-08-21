@@ -1,6 +1,7 @@
 package me.y9san9.prizebot.database.giveaways_storage
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.channelFlow
 import me.y9san9.prizebot.actors.giveaway.AutoRaffleActor
 import me.y9san9.prizebot.database.giveaways_storage.Giveaways.GIVEAWAY_DISPLAY_WINNERS_WITH_EMOJIS
 import me.y9san9.prizebot.database.giveaways_storage.Giveaways.GIVEAWAY_ID
@@ -16,7 +17,6 @@ import me.y9san9.prizebot.database.giveaways_storage.giveaways_patch_storage.Giv
 import me.y9san9.prizebot.database.giveaways_storage.participants_storage.ParticipantsStorage
 import me.y9san9.prizebot.database.giveaways_storage.winners_storage.WinnersStorage
 import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.OffsetDateTime
@@ -82,12 +82,32 @@ internal class TableGiveawaysStorage (
             .map { it.toGiveaway() }
     }
 
-    override suspend fun getAllGiveaways() = newSuspendedTransaction(Dispatchers.IO, database) {
-        Giveaways.selectAll().map { it.toGiveaway() }
+    override suspend fun getAllGiveaways() = channelFlow<Giveaway> {
+        newSuspendedTransaction(Dispatchers.IO, database) {
+            Giveaways.selectAll().forEach {
+                send(it.toGiveaway())
+            }
+        }
+    }
+
+    override suspend fun getGiveawaysWithRaffleDate() = channelFlow<ActiveGiveaway> {
+        newSuspendedTransaction(Dispatchers.IO, database) {
+            Giveaways.selectAll().where { GIVEAWAY_RAFFLE_DATE neq null }.forEach {
+                val giveaway = it.toGiveaway()
+                if (giveaway is ActiveGiveaway) {
+                    send(giveaway)
+                } else {
+                    giveaway.giveawaysPatchStorage.removeRaffleDate(giveaway.id)
+                }
+            }
+        }
     }
 
     private suspend fun ResultRow.toGiveaway(): Giveaway {
-        return if(winnersStorage.hasWinners(this[GIVEAWAY_ID]))
+        println("> TableGiveawaysStorage: Before winners check ${this[GIVEAWAY_ID]}")
+        val hasWinners = winnersStorage.hasWinners(this[GIVEAWAY_ID])
+        println("> TableGiveawaysStorage: After winners check ${this[GIVEAWAY_ID]}")
+        return if(hasWinners)
             ActiveGiveaway (
                 this[GIVEAWAY_ID],
                 this[GIVEAWAY_OWNER_ID],

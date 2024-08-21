@@ -7,6 +7,7 @@ import dev.inmo.tgbotapi.types.chat.CommonUser
 import dev.inmo.tgbotapi.types.queries.callback.DataCallbackQuery
 import dev.inmo.tgbotapi.types.queries.callback.InlineMessageIdCallbackQuery
 import dev.inmo.tgbotapi.types.queries.callback.MessageCallbackQuery
+import dev.inmo.tgbotapi.types.toChatId
 import dev.inmo.tgbotapi.types.update.CallbackQueryUpdate
 import me.y9san9.telegram.updates.hierarchies.PossiblyFromUserLocalizedDIBotUpdate
 import me.y9san9.telegram.updates.primitives.AnswerableUpdate
@@ -20,7 +21,7 @@ class CallbackQueryUpdate <DI> (
     val query: CallbackQueryUpdate,
 ) : PossiblyFromUserLocalizedDIBotUpdate<DI>, HasTextUpdate, AnswerableUpdate, FromUserUpdate {
 
-    override val userId = query.data.user.id.chatId
+    override val userId = query.data.user.id.chatId.long
     override val languageCode = (query.data.user as? CommonUser)?.languageCode
     override val text = (query.data as? DataCallbackQuery)?.data
 

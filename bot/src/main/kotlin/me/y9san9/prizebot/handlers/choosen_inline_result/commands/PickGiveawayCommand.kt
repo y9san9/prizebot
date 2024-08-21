@@ -8,7 +8,7 @@ object PickGiveawayCommand {
         val giveaway = update.di.getUserGiveaways (
             update.userId,
             count = 1,
-            offset = update.resultId.toLongOrNull() ?: return
+            offset = update.resultId.string.toLongOrNull() ?: return
         ).getOrNull(0) ?: return
 
         update.di.addActiveMessage(

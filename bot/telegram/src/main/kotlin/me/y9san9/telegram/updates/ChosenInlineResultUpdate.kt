@@ -14,7 +14,7 @@ class ChosenInlineResultUpdate <DI> (
     val update: ChosenInlineResultUpdate
 ) : PossiblyFromUserLocalizedDIBotUpdate<DI>, HasTextUpdate, FromUserUpdate {
     override val text = update.data.query
-    override val userId = update.data.user.id.chatId
+    override val userId = update.data.user.id.chatId.long
     override val languageCode = (update.data.user as? CommonUser)?.languageCode
 
     val resultId = update.data.resultId

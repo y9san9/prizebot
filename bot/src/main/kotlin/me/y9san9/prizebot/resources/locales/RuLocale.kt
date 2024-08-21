@@ -82,6 +82,8 @@ object RuLocale : Locale() {
 
     override val deletedUser = "Пользователь удалён"
 
+    override fun unknownUser(userId: Long) = "Неизвестный пользователь ($userId)"
+
     override val participantsCountIsNotEnough =
         "Участников недостаточно, чтобы выбрать победителей!"
 

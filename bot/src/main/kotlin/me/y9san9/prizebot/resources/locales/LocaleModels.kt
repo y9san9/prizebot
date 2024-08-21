@@ -1,54 +1,54 @@
 package me.y9san9.prizebot.resources.locales
 
-import dev.inmo.micro_utils.language_codes.IetfLanguageCode
+import dev.inmo.micro_utils.language_codes.IetfLang
 import me.y9san9.prizebot.resources.Emoji
 
 
 data class LocaleModel(
     val label: String,
-    val ietf: IetfLanguageCode,
+    val ietf: IetfLang,
     val locale: Locale
 )
 
 val locales = listOf(
     LocaleModel(
         label = "${Emoji.Flag.UK}${Emoji.Flag.US} English",
-        ietf = IetfLanguageCode.English,
+        ietf = IetfLang.English,
         locale = DefaultLocale
     ),
     LocaleModel(
         label = "${Emoji.Flag.GERMANY} Deutsch",
-        ietf = IetfLanguageCode.German,
+        ietf = IetfLang.German,
         locale = DeLocale
     ),
     LocaleModel(
         label = "${Emoji.Flag.ITALY} Italiano",
-        ietf = IetfLanguageCode.Italian,
+        ietf = IetfLang.Italian,
         locale = ItLocale
     ),
     LocaleModel(
         label = "${Emoji.Flag.UKRAINE} Українська",
-        ietf = IetfLanguageCode.Ukrainian,
+        ietf = IetfLang.Ukrainian,
         locale = UkLocale,
     ),
     LocaleModel(
         label = "${Emoji.Flag.KAZAKHSTAN} Қазақ",
-        ietf = IetfLanguageCode.Kazakh,
+        ietf = IetfLang.Kazakh,
         locale = KkLocale
     ),
     LocaleModel(
         label = "${Emoji.Flag.POLAND} Polski",
-        ietf = IetfLanguageCode.Polish,
+        ietf = IetfLang.Polish,
         locale = PlLocale
     ),
     LocaleModel(
         label = "${Emoji.Flag.RUSSIA} Русский",
-        ietf = IetfLanguageCode.Russian,
+        ietf = IetfLang.Russian,
         locale = RuLocale
     ),
     LocaleModel(
         label = "${Emoji.Flag.BELARUS} Беларуская",
-        ietf = IetfLanguageCode.Belarusian,
+        ietf = IetfLang.Belarusian,
         locale = BeLocale
     )
 )

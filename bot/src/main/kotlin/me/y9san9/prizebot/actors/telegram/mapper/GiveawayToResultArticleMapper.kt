@@ -2,6 +2,7 @@ package me.y9san9.prizebot.actors.telegram.mapper
 
 import dev.inmo.tgbotapi.types.InlineQueries.InlineQueryResult.InlineQueryResultArticle
 import dev.inmo.tgbotapi.types.InlineQueries.InputMessageContent.InputTextMessageContent
+import dev.inmo.tgbotapi.types.InlineQueryId
 import me.y9san9.prizebot.database.giveaways_storage.Giveaway
 import me.y9san9.prizebot.extensions.telegram.getLocale
 import me.y9san9.prizebot.extensions.telegram.PrizebotInlineQueryUpdate
@@ -13,7 +14,7 @@ object GiveawayToResultArticleMapper {
     suspend fun map (
         resultId: String, update: PrizebotInlineQueryUpdate, giveaway: Giveaway
     ) = InlineQueryResultArticle (
-        id = resultId,
+        id = InlineQueryId(resultId),
         title = giveaway.title,
         description = update.getLocale().participateText(giveaway.participateText),
         inputMessageContent = InputTextMessageContent(giveawayEntities(update.di, giveaway)),

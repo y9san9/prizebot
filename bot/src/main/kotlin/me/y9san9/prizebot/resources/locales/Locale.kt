@@ -2,6 +2,7 @@
 
 package me.y9san9.prizebot.resources.locales
 
+import dev.inmo.micro_utils.language_codes.asIetfLang
 import dev.inmo.micro_utils.language_codes.asIetfLanguageCode
 import dev.inmo.tgbotapi.types.message.textsources.bold
 import dev.inmo.tgbotapi.types.message.textsources.link
@@ -97,6 +98,8 @@ open class Locale {
     open fun winner(plural: Boolean) = if(plural) "Winners" else "Winner"
 
     open val deletedUser = "Deleted user"
+
+    open fun unknownUser(userId: Long) = "Unknown user ($userId)"
 
     open val participantsCountIsNotEnough =
         "There are not enough participants to raffle!"
@@ -224,7 +227,7 @@ open class Locale {
 
     companion object {
         fun with(language: String?): Locale {
-            val ietf = language?.asIetfLanguageCode()
+            val ietf = language?.asIetfLang()
 
             return locales
                 .firstOrNull { it.ietf == ietf?.ignoreDialect() }

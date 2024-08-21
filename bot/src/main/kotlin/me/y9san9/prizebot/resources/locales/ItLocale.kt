@@ -89,6 +89,8 @@ object ItLocale : Locale() {
 
     override val deletedUser = "Utente cancellato"
 
+    override fun unknownUser(userId: Long) = "Utente sconosciuto ($userId)"
+
     override val participantsCountIsNotEnough =
         "Non ci sono abbastanza partecipanti per sorteggiare!"
 

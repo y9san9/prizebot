@@ -88,6 +88,8 @@ object UkLocale : Locale() {
 
     override val deletedUser = "Користувача видалено"
 
+    override fun unknownUser(userId: Long) = "Невідомий користувач ($userId)"
+
     override val participantsCountIsNotEnough =
         "Участників недостатньо, щоб обрати переможця!"
 

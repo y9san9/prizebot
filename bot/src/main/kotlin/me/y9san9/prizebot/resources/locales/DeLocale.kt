@@ -89,6 +89,8 @@ object DeLocale : Locale() {
 
     override val deletedUser = "Benutzer löschen"
 
+    override fun unknownUser(userId: Long) = "Unbekannter Benutzer ($userId)"
+
     override val participantsCountIsNotEnough =
         "Es hat nicht genug Teilnehmer für die Verlosung!"
 

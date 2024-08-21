@@ -22,17 +22,26 @@ object RaffleCommand : CoroutineScope {
     fun handle(update: PrizebotCallbackQueryUpdate) {
         launch {
             val giveaway = GiveawayFromCommandExtractor.extract(update, splitter = "_") ?: return@launch
+            println("> RaffleCommand: [${giveaway.id}] Raffle command received for giveaway")
 
             if (giveaway is ActiveGiveaway) {
-                val job = launchRaffleProcessingEdit(update)
-
+                println("> RaffleCommand: [${giveaway.id}] Launch 'Processing...' message edit")
+                val job = launchRaffleProcessingEdit(update, giveaway.id)
+                println("> RaffleCommand: [${giveaway.id}] Before raffle")
                 val success = update.di.raffleActor.raffle(update.bot, update.di, giveaway)
+                println("> RaffleCommand: [${giveaway.id}] After raffle")
 
                 job.join()
-                updateMessage(update, update.di.getGiveawayById(giveaway.id)!!)
 
-                if (!success)
-                    return@launch update.answer(text = update.getLocale().participantsCountIsNotEnough)
+                println("> RaffleCommand: [${giveaway.id}] Updating giveaway message")
+                updateMessage(update, update.di.getGiveawayById(giveaway.id)!!)
+                println("> RaffleCommand: [${giveaway.id}] Updated giveaway message")
+
+                if (!success) {
+                    update.answer(text = update.getLocale().participantsCountIsNotEnough)
+                    println("> RaffleCommand: [${giveaway.id}] Answered on click that there is not enough participants")
+                    return@launch
+                }
 
             } else updateMessage(update, giveaway)
 
@@ -42,12 +51,20 @@ object RaffleCommand : CoroutineScope {
         }
     }
 
-    private fun launchRaffleProcessingEdit(update: PrizebotCallbackQueryUpdate) = launchSafelyWithoutExceptions {
-        update.bot.editMessageText(
-            message = update.message?.asTextContentMessage() ?: return@launchSafelyWithoutExceptions,
-            text = update.getLocale().raffleProcessing,
-            replyMarkup = raffleProcessingMarkup()
-        )
+    private fun launchRaffleProcessingEdit(
+        update: PrizebotCallbackQueryUpdate,
+        giveawayId: Long
+    ) = launch {
+        runCatching {
+            update.bot.editMessageText(
+                message = update.message?.asTextContentMessage() ?: return@launch,
+                text = update.getLocale().raffleProcessing,
+                replyMarkup = raffleProcessingMarkup()
+            )
+        }.onFailure {
+            println("> RaffleCommand: [$giveawayId] Cannot update message. ${it.message}")
+        }
+        println("> RaffleCommand: [$giveawayId] 'Processing...' message edited")
     }
 
     private suspend fun updateMessage(update: PrizebotCallbackQueryUpdate, giveaway: Giveaway) =

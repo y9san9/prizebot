@@ -1,15 +1,13 @@
 package me.y9san9.prizebot.database.giveaways_active_messages_storage
 
-import dev.inmo.tgbotapi.types.InlineMessageIdentifier
+import dev.inmo.tgbotapi.types.InlineMessageId
 import kotlinx.coroutines.Dispatchers
-import me.y9san9.prizebot.database.giveaways_active_messages_storage.TableGiveawaysActiveMessagesStorage.Storage.GIVEAWAY_ID
-import me.y9san9.prizebot.database.giveaways_active_messages_storage.TableGiveawaysActiveMessagesStorage.Storage.MESSAGE_ID
-import me.y9san9.prizebot.database.giveaways_active_messages_storage.TableGiveawaysActiveMessagesStorage.Storage.ROW_ID
 import me.y9san9.extensions.any.unit
+import me.y9san9.prizebot.database.giveaways_active_messages_storage.TableGiveawaysActiveMessagesStorage.Storage.GIVEAWAY_ID
 import me.y9san9.prizebot.database.giveaways_active_messages_storage.TableGiveawaysActiveMessagesStorage.Storage.LAST_UPDATE_TIME
+import me.y9san9.prizebot.database.giveaways_active_messages_storage.TableGiveawaysActiveMessagesStorage.Storage.MESSAGE_ID
 import me.y9san9.prizebot.resources.ACTIVE_MESSAGES_LIMIT
 import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.inList
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -34,7 +32,7 @@ class TableGiveawaysActiveMessagesStorage(private val database: Database) : Give
     ) = newSuspendedTransaction(Dispatchers.IO, database) {
         Storage.insert {
             it[GIVEAWAY_ID] = giveawayId
-            it[MESSAGE_ID] = inlineMessage.id
+            it[MESSAGE_ID] = inlineMessage.id.string
             it[LAST_UPDATE_TIME] = inlineMessage.lastUpdateTime
         }
 
@@ -51,15 +49,15 @@ class TableGiveawaysActiveMessagesStorage(private val database: Database) : Give
         newSuspendedTransaction(Dispatchers.IO, database) {
             Storage.selectAll().where { GIVEAWAY_ID eq giveawayId }.map {
                 GiveawaysActiveMessagesStorage.Message(
-                    id = it[MESSAGE_ID],
+                    id = InlineMessageId(it[MESSAGE_ID]),
                     lastUpdateTime = it[LAST_UPDATE_TIME]
                 )
             }
         }
 
-    override suspend fun setLastUpdated(id: InlineMessageIdentifier, lastUpdateTime: Long) {
+    override suspend fun setLastUpdated(id: InlineMessageId, lastUpdateTime: Long) {
         newSuspendedTransaction(Dispatchers.IO, database) {
-            Storage.update({ MESSAGE_ID eq id }) {
+            Storage.update({ MESSAGE_ID eq id.string }) {
                 it[LAST_UPDATE_TIME] = lastUpdateTime
             }
         }

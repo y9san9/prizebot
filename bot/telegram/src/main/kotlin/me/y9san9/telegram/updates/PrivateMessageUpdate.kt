@@ -17,7 +17,7 @@ class PrivateMessageUpdate<out DI> (
     suspend fun delete() = message.delete(bot)
 
     override val languageCode: String? = message.languageCode
-    override val userId: Long = message.chat.id.chatId
+    override val userId: Long = message.chat.id.chatId.long
     override val chatId: Long = userId
     override val text: String? = (message.content as? TextContent)?.text
 }

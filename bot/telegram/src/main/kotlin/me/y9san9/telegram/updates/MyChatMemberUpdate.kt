@@ -12,9 +12,9 @@ class MyChatMemberUpdate<out T> (
     override val di: T,
     update: MyChatMemberUpdatedUpdate
 ) : DIBotUpdate<T>, FromUserUpdate, FromChatUpdate {
-    override val userId = update.data.chat.id.chatId
+    override val userId = update.data.chat.id.chatId.long
     val oldState = update.data.oldChatMemberState
     val newState = update.data.newChatMemberState
-    override val chatId = update.data.chat.id.chatId
+    override val chatId = update.data.chat.id.chatId.long
 
 }

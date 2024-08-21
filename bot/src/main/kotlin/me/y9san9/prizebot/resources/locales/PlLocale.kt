@@ -88,6 +88,8 @@ object PlLocale : Locale() {
 
     override val deletedUser = "Użytkownik usunięty"
 
+    override fun unknownUser(userId: Long) = "Nieznany użytkownik ($userId)"
+
     override val participantsCountIsNotEnough =
         "Nie ma wystarczającej liczby uczestników, aby wybrać zwycięzców!"
 
