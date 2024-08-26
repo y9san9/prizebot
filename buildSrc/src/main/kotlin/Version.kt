@@ -1,5 +1,4 @@
 object Version {
-    const val JVM = "1.8"
     const val KOTLIN = "2.0.0"
 
     const val SERIALIZATION = "1.3.2"
@@ -9,7 +8,7 @@ object Version {
 
     const val EXPOSED = "0.53.0"
     const val POSTGRESQL = "42.2.18"
-    const val TG_BOT_API = "4.1.2"
+    const val TG_BOT_API = "17.0.0"
     const val KTOR = "2.0.0"
     const val AQUEUE = "1.0.8"
     const val H2DATABASE = "2.3.232"

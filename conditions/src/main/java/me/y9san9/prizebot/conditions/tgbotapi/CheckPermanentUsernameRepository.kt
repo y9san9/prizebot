@@ -4,6 +4,7 @@ import dev.inmo.tgbotapi.bot.TelegramBot
 import dev.inmo.tgbotapi.extensions.api.chat.get.getChat
 import dev.inmo.tgbotapi.extensions.utils.whenUsernameChat
 import dev.inmo.tgbotapi.types.ChatId
+import dev.inmo.tgbotapi.types.RawChatId
 import dev.inmo.tgbotapi.utils.PreviewFeature
 
 class CheckPermanentUsernameRepository(
@@ -36,7 +37,7 @@ class CheckPermanentUsernameRepository(
     @OptIn(PreviewFeature::class)
     private suspend fun loadChannelAndSaveToCache(channelId: Long): CachedUsername? {
         val username = runCatching {
-            bot.getChat(ChatId(channelId)).whenUsernameChat { chat ->
+            bot.getChat(ChatId(RawChatId(channelId))).whenUsernameChat { chat ->
                 val username = chat.username?.username ?: return@whenUsernameChat null
                 CachedUsername(channelId, username, System.currentTimeMillis())
             }

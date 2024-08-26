@@ -1,11 +1,13 @@
 package me.y9san9.prizebot.resources.entities
 
+import dev.inmo.tgbotapi.types.RawChatId
 import dev.inmo.tgbotapi.types.message.textsources.TextSourcesList
 import dev.inmo.tgbotapi.types.message.textsources.bold
 import dev.inmo.tgbotapi.types.message.textsources.italic
 import dev.inmo.tgbotapi.types.message.textsources.mention
 import dev.inmo.tgbotapi.types.message.textsources.plus
 import dev.inmo.tgbotapi.types.message.textsources.regular
+import dev.inmo.tgbotapi.types.toChatId
 import me.y9san9.prizebot.database.giveaways_storage.ActiveGiveaway
 import me.y9san9.prizebot.database.giveaways_storage.FinishedGiveaway
 import me.y9san9.prizebot.database.giveaways_storage.Giveaway
@@ -67,7 +69,7 @@ suspend fun giveawayEntities (
     val winners = if(giveaway is FinishedGiveaway) {
         val winners = giveaway.getWinners()
         val links = winners
-            .map { id -> id.mention(text = titlesStorage.getUserTitle(id) ?: locale.deletedUser) }
+            .map { id -> mention(text = titlesStorage.getUserTitle(id) ?: locale.unknownUser(id), id = RawChatId(id)) }
             .flatMapIndexed { i, mention ->
                 if(giveaway.displayWinnersWithEmojis)
                     regular(Emoji.getPlaceEmoji(place = i + 1)) + " " + mention + regular("\n")

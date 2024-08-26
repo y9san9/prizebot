@@ -1,6 +1,7 @@
 package me.y9san9.prizebot.actors.telegram.updater
 
 import dev.inmo.tgbotapi.extensions.api.edit.text.editMessageText
+import dev.inmo.tgbotapi.types.InlineMessageId
 import kotlinx.coroutines.*
 import me.y9san9.aqueue.AQueue
 import me.y9san9.prizebot.database.giveaways_active_messages_storage.GiveawaysActiveMessagesStorage
@@ -29,7 +30,7 @@ object GiveawayActiveMessagesUpdater {
             .getActiveMessages(giveawayId)
             .map { (inlineId, lastUpdateTime) ->
                 println("UPDATING $inlineId of $giveawayId")
-                updateMessage(update, giveawayId, inlineId, lastUpdateTime)
+                updateMessage(update, giveawayId, inlineId.string, lastUpdateTime)
             }
     }
 
@@ -54,7 +55,7 @@ object GiveawayActiveMessagesUpdater {
             println("NEXT UPDATE: $inlineId $nextUpdateTime, DELTA: $delta, $giveawayId")
 
             if (delta > 0) {
-                update.di.setLastUpdated(inlineId, nextUpdateTime)
+                update.di.setLastUpdated(InlineMessageId(inlineId), nextUpdateTime)
                 scope.launch {
                     delay(delta)
                     println("UPDATING GIVEAWAY FROM DELTA $inlineId $giveawayId")
@@ -68,13 +69,13 @@ object GiveawayActiveMessagesUpdater {
                 return@execute
             }
 
-            update.di.setLastUpdated(inlineId, System.currentTimeMillis())
+            update.di.setLastUpdated(InlineMessageId(inlineId), System.currentTimeMillis())
 
             queue.execute(AQueueKey.SendMessage(inlineId)) {
                 val giveaway = update.di.getGiveawayById(giveawayId) ?: return@execute
                 val (entities, markup) = giveawayContent(update.di, giveaway)
                 runCatching {
-                    update.bot.editMessageText(inlineId, entities, replyMarkup = markup)
+                    update.bot.editMessageText(InlineMessageId(inlineId), entities, replyMarkup = markup)
                 }
             }
         }

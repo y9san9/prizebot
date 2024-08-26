@@ -82,6 +82,8 @@ object KkLocale : Locale() {
 
     override val deletedUser = "Пайдаланушы жойылды"
 
+    override fun unknownUser(userId: Long) = "Белгісіз пайдаланушы ($userId)"
+
     override val participantsCountIsNotEnough =
         "Жеңімпаздарды таңдау үшін қатысушылар жеткіліксіз!"
 

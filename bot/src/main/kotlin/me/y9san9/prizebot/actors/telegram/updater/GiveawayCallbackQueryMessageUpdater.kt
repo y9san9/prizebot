@@ -62,7 +62,7 @@ object GiveawayCallbackQueryMessageUpdater {
 
         val edit = when {
             inlineMessageId != null -> GiveawayEdit.Inline(
-                inlineMessageId = inlineMessageId,
+                inlineMessageId = inlineMessageId.string,
                 job = coroutineScope.launch {
                     safelyWithoutExceptions {
                         update.bot.editMessageText(inlineMessageId, entities, replyMarkup = markup)
@@ -70,7 +70,7 @@ object GiveawayCallbackQueryMessageUpdater {
                 }
             )
             message != null -> GiveawayEdit.Message(
-                messageId = message.messageId,
+                messageId = message.messageId.long,
                 job = coroutineScope.launch {
                     safelyWithoutExceptions {
                         update.bot.editMessageText(message, entities, replyMarkup = markup)

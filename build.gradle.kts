@@ -2,6 +2,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import me.y9san9.deploy.Deploy
 import me.y9san9.deploy.DeployConfiguration
 import me.y9san9.deploy.ssh
+import org.jetbrains.kotlin.config.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.konan.properties.loadProperties
 
 
@@ -24,12 +26,6 @@ dependencies {
     implementation(bot)
     implementation(coroutines)
     implementation(h2Database)
-}
-
-allprojects {
-    tasks.withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = Version.JVM
-    }
 }
 
 val deployPropertiesFile = file("deploy.properties")

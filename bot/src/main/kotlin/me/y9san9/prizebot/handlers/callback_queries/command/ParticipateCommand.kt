@@ -4,6 +4,8 @@ package me.y9san9.prizebot.handlers.callback_queries.command
 
 import dev.inmo.tgbotapi.extensions.api.send.sendMessage
 import dev.inmo.tgbotapi.types.ChatId
+import dev.inmo.tgbotapi.types.toChatId
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import me.y9san9.prizebot.actors.giveaway.check
 import me.y9san9.prizebot.actors.telegram.extractor.GiveawayFromCommandExtractor
@@ -15,16 +17,23 @@ import me.y9san9.prizebot.database.giveaways_storage.FinishedGiveaway
 import me.y9san9.prizebot.extensions.telegram.PrizebotCallbackQueryUpdate
 import me.y9san9.prizebot.extensions.telegram.getLocale
 import me.y9san9.prizebot.resources.locales.Locale
+import me.y9san9.telegram.extensions.telegram_bot.getUserTitleOrNull
 
 object ParticipateCommand {
-    suspend fun handle(update: PrizebotCallbackQueryUpdate) {
+    suspend fun handle(update: PrizebotCallbackQueryUpdate): Unit = coroutineScope {
         val participantId = update.userId
         val locale = update.getLocale()
+
+        launch {
+            update.bot.getUserTitleOrNull(update.userId)?.let {
+                update.di.saveUserTitle(update.userId, it)
+            }
+        }
 
         println("BEFORE EXTRACTION! ${update.query}")
 
         val giveaway = GiveawayFromCommandExtractor.extract(update, splitter = "_")
-            ?: return update.answer(locale.thisGiveawayDeleted)
+            ?: return@coroutineScope update.answer(locale.thisGiveawayDeleted)
 
         println("EXTRACTED! $giveaway ${update.query}")
 
@@ -78,7 +87,7 @@ object ParticipateCommand {
         update.di.scope.launch {
             runCatching {
                 update.bot.sendMessage(
-                    chatId = ChatId(update.userId),
+                    chatId = update.userId.toChatId(),
                     text = processCondition(condition, update.getLocale()).message
                 )
             }

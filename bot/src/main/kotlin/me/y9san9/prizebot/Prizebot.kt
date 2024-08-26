@@ -1,10 +1,15 @@
 package me.y9san9.prizebot
 
+import dev.inmo.kslog.common.KSLog
+import dev.inmo.kslog.common.LogLevel
+import dev.inmo.kslog.common.defaultMessageFormatter
 import dev.inmo.tgbotapi.bot.ktor.telegramBot
+import dev.inmo.tgbotapi.extensions.api.bot.getMe
 import dev.inmo.tgbotapi.extensions.api.send.sendMessage
 import dev.inmo.tgbotapi.extensions.utils.updates.retrieving.longPolling
 import dev.inmo.tgbotapi.types.ChatId
 import dev.inmo.tgbotapi.types.message.abstracts.PrivateContentMessage
+import dev.inmo.tgbotapi.types.toChatId
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -56,6 +61,9 @@ class Prizebot(
 ) {
     private val bot = telegramBot(botToken) {
         requestsLimiter = PrizebotRequestsLimiter
+        logger = KSLog { level: LogLevel, tag: String?, message: Any, throwable: Throwable? ->
+            println(defaultMessageFormatter(level, tag, message, throwable))
+        }
     }
     private val database = connectDatabase(databaseConfig)
 
@@ -102,6 +110,12 @@ class Prizebot(
         chosenInlineResultsFlow
             .map { ChosenInlineResultUpdate(bot, di, update = it) }
             .launchEachSafelyByChatId(scope, ::logException, ChosenInlineResultHandler::handle)
+
+        println("> Prizebot: System is up and running")
+        scope.launch {
+            val me = bot.getMe()
+            println("> Prizebot: Bot Account: ${me.username?.username} (${me.id.chatId})")
+        }
     }
 
     private fun scheduleRaffles() = scope.launch {
@@ -139,7 +153,7 @@ class Prizebot(
 
         runCatching {
             bot.sendMessage(
-                chatId = ChatId(chatId = logChatId ?: return),
+                chatId = logChatId?.toChatId() ?: return,
                 text = stacktrace
             )
         }

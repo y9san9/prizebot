@@ -18,7 +18,7 @@ class InlineQueryUpdate <DI> (
     private val query: InlineQueryUpdate,
 ) : PossiblyFromUserLocalizedDIBotUpdate<DI>, HasTextUpdate, AnswerableUpdate, FromUserUpdate {
 
-    override val userId = query.data.from.id.chatId
+    override val userId = query.data.from.id.chatId.long
     override val languageCode = (query.data.from as? CommonUser)?.languageCode
     override val text = query.data.query
 

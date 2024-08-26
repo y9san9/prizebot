@@ -1,6 +1,6 @@
 package me.y9san9.prizebot.resources.locales.ietf
 
-import dev.inmo.micro_utils.language_codes.IetfLanguageCode
+import dev.inmo.micro_utils.language_codes.IetfLang
 
-fun IetfLanguageCode.ignoreDialect(): IetfLanguageCode =
-    IetfLanguageCode(code.split("-").first())
+fun IetfLang.ignoreDialect(): IetfLang =
+    IetfLang(code.split("-").first())

@@ -85,6 +85,8 @@ object BeLocale : Locale() {
     override val participantsCountIsNotEnough =
         "Удзельнікаў недастаткова, каб абраць пераможцаў!"
 
+    override fun unknownUser(userId: Long) = "Невядомы карыстальнік ($userId)"
+
     override val giveawayFinished = "Розыгрыш скончаны!"
 
     override val giveawayDoesNotExist = "Такога розыгрышу не існуе"

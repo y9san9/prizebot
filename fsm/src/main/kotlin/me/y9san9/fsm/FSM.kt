@@ -44,6 +44,7 @@ class FSM <TChannel, TEvent> (
         events
             .map { eventChannelProvider(it) to it }
             .launchEachSafely(scope, throwableHandler, { (channel) -> channel }) { (channel, event) ->
+                println("> FSM: Receiving message from $channel. $event")
                 processEvent(channel, event, states.states)
             }
     }

@@ -11,7 +11,9 @@ class RawConditionsClient(
         firstHandler: suspend (Result) -> Unit
     ): Result = queue.execute(discriminator) {
         val invalidCondition = conditions
-            .firstOrNull { condition -> !condition.check() }
+            .firstOrNull { condition ->
+                !condition.check()
+            }
             ?: return@execute Result.Success.also { firstHandler(it) }
 
         return@execute Result.Failed(invalidCondition).also { firstHandler(it) }

@@ -1,5 +1,6 @@
 package me.y9san9.prizebot.database.giveaways_storage
 
+import kotlinx.coroutines.flow.Flow
 import me.y9san9.prizebot.actors.giveaway.AutoRaffleActor
 import me.y9san9.prizebot.database.giveaways_storage.conditions_storage.GiveawayConditions
 import org.jetbrains.exposed.sql.Database
@@ -23,5 +24,6 @@ interface GiveawaysStorage {
         conditions: GiveawayConditions
     ): ActiveGiveaway
     suspend fun getUserGiveaways(ownerId: Long, count: Int = 20, offset: Long = 0): List<Giveaway>
-    suspend fun getAllGiveaways(): List<Giveaway>
+    suspend fun getAllGiveaways(): Flow<Giveaway>
+    suspend fun getGiveawaysWithRaffleDate(): Flow<ActiveGiveaway>
 }

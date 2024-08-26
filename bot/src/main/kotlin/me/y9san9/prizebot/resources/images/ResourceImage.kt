@@ -3,9 +3,7 @@
 package me.y9san9.prizebot.resources.images
 
 import dev.inmo.tgbotapi.requests.abstracts.MultipartFile
-import dev.inmo.tgbotapi.utils.BuiltinMimeTypes
-import io.ktor.utils.io.core.Input
-import io.ktor.utils.io.streams.asInput
+import io.ktor.utils.io.streams.*
 import kotlin.properties.ReadOnlyProperty
 
 
