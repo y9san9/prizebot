@@ -7,6 +7,7 @@
     <a href="https://hitsofcode.com/github/y9san9/prizebot/view?branch=dev"><img alt="HoC" src="https://hitsofcode.com/github/y9san9/prizebot?branch=dev"/></a>
     <img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/y9san9/prizebot&title=views%20daily/total" alt="Views" />
     <a href="https://wakatime.com/badge/github/y9san9/prizebot"><img src="https://wakatime.com/badge/github/y9san9/prizebot.svg" alt="wakatime"/></a>
+    <a href="https://tgbotmau.quoi.dev/?bot=y9prizebot" target="_blank"><img alt="@y9prizebot MAU" title="@y9prizebot MAU" src="https://tgbotmau.quoi.dev/api/bot/y9prizebot/mau/badge?style=flat"></a>
     <br><br>
     An open source telegram bot to purely raffle prizes with <a href="https://random.org">random.org</a>. <br>
     The official bot hosted at <a href="https://t.me/y9prizebot">@y9prizebot</a>, all discussions are welcome in issues, news feed available at <a href="https://t.me/prizebot_feed">telegram</a>
