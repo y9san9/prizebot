@@ -11,18 +11,19 @@ suspend fun timezoneKeyboard(update: PrizebotLocalizedUpdate) = ReplyKeyboardMar
         listOf (
             SimpleKeyboardButton(update.getLocale().GMT),
             SimpleKeyboardButton(update.getLocale().`UTC-4`),
-            SimpleKeyboardButton(update.getLocale().UTC1),
+            SimpleKeyboardButton(update.getLocale().`UTC-3`),
         ),
         listOf (
+            SimpleKeyboardButton(update.getLocale().UTC1),
             SimpleKeyboardButton(update.getLocale().UTC2),
             SimpleKeyboardButton(update.getLocale().UTC3),
-            SimpleKeyboardButton(update.getLocale().UTC5_30)
         ),
         listOf (
+            SimpleKeyboardButton(update.getLocale().UTC5_30),
             SimpleKeyboardButton(update.getLocale().UTC8),
-            SimpleKeyboardButton(update.getLocale().UTC9)
-        )
+            SimpleKeyboardButton(update.getLocale().UTC9),
+        ),
     ),
     resizeKeyboard = true,
-    oneTimeKeyboard = true
+    oneTimeKeyboard = true,
 )
