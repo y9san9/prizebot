@@ -10,11 +10,14 @@ import me.y9san9.prizebot.resources.MAX_TITLE_LEN
 
 object KkLocale : Locale() {
     override val start = regular("Сәлем! менін атым ") + bold("PrizeBot") +
-            regular(", осы жерде сіз жүлделерді ашық түрде ойнай аласыз. " +
-                    "Боттың басты ерекшелігі - сіз мүшелер үшін шарттарды таңдай аласыз " +
-                    "(Арнаға жазылу және т.б.). Таңдау кездейсоқтығы random.org'пен жеткізіледі, ал ") +
-            link(text = "осында", url = "https://github.com/y9san9/prizebot") + " бастапқы кодты көруге болады\n" +
-            "Барлық қол жетімді командалардың тізімін көру үшін /help пайдаланыңыз"
+        regular(
+            ", осы жерде сіз жүлделерді ашық түрде ойнай аласыз. " +
+                "Боттың басты ерекшелігі - сіз мүшелер үшін шарттарды таңдай аласыз " +
+                "(Арнаға жазылу және т.б.). Таңдау кездейсоқтығы random.org'пен жеткізіледі, ал ",
+        ) +
+        link(text = "осында", url = "https://github.com/y9san9/prizebot") +
+        " бастапқы кодты көруге болады\n" +
+        "Барлық қол жетімді командалардың тізімін көру үшін /help пайдаланыңыз"
 
     override fun unknownCommand(command: String) = "Белгісіз команда '$command'"
 
@@ -23,7 +26,8 @@ object KkLocale : Locale() {
 
     override val enterText = "Мәтінді енгізіңіз!"
 
-    override val help = "Сәлем! Мен ұтыс ойындарының жетілдірілген ботпын, мұнда қол жетімді командалардың тізімі берілген:\n" +
+    override val help =
+        "Сәлем! Мен ұтыс ойындарының жетілдірілген ботпын, мұнда қол жетімді командалардың тізімі берілген:\n" +
             "- /help: Бұл хабарламаны жіберу\n" +
             "- /giveaway: Жаңа ұтыс ойынын бастау\n" +
             "- /my_giveaways: Жасалған ұтыс ойындарын қарау\n" +
@@ -59,7 +63,8 @@ object KkLocale : Locale() {
 
     override val alreadyParticipating = "Сіз ұтыс ойынына қатысасыз"
 
-    override val highLoadMessage = "Қазір бот үлкен жүктемеде, шыдамды болыңыз. " +
+    override val highLoadMessage =
+        "Қазір бот үлкен жүктемеде, шыдамды болыңыз. " +
             "Егер сіз ботқа әлі хат жазбаған болсаңыз, оған /start деп жазыңыз, бот кейінірек мәртебе туралы жазады"
 
     override val selectGiveawayToView = "Толығырақ көру үшін ұтыс ойынын таңдаңыз"
@@ -72,13 +77,14 @@ object KkLocale : Locale() {
 
     // fixme: remove business logic
     override fun giveawayDeleted(title: String) = regular("Ұтыс ойын '") +
-            bold(title.awesomeCut(maxLength = 30)) + "' жойылды"
+        bold(title.awesomeCut(maxLength = 30)) + "' жойылды"
 
     override val thisGiveawayDeleted = "Бұл ұтыс ойыны жойылды"
 
     override val raffle = "Ойнау ${Emoji.GIFT}"
 
-    override fun winner(plural: Boolean) = if(plural) "Жеңімпаздар" else "Жеңімпаз"
+    override fun winner(plural: Boolean) =
+        if (plural) "Жеңімпаздар" else "Жеңімпаз"
 
     override val deletedUser = "Пайдаланушы жойылды"
 
@@ -95,7 +101,8 @@ object KkLocale : Locale() {
 
     override val localeSelected = "Тіл өзгертілді"
 
-    override fun confirmation(confirmationText: String) = "Сіз $confirmationText алғыңыз келетініне сенімдісіз бе?"
+    override fun confirmation(confirmationText: String) =
+        "Сіз $confirmationText алғыңыз келетініне сенімдісіз бе?"
 
     override val confirm = "Растау"
 
@@ -103,10 +110,14 @@ object KkLocale : Locale() {
 
     override val raffleGiveawayConfirmation = "жүлдені ойнау"
 
-    override val enterRaffleDateInput = regular("Форматтардың бірінде автоматты түрде ұтыс ойынының күнін енгізіңіз: ") +
+    override val enterRaffleDateInput =
+        regular(
+            "Форматтардың бірінде автоматты түрде ұтыс ойынының күнін енгізіңіз: ",
+        ) +
             bold("00:00") + ", " +
             bold("00:00 13.01") + ", " +
-            bold("00:00 13.01.2020") + " (өткізіп жіберу үшін /skip және болдырмау үшін /cancel пайдаланыңыз). " +
+            bold("00:00 13.01.2020") +
+            " (өткізіп жіберу үшін /skip және болдырмау үшін /cancel пайдаланыңыз). " +
             "Уақыт ауыстыруды келесі қадамда таңдауға болады."
 
     override val invalidDateFormat = "Күн дұрыс емес еңгізілген, қайталап көріңіз"
@@ -116,6 +127,7 @@ object KkLocale : Locale() {
     override val customTimeOffset = "Басқа уақыт ауыстыру"
 
     override val `UTC-4` = "Нью-Йорк -4"
+    override val `UTC-3` = "Бразилия -3"
     override val GMT = "Гринвич +0"
     override val UTC1 = "Берлин +1"
     override val UTC2 = "Киев +2"
@@ -124,7 +136,8 @@ object KkLocale : Locale() {
     override val UTC8 = "Бейжің +8"
     override val UTC9 = "Токио +9"
 
-    override val customTimezoneInput = regular("Форматтардың біріне уақыт белдеуін енгізіңіз: ") +
+    override val customTimezoneInput =
+        regular("Форматтардың біріне уақыт белдеуін енгізіңіз: ") +
             bold("+9") + ", " + bold("-9:30")
 
     override val invalidTimezoneFormat = "Уақыт белдеуінің дұрыс емес форматы, қайталап көріңіз"
@@ -161,8 +174,12 @@ object KkLocale : Locale() {
 
     override val channelsUpdated = "Жаңартылды!"
 
-    override val channelLinkingHelp = bold("Арнаны/чатты байланыстыру үшін келесі қадамдарды орындау қажет:\n\n") +
-            "• @y9prizebot сіз байланыстырғыңыз келетін " + bold("username") + " арнасына қосыңыз (кез келген адам оған қосыла алатындай), " +
+    override val channelLinkingHelp =
+        bold(
+            "Арнаны/чатты байланыстыру үшін келесі қадамдарды орындау қажет:\n\n",
+        ) +
+            "• @y9prizebot сіз байланыстырғыңыз келетін " + bold("username") +
+            " арнасына қосыңыз (кез келген адам оған қосыла алатындай), " +
             "бұл кейінірек мүшелерді тексеру үшін пайдаланылады\n" +
             "• Жаңарту түймесін басу\n\n" +
             "\n" +
@@ -176,7 +193,8 @@ object KkLocale : Locale() {
 
     override fun subscribeTo(username: String) = bold(username) + "'ға жазылу"
 
-    override fun inviteFriends(count: Int) = bold("$count") + " ${getValidFriendsForm(count)} ұтыс ойынына шақыру"
+    override fun inviteFriends(count: Int) =
+        bold("$count") + " ${getValidFriendsForm(count)} ұтыс ойынына шақыру"
 
     private fun getValidFriendsForm(count: Int) = when {
         count % 10 == 1 -> "досты"
@@ -193,7 +211,8 @@ object KkLocale : Locale() {
 
     override val cannotMentionsUser = "Параметрлерде 'хабарламаларды жіберуге' рұқсат етіңіз, әйтпесе бот сізді айта алмайды (параметр 5 минуттан кейін қолданылады)"
 
-    override fun friendsAreNotInvited(invitedCount: Int, requiredCount: Int) = "Сіз $invitedCount / $requiredCount достарды шақырдыңыз"
+    override fun friendsAreNotInvited(invitedCount: Int, requiredCount: Int) =
+        "Сіз $invitedCount / $requiredCount достарды шақырдыңыз"
 
     override val raffleProcessing = "Күте тұрыңыз, ұтыс ойыны өңделуде"
 
@@ -201,7 +220,8 @@ object KkLocale : Locale() {
 
     override val thisChatIsNotPublic = "Оны қосу үшін чатты жалпыға қол жетімді етіңіз"
 
-    override val displayWinnersWithEmoji = "Жеңімпаздарды эмодзимен көрсету керек пе? Мысалы:\n\n" +
+    override val displayWinnersWithEmoji =
+        "Жеңімпаздарды эмодзимен көрсету керек пе? Мысалы:\n\n" +
             "${Emoji.FIRST_PLACE} Foo Bar\n" +
             "${Emoji.SECOND_PLACE} Bar Foo\n" +
             "${Emoji.THIRD_PLACE} Baz Baz\n\n" +
@@ -210,5 +230,4 @@ object KkLocale : Locale() {
     override val yes = "Иә"
 
     override val no = "Жоқ"
-
 }
