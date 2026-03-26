@@ -42,6 +42,9 @@ object TimezoneInputState : PrizebotFSMState<TimezoneInputData> {
             raw(Locale::`UTC-4`) {
                 return nextState(event, data, ZoneOffset.ofHours(-4))
             }
+            raw(Locale::`UTC-3`) {
+                return nextState(event, data, ZoneOffset.ofHours(-3))
+            }
             raw(Locale::UTC1) {
                 return nextState(event, data, ZoneOffset.ofHours(1))
             }
