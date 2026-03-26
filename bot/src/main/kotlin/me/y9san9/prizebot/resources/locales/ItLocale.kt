@@ -6,32 +6,34 @@ import dev.inmo.tgbotapi.types.message.textsources.bold
 import dev.inmo.tgbotapi.types.message.textsources.link
 import dev.inmo.tgbotapi.types.message.textsources.plus
 import dev.inmo.tgbotapi.types.message.textsources.regular
+import me.y9san9.extensions.string.awesomeCut
 import me.y9san9.prizebot.resources.Emoji
 import me.y9san9.prizebot.resources.MAX_TITLE_LEN
-import me.y9san9.extensions.string.awesomeCut
 
 object ItLocale : Locale() {
     override val start = regular("Ciao! il mio nome è ") + bold("PrizeBot") +
-            regular(
-                ", qui potrai sorteggiare casualmente, ed in modo trasparente, premi tra utenti. " +
-                        "Una delle caratteristiche principali è che puoi " +
-                        "scegliere condizioni per i membri " +
-                        "(devono essere iscritti a dei canali, etc.). " +
-                        "\nLa randomicità del bot è fornita da random.org e "
-            ) + link(text = "lì", url = "https://github.com/y9san9/prizebot") +
-            " puoi controllare le fonti.\n\n" +
-            "Per visualizzare tutti i comandi disponibili, usa /help"
+        regular(
+            ", qui potrai sorteggiare casualmente, ed in modo trasparente, premi tra utenti. " +
+                "Una delle caratteristiche principali è che puoi " +
+                "scegliere condizioni per i membri " +
+                "(devono essere iscritti a dei canali, etc.). " +
+                "\nLa randomicità del bot è fornita da random.org e ",
+        ) + link(text = "lì", url = "https://github.com/y9san9/prizebot") +
+        " puoi controllare le fonti.\n\n" +
+        "Per visualizzare tutti i comandi disponibili, usa /help"
 
-    override val help = "Hey! Sono un avanzato bot per Giveaway (Regali), ecco la lista dei comandi disponibili:\n" +
+    override val help =
+        "Hey! Sono un avanzato bot per Giveaway (Regali), ecco la lista dei comandi disponibili:\n" +
             "- /start: Mi attiva! L'hai probabilmente già usato\n" +
             "- /help: Manda questo messaggio\n" +
             "- /giveaway: Crea un nuovo Giveaway\n" +
             "- /my_giveaways: Mostra la lista dei Giveaway creati\n" +
             "- /language: Seleziona la lingua del bot\n"
 
-    override fun unknownCommand (command: String) = "Comando sconosciuto '$command'"
+    override fun unknownCommand(command: String) =
+        "Comando sconosciuto '$command'"
 
-    override fun invalidArgsCount (expected: Int, actual: Int) =
+    override fun invalidArgsCount(expected: Int, actual: Int) =
         "Previsti $expected argomenti per il comando, ma ne sono stati trovati $actual"
 
     override val enterText = "Inserisci il testo!"
@@ -56,7 +58,8 @@ object ItLocale : Locale() {
 
     override val send = "Invio..."
 
-    override fun participateText(text: String) = "Pulsante per partecipare: $text"
+    override fun participateText(text: String) =
+        "Pulsante per partecipare: $text"
 
     override val cannotParticipateInSelfGiveaway = "Non puoi partecipare nel tuo stesso Giveaway!"
 
@@ -68,7 +71,8 @@ object ItLocale : Locale() {
 
     override val selectGiveawayToView = "Seleziona il Giveaway dalla lista sottostante"
 
-    override val highLoadMessage = "Il bot in questo momento sta ricevendo un carico elevato di informazioni, quindi " +
+    override val highLoadMessage =
+        "Il bot in questo momento sta ricevendo un carico elevato di informazioni, quindi " +
             "sii paziente. Scrivi /start al bot se non l'hai ancora fatto, in modo che il bot possa informarti sul tuo stato."
 
     override val noGiveawaysYet = "Non hai creato alcun Giveaway. Creane uno con il comando /giveaway"
@@ -79,13 +83,14 @@ object ItLocale : Locale() {
 
     // FIXME: remove business logic
     override fun giveawayDeleted(title: String) = regular("Giveaway '") +
-            bold(title.awesomeCut(maxLength = 30)) + "' cancellato"
+        bold(title.awesomeCut(maxLength = 30)) + "' cancellato"
 
     override val thisGiveawayDeleted = "Questo Giveaway è stato cancellato."
 
     override val raffle = "Sorteggia ${Emoji.GIFT}"
 
-    override fun winner(plural: Boolean) = if(plural) "Vincitori" else "Vincitore"
+    override fun winner(plural: Boolean) =
+        if (plural) "Vincitori" else "Vincitore"
 
     override val deletedUser = "Utente cancellato"
 
@@ -102,7 +107,8 @@ object ItLocale : Locale() {
 
     override val localeSelected = "Lingua selezionata!"
 
-    override fun confirmation(confirmationText: String) = "Sei sicuro di $confirmationText"
+    override fun confirmation(confirmationText: String) =
+        "Sei sicuro di $confirmationText"
 
     override val confirm = "Conferma"
 
@@ -110,10 +116,14 @@ object ItLocale : Locale() {
 
     override val raffleGiveawayConfirmation = "Sorteggia Giveaway"
 
-    override val enterRaffleDateInput = regular("Inserisci la data per il sorteggio automatico in uno dei seguenti formati: ") +
+    override val enterRaffleDateInput =
+        regular(
+            "Inserisci la data per il sorteggio automatico in uno dei seguenti formati: ",
+        ) +
             bold("00:00") + ", " +
             bold("00:00 13.01") + ", " +
-            bold("00:00 13.01.2020") + " (usa /skip per saltare o /cancel per cancellare). " +
+            bold("00:00 13.01.2020") +
+            " (usa /skip per saltare o /cancel per cancellare). " +
             "Puoi scegliere il fuso orario nel prossimo passaggio."
 
     override val invalidDateFormat = "Formato della data invalido, prova ancora"
@@ -123,6 +133,7 @@ object ItLocale : Locale() {
     override val customTimeOffset = "Fuso orario personalizzato"
 
     override val `UTC-4` = "New York -4"
+    override val `UTC-3` = "Brasile -3"
     override val GMT = "GMT +0"
     override val UTC1 = "Berlino +1"
     override val UTC2 = "Kiev +2"
@@ -131,7 +142,10 @@ object ItLocale : Locale() {
     override val UTC8 = "Pechino +8"
     override val UTC9 = "Tokyo +9"
 
-    override val customTimezoneInput = regular("Inserisci il fuso orario personalizzato in uno dei seguenti formati: ") +
+    override val customTimezoneInput =
+        regular(
+            "Inserisci il fuso orario personalizzato in uno dei seguenti formati: ",
+        ) +
             bold("+9") + ", " + bold("-9:30")
 
     override val invalidTimezoneFormat = "Formato fuso orario invalido, prova ancora"
@@ -167,8 +181,11 @@ object ItLocale : Locale() {
 
     override val channelsUpdated = "Canali collegati aggiornati!"
 
-    override val channelLinkingHelp = bold("Per collegare un canale devi seguire questi passaggi:\n\n") +
-            "• Aggiungi come amministratore @y9prizebot al canale/chat che vuoi collegare (" + bold("deve avere un username") + " così che tutti possano entrarvi), " +
+    override val channelLinkingHelp =
+        bold("Per collegare un canale devi seguire questi passaggi:\n\n") +
+            "• Aggiungi come amministratore @y9prizebot al canale/chat che vuoi collegare (" +
+            bold("deve avere un username") +
+            " così che tutti possano entrarvi), " +
             "sarà successivamente utilizzato per controllare se il membro è entrato\n" +
             "• Poi clicca il pulsante per aggiornare e seleziona il canale\n\n" +
             bold("Nel caso il bot sia già nella chat:\n\n") +
@@ -181,12 +198,15 @@ object ItLocale : Locale() {
 
     override val giveawayConditions = "Condizione del Giveaway:"
 
-    override fun subscribeTo(username: String) = regular("Iscriviti a ") + bold(username)
+    override fun subscribeTo(username: String) =
+        regular("Iscriviti a ") + bold(username)
 
-    override fun inviteFriends(count: Int) = regular("Invita ") + bold("$count") + " amic" +
-            (if(count > 1) "i" else "o") + " nel Giveaway"
+    override fun inviteFriends(count: Int) =
+        regular("Invita ") + bold("$count") + " amic" +
+            (if (count > 1) "i" else "o") + " nel Giveaway"
 
-    override val channelConditionRequiredForInvitations = "Almeno un'iscrizione ad un canale è necessaria se vuoi aggiungere gli " +
+    override val channelConditionRequiredForInvitations =
+        "Almeno un'iscrizione ad un canale è necessaria se vuoi aggiungere gli " +
             "inviti ad amici"
 
     override val invitationsCountShouldBePositive = "La quantità di inviti deve essere un numero positivo"
@@ -195,10 +215,12 @@ object ItLocale : Locale() {
 
     override val notSubscribedToConditions = "Non sei entrato in tutte le chat/canali"
 
-    override val cannotMentionsUser = "Attenzione, per partecipare, il bot ha bisogno che tu abbia attiva l'opzione privacy \"Inoltro dei messaggi\"\n" +
+    override val cannotMentionsUser =
+        "Attenzione, per partecipare, il bot ha bisogno che tu abbia attiva l'opzione privacy \"Inoltro dei messaggi\"\n" +
             "Per attivarla, vai nelle impostazioni Telegram > \"Privacy\" > \"Inoltro messaggi\" > \"Tutti\""
 
-    override fun friendsAreNotInvited(invitedCount: Int, requiredCount: Int) = "Hai invitato $invitedCount / $requiredCount amici"
+    override fun friendsAreNotInvited(invitedCount: Int, requiredCount: Int) =
+        "Hai invitato $invitedCount / $requiredCount amici"
 
     override val raffleProcessing = "Per favore attendi, il sorteggio è in elaborazione"
 
@@ -206,7 +228,8 @@ object ItLocale : Locale() {
 
     override val thisChatIsNotPublic = "Questa chat non è pubblica, per favore aggiungi un username"
 
-    override val displayWinnersWithEmoji = "Vuoi mostrare i vincitori con delle emoji così?\n\n" +
+    override val displayWinnersWithEmoji =
+        "Vuoi mostrare i vincitori con delle emoji così?\n\n" +
             "${Emoji.FIRST_PLACE} Foo Bar\n" +
             "${Emoji.SECOND_PLACE} Bar Foo\n" +
             "${Emoji.THIRD_PLACE} Baz Baz\n\n" +

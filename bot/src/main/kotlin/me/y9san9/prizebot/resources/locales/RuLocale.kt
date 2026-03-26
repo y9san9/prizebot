@@ -10,20 +10,28 @@ import me.y9san9.prizebot.resources.MAX_TITLE_LEN
 
 object RuLocale : Locale() {
     override val start = regular("Привет! Меня зовут ") + bold("PrizeBot") +
-            regular(", здесь вы можете прозрачно разыграть призы. " +
-                    "Главная особенность бота - вы можете выбирать условия для участников " +
-                    "(подписка на канал и пр.). Случайность выбора достигается с помощью random.org, а ") +
-                    link(text = "здесь", url = "https://github.com/y9san9/prizebot") + " можно посмотреть исходный код\n" +
-                    "Чтобы посмотреть список всех доступных команд, используйте /help"
+        regular(
+            ", здесь вы можете прозрачно разыграть призы. " +
+                "Главная особенность бота - вы можете выбирать условия для участников " +
+                "(подписка на канал и пр.). Случайность выбора достигается с помощью random.org, а ",
+        ) +
+        link(
+            text = "здесь",
+            url = "https://github.com/y9san9/prizebot",
+        ) +
+        " можно посмотреть исходный код\n" +
+        "Чтобы посмотреть список всех доступных команд, используйте /help"
 
-    override fun unknownCommand(command: String) = "Неизвестная команда '$command'"
+    override fun unknownCommand(command: String) =
+        "Неизвестная команда '$command'"
 
     override fun invalidArgsCount(expected: Int, actual: Int) =
         "Ожидается $expected аргументов для команды, но $actual найдено"
 
     override val enterText = "Введите текст!"
 
-    override val help = "Привет! Я продвинутый бот для розыгрышей, вот список доступных команд:\n" +
+    override val help =
+        "Привет! Я продвинутый бот для розыгрышей, вот список доступных команд:\n" +
             "- /help: Отправить это сообщение\n" +
             "- /giveaway: Начать новый розыгрыш\n" +
             "- /my_giveaways: Посмотреть созданные розыгрыши\n" +
@@ -59,7 +67,8 @@ object RuLocale : Locale() {
 
     override val alreadyParticipating = "Ты участвуешь в розыгрыше"
 
-    override val highLoadMessage = "Сейчас бот находится под большой нагрузкой, пожалуйста, запасись терпением. " +
+    override val highLoadMessage =
+        "Сейчас бот находится под большой нагрузкой, пожалуйста, запасись терпением. " +
             "Если ты ещё не писал боту, напиши ему /start, бот позже напишет о статусе"
 
     override val selectGiveawayToView = "Выбери розыгрыш, чтобы посмотреть подробнее"
@@ -72,17 +81,19 @@ object RuLocale : Locale() {
 
     // fixme: remove business logic
     override fun giveawayDeleted(title: String) = regular("Розыгрыш '") +
-            bold(title.awesomeCut(maxLength = 30)) + "' удалён"
+        bold(title.awesomeCut(maxLength = 30)) + "' удалён"
 
     override val thisGiveawayDeleted = "Этот розыгрыш удалён"
 
     override val raffle = "Разыграть ${Emoji.GIFT}"
 
-    override fun winner(plural: Boolean) = if(plural) "Победители" else "Победитель"
+    override fun winner(plural: Boolean) =
+        if (plural) "Победители" else "Победитель"
 
     override val deletedUser = "Пользователь удалён"
 
-    override fun unknownUser(userId: Long) = "Неизвестный пользователь ($userId)"
+    override fun unknownUser(userId: Long) =
+        "Неизвестный пользователь ($userId)"
 
     override val participantsCountIsNotEnough =
         "Участников недостаточно, чтобы выбрать победителей!"
@@ -95,7 +106,8 @@ object RuLocale : Locale() {
 
     override val localeSelected = "Язык изменён"
 
-    override fun confirmation(confirmationText: String) = "Вы уверены, что хотите $confirmationText?"
+    override fun confirmation(confirmationText: String) =
+        "Вы уверены, что хотите $confirmationText?"
 
     override val confirm = "Подтвердить"
 
@@ -103,10 +115,14 @@ object RuLocale : Locale() {
 
     override val raffleGiveawayConfirmation = "разыграть приз"
 
-    override val enterRaffleDateInput = regular("Введите дату для автоматического розыгрыша в одном из форматов: ") +
+    override val enterRaffleDateInput =
+        regular(
+            "Введите дату для автоматического розыгрыша в одном из форматов: ",
+        ) +
             bold("00:00") + ", " +
             bold("00:00 13.01") + ", " +
-            bold("00:00 13.01.2020") + " (используйте /skip, чтобы пропустить, и /cancel, чтобы отменить). " +
+            bold("00:00 13.01.2020") +
+            " (используйте /skip, чтобы пропустить, и /cancel, чтобы отменить). " +
             "Смещение времени можно будет выбрать на следующем шаге."
 
     override val invalidDateFormat = "Неверный формат даты, попробуйте ещё раз"
@@ -116,6 +132,7 @@ object RuLocale : Locale() {
     override val customTimeOffset = "Другое смещение"
 
     override val `UTC-4` = "Нью-Йорк -4"
+    override val `UTC-3` = "Бразилия -3"
     override val GMT = "Гринвич +0"
     override val UTC1 = "Берлин +1"
     override val UTC2 = "Киев +2"
@@ -124,7 +141,8 @@ object RuLocale : Locale() {
     override val UTC8 = "Пекин +8"
     override val UTC9 = "Токио +9"
 
-    override val customTimezoneInput = regular("Введите часовой пояс в одном из форматов: ") +
+    override val customTimezoneInput =
+        regular("Введите часовой пояс в одном из форматов: ") +
             bold("+9") + ", " + bold("-9:30")
 
     override val invalidTimezoneFormat = "Неправильный формат часового пояса, попробуйте ещё раз"
@@ -161,8 +179,12 @@ object RuLocale : Locale() {
 
     override val channelsUpdated = "Обновлено!"
 
-    override val channelLinkingHelp = bold("Чтобы привязать канал/чат вам нужно выполнить следующие шаги:\n\n") +
-            "• Добавить @y9prizebot в ваш канал с " + bold("username") + ", который вы хотите привязать (чтобы любой мог присоединиться к нему), " +
+    override val channelLinkingHelp =
+        bold(
+            "Чтобы привязать канал/чат вам нужно выполнить следующие шаги:\n\n",
+        ) +
+            "• Добавить @y9prizebot в ваш канал с " + bold("username") +
+            ", который вы хотите привязать (чтобы любой мог присоединиться к нему), " +
             "позже это будет использовано для проверки участников\n" +
             "• Нажать на кнопку обновить\n\n" +
             "\n" +
@@ -174,9 +196,12 @@ object RuLocale : Locale() {
 
     override val giveawayConditions = "Условия участия:"
 
-    override fun subscribeTo(username: String) = regular("Подписаться на ") + bold(username)
+    override fun subscribeTo(username: String) =
+        regular("Подписаться на ") + bold(username)
 
-    override fun inviteFriends(count: Int) = regular("Пригласить ") + bold("$count") + " ${getValidFriendsForm(count)} в розыгрыш"
+    override fun inviteFriends(count: Int) =
+        regular("Пригласить ") + bold("$count") +
+            " ${getValidFriendsForm(count)} в розыгрыш"
 
     private fun getValidFriendsForm(count: Int) = when {
         count % 10 == 1 -> "друга"
@@ -193,7 +218,8 @@ object RuLocale : Locale() {
 
     override val cannotMentionsUser = "Разрешите 'Пересылать сообщения' в настройках, иначе бот не сможет вас упомянуть (настройка применится через 5 минут)"
 
-    override fun friendsAreNotInvited(invitedCount: Int, requiredCount: Int) = "Вы пригласили $invitedCount / $requiredCount друзей"
+    override fun friendsAreNotInvited(invitedCount: Int, requiredCount: Int) =
+        "Вы пригласили $invitedCount / $requiredCount друзей"
 
     override val raffleProcessing = "Подождите, идёт обработка розыгрыша"
 
@@ -201,7 +227,8 @@ object RuLocale : Locale() {
 
     override val thisChatIsNotPublic = "Сделайте чат публичным, чтобы подключить его"
 
-    override val displayWinnersWithEmoji = "Показывать победителей с эмодзи? Например:\n\n" +
+    override val displayWinnersWithEmoji =
+        "Показывать победителей с эмодзи? Например:\n\n" +
             "${Emoji.FIRST_PLACE} Foo Bar\n" +
             "${Emoji.SECOND_PLACE} Bar Foo\n" +
             "${Emoji.THIRD_PLACE} Baz Baz\n\n" +
@@ -210,5 +237,4 @@ object RuLocale : Locale() {
     override val yes = "Да"
 
     override val no = "Нет"
-
 }

@@ -10,22 +10,28 @@ import me.y9san9.prizebot.resources.MAX_TITLE_LEN
 
 object PlLocale : Locale() {
     override val start = regular("Cześć! Mam na imię ") + bold("PrizeBot") +
-            regular(
-                ", za pomocą tego bota możesz stworzyć giveaway! " +
-                        "Najważniejszą osobliwością bota jest to, że możesz ustawić warunki dla uczestników" +
-                        "(subskrypcja na kanał i td). Przypadkowość wyboru jest robiona przez random.org, а "
-            ) +
-            link(text = "tutajздесь", url = "https://github.com/y9san9/prizebot") + " możesz zobaczyć kod żródłowy\n" +
-            "Żeby zapoznać się z innymi możliwośćiami bota, wpisz /help"
+        regular(
+            ", za pomocą tego bota możesz stworzyć giveaway! " +
+                "Najważniejszą osobliwością bota jest to, że możesz ustawić warunki dla uczestników" +
+                "(subskrypcja na kanał i td). Przypadkowość wyboru jest robiona przez random.org, а ",
+        ) +
+        link(
+            text = "tutajздесь",
+            url = "https://github.com/y9san9/prizebot",
+        ) +
+        " możesz zobaczyć kod żródłowy\n" +
+        "Żeby zapoznać się z innymi możliwośćiami bota, wpisz /help"
 
-    override fun unknownCommand(command: String) = "Niewadoma komenda. '$command'"
+    override fun unknownCommand(command: String) =
+        "Niewadoma komenda. '$command'"
 
     override fun invalidArgsCount(expected: Int, actual: Int) =
         "Oczekiwano $expected argumentów dla komendy, ale $actual znaleziono"
 
     override val enterText = "Wpisz tekst!"
 
-    override val help = "Hej! Jestem najlepszym botem dla stworzenia giveaway, tutaj masz listę dostępnych komend:\n" +
+    override val help =
+        "Hej! Jestem najlepszym botem dla stworzenia giveaway, tutaj masz listę dostępnych komend:\n" +
             "- /help: Odesłać to powiadomienie\n" +
             "- /giveaway: Stworzyć nowe losowanie\n" +
             "- /my_giveaways: Zobaczyć stworzone loterie\n" +
@@ -64,7 +70,8 @@ object PlLocale : Locale() {
 
     override val alreadyParticipating = "Bierzesz udział w losowaniu"
 
-    override val highLoadMessage = "Bot jest obecnie bardzo obciążony, prosimy o cierpliwość " +
+    override val highLoadMessage =
+        "Bot jest obecnie bardzo obciążony, prosimy o cierpliwość " +
             "Jeśli jeszcze nie napisałeś do bota, napisz /start do niego, bot napisze o statusie później"
 
     override val selectGiveawayToView = "Wybierz losowanie, aby zobaczyć więcej"
@@ -78,13 +85,14 @@ object PlLocale : Locale() {
 
     // fixme: remove business logic
     override fun giveawayDeleted(title: String) = regular("Konkurs '") +
-            bold(title.awesomeCut(maxLength = 30)) + "' został usunięty"
+        bold(title.awesomeCut(maxLength = 30)) + "' został usunięty"
 
     override val thisGiveawayDeleted = "Ten konkurs został usunięty."
 
     override val raffle = "Zacznij losowanie ${Emoji.GIFT}"
 
-    override fun winner(plural: Boolean) = if (plural) "Zwycięzcy" else "Zwycięzca"
+    override fun winner(plural: Boolean) =
+        if (plural) "Zwycięzcy" else "Zwycięzca"
 
     override val deletedUser = "Użytkownik usunięty"
 
@@ -101,7 +109,8 @@ object PlLocale : Locale() {
 
     override val localeSelected = "Zmieniono język"
 
-    override fun confirmation(confirmationText: String) = "Jesteś pewny że chcesz $confirmationText?"
+    override fun confirmation(confirmationText: String) =
+        "Jesteś pewny że chcesz $confirmationText?"
 
     override val confirm = "Potwierdzać"
 
@@ -109,10 +118,14 @@ object PlLocale : Locale() {
 
     override val raffleGiveawayConfirmation = "wylosować nagrodę"
 
-    override val enterRaffleDateInput = regular("Wprowadź datę automatycznego losowania w jednym z formatów: ") +
+    override val enterRaffleDateInput =
+        regular(
+            "Wprowadź datę automatycznego losowania w jednym z formatów: ",
+        ) +
             bold("00:00") + ", " +
             bold("00:00 13.01") + ", " +
-            bold("00:00 13.01.2020") + " (użyj /skip, aby pominąć i /cancel, aby anulować). " +
+            bold("00:00 13.01.2020") +
+            " (użyj /skip, aby pominąć i /cancel, aby anulować). " +
             "Przesunięcie czasowe można wybrać w następnym kroku."
 
     override val invalidDateFormat = "Nieprawidłowy format daty, spróbuj ponownie"
@@ -122,6 +135,7 @@ object PlLocale : Locale() {
     override val customTimeOffset = "Kolejne przesunięcie czasowe"
 
     override val `UTC-4` = "Nowy Jork -4"
+    override val `UTC-3` = "Brazylia -3"
     override val GMT = "Greenwicz +0"
     override val UTC1 = "Berlin +1"
     override val UTC2 = "Kijów +2"
@@ -130,7 +144,8 @@ object PlLocale : Locale() {
     override val UTC8 = "Pekin +8"
     override val UTC9 = "Tokio +9"
 
-    override val customTimezoneInput = regular("Wprowadź strefę czasową w jednym z formatów: ") +
+    override val customTimezoneInput =
+        regular("Wprowadź strefę czasową w jednym z formatów: ") +
             bold("+9") + ", " + bold("-9:30")
 
     override val invalidTimezoneFormat = "Nieprawidłowy format strefy czasowej, spróbuj ponownie"
@@ -171,8 +186,11 @@ object PlLocale : Locale() {
 
     override val channelsUpdated = "Zaktualizowano!"
 
-    override val channelLinkingHelp = bold("Aby połączyć kanał/czat, wykonaj następujące kroki:\n\n") +
-            "• Dodaj @y9prizebot do swojego kanału za pomocą " + bold("username") + ", którą chcesz związać (aby każdy mógł do niej dołączyć), " +
+    override val channelLinkingHelp =
+        bold("Aby połączyć kanał/czat, wykonaj następujące kroki:\n\n") +
+            "• Dodaj @y9prizebot do swojego kanału za pomocą " +
+            bold("username") +
+            ", którą chcesz związać (aby każdy mógł do niej dołączyć), " +
             "później zostanie to użyte do sprawdzenia poprawności członków\n" +
             "• Kliknij przycisk aktualizacji\n\n" +
             "\n" +
@@ -184,10 +202,12 @@ object PlLocale : Locale() {
 
     override val giveawayConditions = "Warunki uczestnictwa:"
 
-    override fun subscribeTo(username: String) = regular("Subskrybować ") + bold(username)
+    override fun subscribeTo(username: String) =
+        regular("Subskrybować ") + bold(username)
 
     override fun inviteFriends(count: Int) =
-        regular("Zaprosić ") + bold("$count") + " ${getValidFriendsForm(count)} w losowanie"
+        regular("Zaprosić ") + bold("$count") +
+            " ${getValidFriendsForm(count)} w losowanie"
 
     private fun getValidFriendsForm(count: Int) = when {
         count % 10 == 1 -> "przyjaciela"
@@ -215,7 +235,8 @@ object PlLocale : Locale() {
 
     override val thisChatIsNotPublic = "Ustaw czat jako publiczny, aby go połączyć"
 
-    override val displayWinnersWithEmoji = "Pokaż zwycięzców za pomocą emotikonów? Na przykład:\n\n" +
+    override val displayWinnersWithEmoji =
+        "Pokaż zwycięzców za pomocą emotikonów? Na przykład:\n\n" +
             "${Emoji.FIRST_PLACE} Foo Bar\n" +
             "${Emoji.SECOND_PLACE} Bar Foo\n" +
             "${Emoji.THIRD_PLACE} Baz Baz\n\n" +

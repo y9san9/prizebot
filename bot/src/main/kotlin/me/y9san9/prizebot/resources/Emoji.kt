@@ -2,7 +2,6 @@
 
 package me.y9san9.prizebot.resources
 
-
 object Emoji {
     const val GIFT = "\uD83C\uDF81"
     const val HELP = "\uD83C\uDD98"
@@ -34,5 +33,7 @@ object Emoji {
         const val KAZAKHSTAN = "\uD83C\uDDF0\uD83C\uDDFF"
         const val POLAND = "\uD83C\uDDF5\uD83C\uDDF1"
         const val BELARUS = "\uD83C\uDDE7\uD83C\uDDFE"
+        const val PORTUGAL = "\uD83C\uDDF5\uD83C\uDDF9"
+        const val BRAZIL = "\uD83C\uDDE7\uD83C\uDDF7"
     }
 }
